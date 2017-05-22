@@ -87,3 +87,9 @@ function showAxes(ctx, axes) {
     ctx.stroke();
 }
 
+function main(){
+  draw();
+  audioConv();
+}
+
+window.onload = main;

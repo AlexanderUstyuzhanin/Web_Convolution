@@ -1,16 +1,20 @@
 ﻿<!DOCTYPE html>
+
+
 <html>
 <head>
     <meta charset="utf-8" />
     <title>CONVOLUTION DEMONSTRATOR & MORE</title>
-    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script src="js/audioConv.js"></script>
 </head>
-<body onload="draw()">
+
+<body>
+  <div class="convDemo">
     <h1>This is a web-based convolution demonstrator.</h1>
     <h2>Some comment about convolution here!</h2>
     <h3>Some instructions here.</h3>
-    <!-- Comment -->    
-
+    <!-- Comment -->
     <form>
         <fieldset>
             <canvas id="canvas" width="502" height="108"></canvas>
@@ -29,5 +33,26 @@
             </p>
         </fieldset>
     </form>
+  </div>
+
+  <div class="audioConv">
+    <h1>Audio convolution</h1>
+    <p>Choose a file from your computer to try:
+      <input type="file" id="files" name="files[]" type = "audio" />
+      </p>
+      <p>Input sound:</p>
+      <audio id="inputSound" controls></audio>
+
+      <p>Choose an impulse response
+      <input type="file" id="iFiles" name="files[]" type = "audio" />
+      </p>
+      <p>Impulse response:</p>
+      <audio id="impulseResponse" controls></audio>
+
+      <p>Result:</p>
+      <audio id="outputSound" controls></audio>
+      <output id="list"></output>
+  </div>
+
 </body>
 </html>
