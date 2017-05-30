@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+ <head>
+    <link rel="stylesheet" type="text/css" href="jsxgraph.css" />
+    <script type="text/javascript" src="jsxgraphcore.js" charset="utf-8"></script>
+    <script type="text/javascript" src="plot_and_functions.js"></script>
+<!--    <script type="text/javascript" src=jsxgraphcore.js></script>-->
+    <style>
+    .next {  
+        float:right;
+        width: 300px;
+        padding: 10px;
+    }
+     .space{
+        clear : none;
+        float : left;
+        position : relative;
+        width : 100px;
+        height : 50px;
+        }
+        .boxGroup{
+        clear : none;
+        float : left;
+        position : relative;
+        }
+        .jxgbox1{
+        clear : both;
+        float : none;
+        position : relative;
+        border-style: solid;
+       
+        }
+        .jxgbox2{
+        clear : both;
+        float : none;
+        position : relative;
+        }
+        .formField{
+        clear : none;
+        float : left;
+        position : relative;
+        padding: 10px;
+        width : 300px;
+        height : 400px;
+        }
+    
+    </style>
+</head>
+
+<body>
+    <div id ="space" class ="space" > </div>
+        
+    <div id ="boxGroup" class="boxGroup">
+    
+        <div id="jxgbox" class="jxgbox" style="width:600px; height:300px" ></div>
+                <script type="text/javascript">
+                    var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-3, 2, 3, -1], axis:true});
+                    d = brd.create('slider',[[1,1.5],[2.5,1.5],[-3,0,3]], {name:'SHIFT', snapWidth:0.5});
+                    
+                </script>
+         <div  style="width:600px; height:20px" ></div>
+         <div id="jxgbox2" class="jxgbox" style="width:600px; height:300px" ></div>   
+            <script type="text/javascript">
+               var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {boundingbox: [-3, 10, 3, -1], axis:true}); 
+               start(brd,brd2, d);
+            </script>
+     </div>    
+    <div id ="formField" class="formField" align="top" >
+
+        <form>
+           <fieldset>
+              <legend>Action Area</legend>
+              <p>
+                 <label>Select Function 1</label>
+                 <select id = "functionList1" onchange="plot1(brd)">
+                   <option value = "1">Rectangle</option>
+                   <option value = "2">Triangle</option>
+                   <option value = "3">Gaussian</option>
+                   <option value = "4">Sinc</option>
+                 </select>
+              </p>
+              <p>
+                 <label>Select Function 2</label>
+                 <select id = "functionList2" onchange="plot2(brd, d)">
+                   <option value = "1">Triangle</option>
+                   <option value = "2">Rectangle</option>
+                   <option value = "3">Gaussian</option>
+                   <option value = "4">Sinc</option>
+                 </select>
+              </p>
+              <p>
+                  <button id="convoBtn" onclick="doConvo(brd2); return false;" >
+                      Convolution
+                  </button>
+                  <button id="corrBtn" onclick="doCorrelation(brd2); return false;" >
+                      AutoCorrelation
+                  </button>
+              </p>
+
+           </fieldset>
+        </form>
+    </div>
+         
+        
+    </body>
+</html>
