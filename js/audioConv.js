@@ -50,8 +50,10 @@ function audioConv(){
              convolver.buffer = buffer;
            });
          }
+  }
 
-
+  function onIrPresetSelect(evt){
+      alert("selected");
   }
 
   function playOutput(evt){
@@ -62,6 +64,8 @@ function audioConv(){
   document.getElementById('files').addEventListener('change', handleFileSelect, false);
   document.getElementById('iFiles').addEventListener('change', handleImResFileSelect, false);
   document.getElementById('outputSound').addEventListener('play', playOutput, false);
+  document.getElementById('irPreset').addEventListener('change', onIrPresetSelect, false);
+  //document.getElementById('irPreset').onchange = onIrPresetSelect;
 
   var outputSound = document.getElementById('outputSound');
   output = audioCtx.createMediaElementSource(outputSound);

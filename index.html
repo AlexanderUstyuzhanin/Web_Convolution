@@ -38,13 +38,19 @@
   <div class="audioConv">
     <h1>Audio convolution</h1>
     <p>Choose a file from your computer to try:
-      <input type="file" id="files" name="files[]" type = "audio" />
+      <input type="file" id="files" name="files[]" />
       </p>
       <p>Input sound:</p>
       <audio id="inputSound" controls></audio>
-
       <p>Choose an impulse response
-      <input type="file" id="iFiles" name="files[]" type = "audio" />
+      <input type="file" id="iFiles" name="files[]" />
+        OR Choose from presets
+        <select id="irPreset">
+          <option value="" disabled selected style="display:none;">Select an impulse response...</option>
+          <option value="slinky">Slinky</option>
+          <option value="carpark">Carpark</option>
+        </select>
+
       </p>
       <p>Impulse response:</p>
       <audio id="impulseResponse" controls></audio>
