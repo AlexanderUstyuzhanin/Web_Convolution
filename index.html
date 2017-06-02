@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 
 <html>
@@ -14,56 +14,52 @@
 
 <body>
     <h1>This is a web-based convolution demonstrator.</h1>
-  <div class="tabs">
-    <ul class="tab-links">
-        <li class="active"><a href="#tab1">Convolution graph</a></li>
-        <li><a href="#tab2">Audio Convolution</a></li>
-    </ul>
+    <div class="tabs">
+        <ul class="tab-links">
+            <li class="active"><a href="#tab1">Convolution graph</a></li>
+            <li><a href="#tab2">Audio Convolution</a></li>
+        </ul>
 
-    <div class="tab-content">
-        <div id="tab1" class="tab active">
-          <div class="convDemo">
-            <h2>This segment is for convolution on a graph</h2>
-            <h3>Some instructions here.</h3>
-            <!-- Comment -->
-            <form>
-                <fieldset>
-                    <canvas id="canvas" width="502" height="108"></canvas>
-                    <legend>Signals</legend>
-                    <p>
-                        <label> a1 </label>
-                        <input type="text"
-                               id="myOffset1"
-                               value="" />
-                    </p>
-                    <p>
-                        <label> a2 </label>
-                        <input type="text"
-                               id="myOffset2"
-                               value="" />
-                    </p>
-                </fieldset>
-            </form>
-          </div>
-        </div>
+        <div class="tab-content">
+            <div id="tab1" class="tab active">
+                <h2>This segment is for convolution on a graph</h2>
+                <h3>Some instructions here.</h3>
+                <!-- Comment -->
+                <form>
+                    <fieldset>
+                        <canvas id="canvas" width="502" height="108"></canvas>
+                        <legend>Signals</legend>
+                        <p>
+                            <label> a1 </label>
+                            <input type="text"
+                            id="myOffset1"
+                            value="" />
+                        </p>
+                        <p>
+                            <label> a2 </label>
+                            <input type="text"
+                            id="myOffset2"
+                            value="" />
+                        </p>
+                    </fieldset>
+                </form>
+            </div>
 
-        <div id="tab2" class="tab">
-
-            <div class="audioConv">
-              <h1>Audio convolution</h1>
-              <p>Choose a file from your computer to try:
-                <input type="file" id="files" name="files[]" />
+            <div id="tab2" class="tab">
+                <h1>Audio convolution</h1>
+                <p>Choose a file from your computer to try:
+                    <input type="file" id="files" name="files[]" />
                 </p>
                 <p>Input sound:</p>
                 <audio id="inputSound" controls></audio>
                 <p>Choose an impulse response
-                <input type="file" id="iFiles" name="files[]" />
-                  OR Choose from presets
-                  <select id="irPreset">
-                    <option value="" disabled selected style="display:none;">Select an impulse response...</option>
-                    <option value="slinky">Slinky</option>
-                    <option value="carpark">Carpark</option>
-                  </select>
+                    <input type="file" id="iFiles" name="files[]" />
+                    OR Choose from presets
+                    <select id="irPreset">
+                        <option value="" disabled selected style="display:none;">Select an impulse response...</option>
+                        <option value="slinky">Slinky</option>
+                        <option value="carpark">Carpark</option>
+                    </select>
 
                 </p>
                 <p>Impulse response:</p>
@@ -73,9 +69,9 @@
                 <audio id="outputSound" controls></audio>
                 <output id="list"></output>
             </div>
-          </div>
+
+        </div>
     </div>
-</div>
 
 </body>
 </html>
