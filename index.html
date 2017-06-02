@@ -5,60 +5,77 @@
 <head>
     <meta charset="utf-8" />
     <title>CONVOLUTION DEMONSTRATOR & MORE</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/style.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <script src="js/audioConv.js"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-  <div class="convDemo">
     <h1>This is a web-based convolution demonstrator.</h1>
-    <h2>Some comment about convolution here!</h2>
-    <h3>Some instructions here.</h3>
-    <!-- Comment -->
-    <form>
-        <fieldset>
-            <canvas id="canvas" width="502" height="108"></canvas>
-            <legend>Signals</legend>
-            <p>
-                <label> a1 </label>
-                <input type="text"
-                       id="myOffset1"
-                       value="" />
-            </p>
-            <p>
-                <label> a2 </label>
-                <input type="text"
-                       id="myOffset2"
-                       value="" />
-            </p>
-        </fieldset>
-    </form>
-  </div>
+  <div class="tabs">
+    <ul class="tab-links">
+        <li class="active"><a href="#tab1">Convolution graph</a></li>
+        <li><a href="#tab2">Audio Convolution</a></li>
+    </ul>
 
-  <div class="audioConv">
-    <h1>Audio convolution</h1>
-    <p>Choose a file from your computer to try:
-      <input type="file" id="files" name="files[]" />
-      </p>
-      <p>Input sound:</p>
-      <audio id="inputSound" controls></audio>
-      <p>Choose an impulse response
-      <input type="file" id="iFiles" name="files[]" />
-        OR Choose from presets
-        <select id="irPreset">
-          <option value="" disabled selected style="display:none;">Select an impulse response...</option>
-          <option value="slinky">Slinky</option>
-          <option value="carpark">Carpark</option>
-        </select>
+    <div class="tab-content">
+        <div id="tab1" class="tab active">
+          <div class="convDemo">
+            <h2>This segment is for convolution on a graph</h2>
+            <h3>Some instructions here.</h3>
+            <!-- Comment -->
+            <form>
+                <fieldset>
+                    <canvas id="canvas" width="502" height="108"></canvas>
+                    <legend>Signals</legend>
+                    <p>
+                        <label> a1 </label>
+                        <input type="text"
+                               id="myOffset1"
+                               value="" />
+                    </p>
+                    <p>
+                        <label> a2 </label>
+                        <input type="text"
+                               id="myOffset2"
+                               value="" />
+                    </p>
+                </fieldset>
+            </form>
+          </div>
+        </div>
 
-      </p>
-      <p>Impulse response:</p>
-      <audio id="impulseResponse" controls></audio>
+        <div id="tab2" class="tab">
 
-      <p>Result:</p>
-      <audio id="outputSound" controls></audio>
-      <output id="list"></output>
-  </div>
+            <div class="audioConv">
+              <h1>Audio convolution</h1>
+              <p>Choose a file from your computer to try:
+                <input type="file" id="files" name="files[]" />
+                </p>
+                <p>Input sound:</p>
+                <audio id="inputSound" controls></audio>
+                <p>Choose an impulse response
+                <input type="file" id="iFiles" name="files[]" />
+                  OR Choose from presets
+                  <select id="irPreset">
+                    <option value="" disabled selected style="display:none;">Select an impulse response...</option>
+                    <option value="slinky">Slinky</option>
+                    <option value="carpark">Carpark</option>
+                  </select>
+
+                </p>
+                <p>Impulse response:</p>
+                <audio id="impulseResponse" controls></audio>
+
+                <p>Result:</p>
+                <audio id="outputSound" controls></audio>
+                <output id="list"></output>
+            </div>
+          </div>
+    </div>
+</div>
 
 </body>
 </html>
