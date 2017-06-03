@@ -22,10 +22,10 @@ function flip(x){
 //CONVOLUTION
 function conv(x1, x2){
 	//returns the convolution of the input arrays
-	x=zeroPad(x1,x2); 					//Zero-padding
+	x=zeroPad(x1,x2); 			//Zero-padding
 	x1=x[0]; x2=x[1]; N=x[0].length;	
-	y=Array(N).fill(0); 				//Preallocating
-	for(n=0;n<N;++n){					//for-loop implementation following definition
+	y=Array(N).fill(0); 			//Preallocating
+	for(n=0;n<N;++n){			//for-loop implementation following definition
 		for(k=0;k<N;++k){
 			if(k>n) break;
 			y[n] += x1[k]*x2[n-k];
@@ -37,10 +37,10 @@ function conv(x1, x2){
 //CORRELATION
 function xcross(x1, x2){
 	//returns the cross-correlation of the input arrays					
-	x=zeroPad(x1,flip(x2)); 			//Zero-padding and index-reversing
+	x=zeroPad(x1,flip(x2)); 		//Zero-padding and index-reversing
 	x1=x[0]; x2=x[1]; N=x[0].length;	
-	y=Array(N).fill(0); 				//Preallocating
-	for(n=0;n<N;++n){					//for-loop implementation following definition
+	y=Array(N).fill(0); 			//Preallocating
+	for(n=0;n<N;++n){			//for-loop implementation following definition
 		for(k=0;k<N;++k){
 			if(k>n) break;
 			y[n] += x1[k]*x2[n-k];
@@ -56,9 +56,9 @@ function rect(x, width=1, shift=0){
 	y=Array(N).fill(0);
 	for(i=0;i<x.length;++i){
 		delta=Math.abs((x[i]-shift)/width);
-		if 		(delta > 1/2) 	{y[i]=0;}
+		if 	(delta > 1/2) 	{y[i]=0;}
 		else if (delta == 1/2) 	{y[i]=1/2;}
-		else 					{y[i]=1;}
+		else 			{y[i]=1;}
 	}
 	return y;
 }
@@ -70,7 +70,7 @@ function tri(x, width=1, shift=0){
 	y=Array(N).fill(0);
 	for(i=0;i<x.length;++i){
 		delta=(x[i]-shift)/width;
-		if 		(Math.abs(delta) > 1/2) 		{y[i]=0;}
+		if 	(Math.abs(delta) > 1/2) 	{y[i]=0;}
 		else if (delta >= 0 && delta <= 1/2) 	{y[i]=1-2*(x[i]-shift)/width;}
 		else if (delta < 0 && delta >= -1/2)	{y[i]=1+2*(x[i]-shift)/width;}
 	}
@@ -79,38 +79,37 @@ function tri(x, width=1, shift=0){
 
 //STEP FUNCTION
 function step(x, shift=0) {
-    //returns the step function of the input array x, centered on shift
-    N=x.length;
+    /	/returns the step function of the input array x, centered on shift
+    	N=x.length;
 	y=Array(N).fill(0);
 	for(i=0;i<x.length;++i){
 		delta=x[i]-shift;
 		if (delta >= 0) {y[i]=1;}
-		else 			{y[i]=0;}
+		else 		{y[i]=0;}
 	}
 	return y;
 }
 
 //SINC FUNCTION
 function sinc(x, width=1, shift=0) {
-    //returns the sinc function of the input array x
+    	//returns the sinc function of the input array x
 	N=x.length;
 	y=Array(N).fill(0);
 	for(i=0;i<x.length;++i){
 		delta=(x[i]-shift)/width;
 		if (delta == 0) {y[i]=1;}
-		else 			{y[i]=Math.sin(delta)/delta;}
+		else 		{y[i]=Math.sin(delta)/delta;}
 	}
 	return y;
 }
 
 //NORMALIZED GAUSSIAN FUNCTION
 function gaussian(x, vari=1, expect=0) {
-    //returns the gaussian-normalized function of the input array x, with
-    //expectation expect, and variance vari
+	//returns the gaussian-normalized function of the input array x, with
+	//expectation expect, and variance vari
 	N=x.length;
 	y=Array(N).fill(0);
-	for(i=0;i<N;++i){
+	for(i=0;i<N;++i)
 		y[i]=Math.exp(-Math.pow((x[i]-expect),2)/(2*vari))/(Math.sqrt(2*Math.PI*vari));
-	}
-    return y;
+	return y;
 }
