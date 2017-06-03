@@ -56,9 +56,9 @@ function rect(x, width=1, shift=0){
 	y=Array(N).fill(0);
 	for(i=0;i<x.length;++i){
 		delta=Math.abs((x[i]-shift)/width);
-		if 		(delta > 1/2) 	{y[i]=0;}
+		if 	(delta > 1/2) 	{y[i]=0;}
 		else if (delta == 1/2) 	{y[i]=1/2;}
-		else 					{y[i]=1;}
+		else 			{y[i]=1;}
 	}
 	return y;
 }
