@@ -35,7 +35,7 @@ function conv(x1, x2){
 }
 
 //CORRELATION
-function xcross(x1, x2){
+function xcorr(x1, x2){
 	//returns the cross-correlation of the input arrays					
 	x=zeroPad(x1,flip(x2)); 		//Zero-padding and index-reversing
 	x1=x[0]; x2=x[1]; N=x[0].length;	
