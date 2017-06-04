@@ -74,7 +74,7 @@ function tri(x, width=1, shift=0){
         else if (delta >= 0 && delta <= 1/2)    {y[i]=1-2*(x[i]-shift)/width;}
         else if (delta < 0 && delta >= -1/2)    {y[i]=1+2*(x[i]-shift)/width;}
 	}
-	return y;
+    return y;
 }
 
 //STEP FUNCTION
