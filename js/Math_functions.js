@@ -1,4 +1,3 @@
-//Author: Nicola Giaconi
 
 //ZERO_PADDING
 function zeroPad(x1, x2){
