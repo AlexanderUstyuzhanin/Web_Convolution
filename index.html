@@ -10,6 +10,10 @@
     <script type="text/javascript" src="js/main.js"></script>
     <script src="js/audioConv.js"></script>
     <link rel="stylesheet" href="css/style.css">
+    <!--    Imports from anthony-->
+    <link rel="stylesheet" type="text/css" href="css/jsxgraph.css" />
+    <script type="text/javascript" src="js/jsxgraphcore.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/plot_and_functions.js"></script>
 </head>
 
 <body>
@@ -22,27 +26,58 @@
 
         <div class="tab-content">
             <div id="tab1" class="tab active">
-                <h2>This segment is for convolution on a graph</h2>
-                <h3>Some instructions here.</h3>
-                <!-- Comment -->
-                <form>
-                    <fieldset>
-                        <canvas id="canvas" width="502" height="108"></canvas>
-                        <legend>Signals</legend>
-                        <p>
-                            <label> a1 </label>
-                            <input type="text"
-                            id="myOffset1"
-                            value="" />
-                        </p>
-                        <p>
-                            <label> a2 </label>
-                            <input type="text"
-                            id="myOffset2"
-                            value="" />
-                        </p>
-                    </fieldset>
-                </form>
+                <div id ="space" class ="space" > </div>
+
+<div id ="boxGroup" class="boxGroup">
+
+    <div id="jxgbox" class="jxgbox" style="width:600px; height:300px" ></div>
+            <script type="text/javascript">
+                var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-3, 2, 3, -1], axis:true});
+                d = brd.create('slider',[[1,1.5],[2.5,1.5],[-3,0,3]], {name:'SHIFT', snapWidth:0.5});
+
+            </script>
+     <div  style="width:600px; height:20px" ></div>
+     <div id="jxgbox2" class="jxgbox" style="width:600px; height:300px" ></div>
+        <script type="text/javascript">
+           var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {boundingbox: [-3, 10, 3, -1], axis:true});
+           start(brd,brd2, d);
+        </script>
+ </div>
+<div id ="formField" class="formField" align="top" >
+
+    <form>
+       <fieldset>
+          <legend>Action Area</legend>
+          <p>
+             <label>Select Function 1</label>
+             <select id = "functionList1" onchange="plot1(brd)">
+               <option value = "1">Rectangle</option>
+               <option value = "2">Triangle</option>
+               <option value = "3">Gaussian</option>
+               <option value = "4">Sinc</option>
+             </select>
+          </p>
+          <p>
+             <label>Select Function 2</label>
+             <select id = "functionList2" onchange="plot2(brd, d)">
+               <option value = "1">Triangle</option>
+               <option value = "2">Rectangle</option>
+               <option value = "3">Gaussian</option>
+               <option value = "4">Sinc</option>
+             </select>
+          </p>
+          <p>
+              <button id="convoBtn" onclick="doConvo(brd2); return false;" >
+                  Convolution
+              </button>
+              <button id="corrBtn" onclick="doCorrelation(brd2); return false;" >
+                  AutoCorrelation
+              </button>
+          </p>
+
+       </fieldset>
+    </form>
+</div>
             </div>
 
             <div id="tab2" class="tab">
