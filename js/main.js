@@ -39,15 +39,17 @@ function gaussian(t, a = 1) {
 
 function fun1(x) { return rect(x,-2); }
 function fun2(x) { return tri(x,1); }
+function userFun(x) { return evaluateCurrentUserDefinedFunctionAtValue(x); }
 
 
 function draw() {
     var canvas = document.getElementById("canvas");
     if (null == canvas || !canvas.getContext) return;
-
+	
     canvas.width = 700;
     canvas.height = 300;
-
+	// context.clearRect(0, 0, canvas.width, canvas.height); // clear for redrawing
+	
     var axes = {}, ctx = canvas.getContext("2d");
     axes.x0 = .5 + .5 * canvas.width;  // x0 pixels from left to x=0
     axes.y0 = .5 + .5 * canvas.height; // y0 pixels from top to y=0
@@ -57,10 +59,13 @@ function draw() {
     showAxes(ctx, axes);
     funGraph(ctx, axes, fun1, "rgb(11,153,11)", 1);
     funGraph(ctx, axes, fun2, "rgb(66,44,255)", 2);
+    funGraph(ctx, axes, userFun, "rgb(0,0,0)", 3);
+	
+	return false;
 }
 
 function funGraph(ctx, axes, func, color, thick) {
-    var xx, yy, dx = 0.001, x0 = axes.x0, y0 = axes.y0, scale = axes.scale;
+    var xx, yy, dx = 1, x0 = axes.x0, y0 = axes.y0, scale = axes.scale;
     var iMax = Math.round((ctx.canvas.width - x0) / dx);
     var iMin = axes.doNegativeX ? Math.round(-x0 / dx) : 0;
     ctx.beginPath();
@@ -68,7 +73,8 @@ function funGraph(ctx, axes, func, color, thick) {
     ctx.strokeStyle = color;
 
     for (var i = iMin; i <= iMax; i++) {
-        xx = dx * i; yy = scale * func(xx / scale);
+        xx = dx * i;
+		yy = scale * func(xx / scale);
         if (i == iMin) ctx.moveTo(x0 + xx, y0 - yy);
         else ctx.lineTo(x0 + xx, y0 - yy);
     }
@@ -88,8 +94,9 @@ function showAxes(ctx, axes) {
 }
 
 function main(){
-  draw();
-  audioConv();
+	parseMathExpr();
+	draw();
+	audioConv();
 }
 
 window.onload = main;

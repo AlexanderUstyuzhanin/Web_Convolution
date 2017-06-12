@@ -1,12 +1,27 @@
 ﻿<!DOCTYPE html>
 
-
 <html>
 <head>
     <meta charset="utf-8" />
     <title>CONVOLUTION DEMONSTRATOR & MORE</title>
+	
+	<!-- Libraries -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			extensions: ["tex2jax.js"],
+			jax: ["input/TeX", "output/HTML-CSS"],
+			tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+		});
+	</script>
+	<script type="text/javascript" async
+		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+	</script>
+	<script type="text/javascript" src="js/lib/math.min.js"></script>
+	
+	<!-- Custom scripts -->
     <script type="text/javascript" src="js/main.js"></script>
-    <script src="js/audioConv.js"></script>
+    <script type="text/javascript" src="js/audioConv.js"></script>
+    <script type="text/javascript" src="js/udf.js"></script>
 </head>
 
 <body>
@@ -14,31 +29,48 @@
     <h1>This is a web-based convolution demonstrator.</h1>
     <h2>Some comment about convolution here!</h2>
     <h3>Some instructions here.</h3>
-    <!-- Comment -->
+
+    <!-- Visualization -->
     <form>
         <fieldset>
             <canvas id="canvas" width="502" height="108"></canvas>
             <legend>Signals</legend>
             <p>
-                <label> a1 </label>
+                <label> Offset #1 </label>
                 <input type="text"
                        id="myOffset1"
                        value="" />
             </p>
             <p>
-                <label> a2 </label>
+                <label> Offset #2 </label>
                 <input type="text"
                        id="myOffset2"
                        value="" />
             </p>
         </fieldset>
     </form>
+	<button name="btnRedraw" onclick="return draw()">Redraw</button>
   </div>
-
+  
+	<!-- User defined functions -->
+	<div id="divUDF">
+		<p>
+			<label>Your function </label>
+			<input type="text" id="txtUserExpression" value="x^2 + 5*x" /> <br> <br>
+			<label>Evaluate at </label> 
+			<input type="text" id="txtEvalPoint" value="0" /> <br> <br>
+			<button name="btnParse" onclick="return parseMathExpr()">Parse expression</button>
+			<label>Result </label>
+			<input type="text" id="txtEvalRes" value="N/A" /> <br> <br>
+		</p>
+	</div>
+	<div id="divTexExpr">Your expression: ${}$</div>
+	
+	<!-- Audio convolution -->
   <div class="audioConv">
     <h1>Audio convolution</h1>
     <p>Choose a file from your computer to try:
-      <input type="file" id="files" name="files[]" type = "audio" />
+	  <input type="file" id="files" name="files[]" type = "audio" />
       </p>
       <p>Input sound:</p>
       <audio id="inputSound" controls></audio>
