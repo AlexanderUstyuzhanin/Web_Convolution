@@ -39,7 +39,7 @@ function gaussian(t, a = 1) {
 
 function fun1(x) { return rect(x,-2); }
 function fun2(x) { return tri(x,1); }
-function userFun(x) { return evaluateCurrentUserDefinedFunctionAtValue(x); }
+// function userFun(x) { return evaluateCurrentUserDefinedFunctionAtValue(x); }
 
 
 function draw() {
@@ -59,7 +59,7 @@ function draw() {
     showAxes(ctx, axes);
     funGraph(ctx, axes, fun1, "rgb(11,153,11)", 1);
     funGraph(ctx, axes, fun2, "rgb(66,44,255)", 2);
-    funGraph(ctx, axes, userFun, "rgb(0,0,0)", 3);
+    // funGraph(ctx, axes, userFun, "rgb(0,0,0)", 3);
 	
 	return false;
 }
@@ -94,7 +94,7 @@ function showAxes(ctx, axes) {
 }
 
 function main(){
-	parseMathExpr();
+	// parseMathExpr();
 	draw();
 	audioConv();
 }
