@@ -125,8 +125,8 @@
                     <div id="jxgbox" class="jxgbox" style="width:600px; height:300px" ></div>
 
                     <script type="text/javascript">
-                    // The upper board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
-                    var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-4, 2, 4, -1], axis:true});
+						// The upper board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
+						var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-4, 2, 4, -1], axis:true});
                     </script>
 
                     <div  style="width:600px; height:20px" ></div>   <!-- small space between the boards -->
@@ -134,13 +134,11 @@
                     <div id="jxgbox2" class="jxgbox" style="width:600px; height:300px" ></div>
 
                     <script type="text/javascript">
-                    // The lower board goes from -8 to 8 on the X-axis and -1 to 2 on the Y-axis
-                    var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {boundingbox: [-8, 2, 8, -1], axis:true});
-
-                    // Plot 2 functions (rect() and tri()) as start up case on the upper board
-                    generateSamplePoints(); // generate sample points for the 2 functions in the upper graph
-                    start(brd,brd2); // plot pre-selected functions on start-up
-
+						// The lower board goes from -8 to 8 on the X-axis and -1 to 2 on the Y-axis
+						var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {boundingbox: [-8, 2, 8, -1], axis:true});
+						// Plot 2 functions (rect() and tri()) as start up case on the upper board
+						generateSamplePoints(); // generate sample points for the 2 functions in the upper graph
+						start(brd,brd2); // plot pre-selected functions on start-up
                     </script>
                 </div>
             </div>
