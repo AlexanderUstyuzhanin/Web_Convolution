@@ -97,6 +97,23 @@
                             </p>
 
                         </fieldset>
+						
+						<!-- User defined functions -->
+						<fieldset>
+							<legend>User-defined function</legend>
+							<div id="divUDF">
+								<p>
+									<label>Your function </label>
+									<input type="text" id="txtUserExpression" value="x^2 + 5*x" /> <br> <br>
+									<label>Evaluate at </label> 
+									<input type="text" id="txtEvalPoint" value="0" /> <br> <br>
+									<button name="btnParse" onclick="return parseMathExpr()">Parse expression</button> <br> <br>
+									<label>Result </label>
+									<input type="text" id="txtEvalRes" value="N/A" /> <br> <br>
+								</p>
+							</div>
+							<div id="divTexExpr">Your expression: ${}$</div>
+						</fieldset>
                     </form>
 
                 </div>
