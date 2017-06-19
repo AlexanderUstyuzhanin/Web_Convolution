@@ -1,3 +1,8 @@
+// File	  :	udf.js
+// Author :	Alexander Ustyuzhanin
+// HAW Hamburg, CJ1, SS2017
+// User-defined functions for Web Convolution project
+ 
 var userDefinedExpression;
 
 function parseMathExpr() {
@@ -18,7 +23,7 @@ function parseMathExpr() {
 	var input = [ 0, 1 ];
 	var output = evaluateCurrentUserDefinedFunction(input);
 	
-	draw(); // call for redrawing
+	plotUDF(brd); // call for (re)drawing
 	
 	return false; // prevent page reload
 }
