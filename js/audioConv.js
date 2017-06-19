@@ -97,6 +97,9 @@ function audioConv(){
             case 'slinky':
             loadAudioPreset('/music%20samples/slinky_ir.wav');
             break;
+            case 'centreStalls'
+            loadAudioPreset('/music%20samples/ir_centre_stalls.wav');
+            break;
             default:
             alert('preset selected');
         }
