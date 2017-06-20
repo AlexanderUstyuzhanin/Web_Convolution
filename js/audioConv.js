@@ -13,7 +13,6 @@ function audioConv(){
     var convolver = audioCtx.createConvolver();
     var audioPreset = document.getElementById('audioPreset');
     var irPreset = document.getElementById('irPreset');
-    // var fileReader = new FileReader;
 
     function handleFileSelect(evt) {
         var files = evt.target.files; // FileList object
@@ -34,7 +33,6 @@ function audioConv(){
         inputSound.src = URL.createObjectURL(this.files[0]);
 
         outputSound.src = inputSound.src;
-        // source.connect(audioCtx.destination);
     }
 
     function handleImResFileSelect(evt){
@@ -42,10 +40,6 @@ function audioConv(){
         var impulseResponseSound = document.getElementById('impulseResponse');
         impulseResponseSound.src = URL.createObjectURL(this.files[0]);
         var files = evt.target.files;
-        //var response = audioCtx.createMediaElementSource(impulseResponseSound);
-        // var myAudio = document.querySelector('#inputSound2');
-
-        // var imResponse = document.querySelector('#impulseResponse');
 
         var fileReader = new FileReader;
         fileReader.readAsArrayBuffer(this.files[0]);
@@ -110,10 +104,16 @@ function audioConv(){
         convolver.connect(audioCtx.destination);
     }
 
+    //pauseOutput event needed to remove trailing sound due to convolution
+    // function pauseOutput(evt){
+    //     convolver.disconnect();
+    // }
+
 
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
     document.getElementById('iFiles').addEventListener('change', handleImResFileSelect, false);
     document.getElementById('outputSound').addEventListener('play', playOutput, false);
+    // document.getElementById('outputSound').addEventListener('pause', pauseOutput, false);
     irPreset.addEventListener('change', onIrPresetSelect, false);
     audioPreset.addEventListener('change', onAudioSelect, false);
     //document.getElementById('irPreset').onchange = onIrPresetSelect;
