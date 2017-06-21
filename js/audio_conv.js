@@ -11,6 +11,8 @@ function audioConv(){
     var output;
     var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     var convolver = audioCtx.createConvolver();
+    var audioPreset = document.getElementById('audioPreset');
+    var irPreset = document.getElementById('irPreset');
 
     function handleFileSelect(evt) {
         var files = evt.target.files; // FileList object
@@ -31,7 +33,6 @@ function audioConv(){
         inputSound.src = URL.createObjectURL(this.files[0]);
 
         outputSound.src = inputSound.src;
-        //source.connect(audioCtx.destination);
     }
 
     function handleImResFileSelect(evt){
@@ -39,13 +40,9 @@ function audioConv(){
         var impulseResponseSound = document.getElementById('impulseResponse');
         impulseResponseSound.src = URL.createObjectURL(this.files[0]);
         var files = evt.target.files;
-        //var response = audioCtx.createMediaElementSource(impulseResponseSound);
-        // var myAudio = document.querySelector('#inputSound2');
 
-        var imResponse = document.querySelector('#impulseResponse');
         var fileReader = new FileReader;
         fileReader.readAsArrayBuffer(this.files[0]);
-
         fileReader.onload = function(){
             var arrayBuffer = this.result;
             audioCtx.decodeAudioData(arrayBuffer, function(buffer) {
@@ -54,8 +51,52 @@ function audioConv(){
         }
     }
 
+    function loadAudioPreset(audioURL){
+        var audioBuffer;
+        var ajaxRequest = new XMLHttpRequest();
+
+        ajaxRequest.open('GET', audioURL, true);
+        ajaxRequest.responseType = 'arraybuffer';
+
+        ajaxRequest.onload = function(e) {
+            var audioData = ajaxRequest.response;
+            audioCtx.decodeAudioData(audioData, function(buffer) {
+                audioBuffer = buffer;
+                convolver.buffer = audioBuffer;
+            }, function(e){"Error with decoding audio data" + e.err});
+        }
+        ajaxRequest.send();
+    }
+
+    function onAudioSelect(evt){
+        var selectedPreset = audioPreset.value;
+        switch (selectedPreset) {
+            case 'theForce':
+            outputSound.src = inputSound.src = document.getElementById('theForceAudio').src;
+            break;
+            case 'chime':
+            outputSound.src = inputSound.src = 'music/chime.mp3';
+            break;
+            default:
+            alert('preset selected');
+        }
+    }
+
     function onIrPresetSelect(evt){
-        alert("selected");
+        var selectedPreset = irPreset.value;
+        switch (selectedPreset) {
+            case 'carpark':
+            loadAudioPreset('music/carpark_balloon_ir_stereo_24bit_44100.wav');
+            break;
+            case 'slinky':
+            loadAudioPreset('music/slinky_ir.wav');
+            break;
+            case 'centreStalls':
+            loadAudioPreset('music/ir_centre_stalls.wav');
+            break;
+            default:
+            alert('preset selected');
+        }
     }
 
     function playOutput(evt){
@@ -63,10 +104,18 @@ function audioConv(){
         convolver.connect(audioCtx.destination);
     }
 
+    //pauseOutput event needed to remove trailing sound due to convolution
+    // function pauseOutput(evt){
+    //     convolver.disconnect();
+    // }
+
+
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
     document.getElementById('iFiles').addEventListener('change', handleImResFileSelect, false);
     document.getElementById('outputSound').addEventListener('play', playOutput, false);
-    document.getElementById('irPreset').addEventListener('change', onIrPresetSelect, false);
+    // document.getElementById('outputSound').addEventListener('pause', pauseOutput, false);
+    irPreset.addEventListener('change', onIrPresetSelect, false);
+    audioPreset.addEventListener('change', onAudioSelect, false);
     //document.getElementById('irPreset').onchange = onIrPresetSelect;
 
     var outputSound = document.getElementById('outputSound');
