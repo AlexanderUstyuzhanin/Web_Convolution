@@ -51,7 +51,8 @@ function audioConv(){
         }
     }
 
-    function loadAudioPreset(audioURL){
+    function loadIRPreset(audioURL){
+        document.getElementById('impulseResponse').src = audioURL;
         var audioBuffer;
         var ajaxRequest = new XMLHttpRequest();
 
@@ -72,7 +73,7 @@ function audioConv(){
         var selectedPreset = audioPreset.value;
         switch (selectedPreset) {
             case 'theForce':
-            outputSound.src = inputSound.src = document.getElementById('theForceAudio').src;
+            outputSound.src = inputSound.src = 'music/force.mp3';
             break;
             case 'chime':
             outputSound.src = inputSound.src = 'music/chime.mp3';
@@ -86,13 +87,13 @@ function audioConv(){
         var selectedPreset = irPreset.value;
         switch (selectedPreset) {
             case 'carpark':
-            loadAudioPreset('music/carpark_balloon_ir_stereo_24bit_44100.wav');
+            loadIRPreset('music/carpark_balloon_ir_stereo_24bit_44100.wav');
             break;
             case 'slinky':
-            loadAudioPreset('music/slinky_ir.wav');
+            loadIRPreset('music/slinky_ir.wav');
             break;
             case 'centreStalls':
-            loadAudioPreset('music/ir_centre_stalls.wav');
+            loadIRPreset('music/ir_centre_stalls.wav');
             break;
             default:
             alert('preset selected');
