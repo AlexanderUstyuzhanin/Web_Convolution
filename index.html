@@ -3,19 +3,37 @@
 
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>CONVOLUTION DEMONSTRATOR & MORE</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta charset="utf-8"/>
+    <title>Graphical Convolution Demonstrator & More</title>
+	
+	<!-- JS Libraries -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			extensions: ["tex2jax.js"],
+			jax: ["input/TeX", "output/HTML-CSS"],
+			tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+		});
+	</script>
+	<script type="text/javascript" async
+		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+	</script>
+	<script type="text/javascript" src="js/libs/math.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/libs/jsxgraphcore.js" charset="utf-8"></script>
+	
+	<!-- Custom JS Scripts -->
     <script type="text/javascript" src="js/style.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
-    <script src="js/audioConv.js"></script>
-    <link rel="stylesheet" href="css/style.css">
-    <!--    Imports from anthony-->
-    <link rel="stylesheet" type="text/css" href="css/visualization.css" />
-    <link rel="stylesheet" type="text/css" href="css/jsxgraph.css" />
-    <script type="text/javascript" src="js/jsxgraphcore.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/audio_conv.js"></script>
     <script type="text/javascript" src="js/plots.js"></script>
-    <script type="text/javascript" src="js/Math_functions.js"></script>
+    <script type="text/javascript" src="js/math_functions.js"></script>
+    <script type="text/javascript" src="js/udf.js"></script>
+	
+	<!-- Cascading Style Sheets -->
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jsxgraph.css"/>
+    <link rel="stylesheet" type="text/css" href="css/visualization.css"/>
+	
 </head>
 
 <body>
@@ -47,14 +65,16 @@
                                     <option value = "5">Step</option>
                                 </select><br>
 
-                                Function 1 Width: <input type="text" id="F1_width" size="4" value="1" onchange="plot1(brd)" /><br>
-                                Function 1 Shift  :  <input type="text" id="F1_shift" size="4" value="0" onchange="plot1(brd)" /><br>
+                                Function 1 Width: <input type="text" id="F1_width" 
+									size="4" value="1" onchange="plot1(brd)" /><br>
+                                Function 1 Shift: <input type="text" id="F1_shift" 
+									size="4" value="0" onchange="plot1(brd)" /><br>
                             </p>
 
                             <p>
                                 <label>Select Function 2:</label>
 
-                                <select id = "functionList2" onchange="plot2(brd)">
+                                <select id = "functionList2" onchange = "plot2(brd)">
                                     <option value = "1">Triangle</option>
                                     <option value = "2">Rectangle</option>
                                     <option value = "3">Gaussian</option>
@@ -62,8 +82,10 @@
                                     <option value = "5">Step</option>
                                 </select><br>
 
-                                Function 2 Width: <input type="text" id="F2_width" size="4" value="1" onchange="plot2(brd)" /><br>
-                                Function 2  Shift  :  <input type="text" id="F2_shift" size="4" value="0" onchange="plot2(brd)" /><br>
+                                Function 2 Width: <input type="text" id="F2_width" 
+									size="4" value="1" onchange="plot2(brd)" /><br>
+                                Function 2 Shift: <input type="text" id="F2_shift"
+									size="4" value="0" onchange="plot2(brd)" /><br>
                             </p>
 
                             <p>
@@ -76,10 +98,27 @@
                             </p>
 
                         </fieldset>
+						
+						<!-- User defined functions -->
+						<fieldset>
+							<legend>User-defined function</legend>
+							<div id="divUDF">
+								<p>
+									<label>Your function </label>
+									<input type="text" id="txtUserExpression" value="0.3*(x^2 + 5*x)" /> <br> <br>
+									<label>Evaluate at </label> 
+									<input type="text" id="txtEvalPoint" value="0" /> <br> <br>
+									<button name="btnParse" onclick="return parseMathExpr()">Parse expression</button> <br> <br>
+									<label>Result </label>
+									<input type="text" id="txtEvalRes" value="N/A" /> <br> <br>
+								</p>
+							</div>
+							<div id="divTexExpr">Your expression: ${}$</div>
+						</fieldset>
                     </form>
 
                 </div>
-                <!-- User input area ends --------------------------------------------------------------------------------------------------------------- -->
+                <!-- User input area ends ------------------------------------------------------------------------>
 
                 <!-- Create two JSXGRAPH boards to hold all the plots -->
                 <div id ="boxGroup" class="boxGroup">
@@ -87,8 +126,8 @@
                     <div id="jxgbox" class="jxgbox" style="width:600px; height:300px" ></div>
 
                     <script type="text/javascript">
-                    // The upper board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
-                    var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-4, 2, 4, -1], axis:true});
+						// The upper board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
+						var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-4, 2, 4, -1], axis:true});
                     </script>
 
                     <div  style="width:600px; height:20px" ></div>   <!-- small space between the boards -->
@@ -96,17 +135,16 @@
                     <div id="jxgbox2" class="jxgbox" style="width:600px; height:300px" ></div>
 
                     <script type="text/javascript">
-                    // The lower board goes from -8 to 8 on the X-axis and -1 to 2 on the Y-axis
-                    var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {boundingbox: [-8, 2, 8, -1], axis:true});
-
-                    // Plot 2 functions (rect() and tri()) as start up case on the upper board
-                    generateSamplePoints(); // generate sample points for the 2 functions in the upper graph
-                    start(brd,brd2); // plot pre-selected functions on start-up
-
+						// The lower board goes from -8 to 8 on the X-axis and -1 to 2 on the Y-axis
+						var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {boundingbox: [-8, 2, 8, -1], axis:true});
+						// Plot 2 functions (rect() and tri()) as start up case on the upper board
+						generateSamplePoints(); // generate sample points for the 2 functions in the upper graph
+						start(brd,brd2); // plot pre-selected functions on start-up
                     </script>
                 </div>
             </div>
-
+			
+			<!-- Audio convolution stuff -->
             <div id="tab2" class="tab">
                 <h1>Audio convolution</h1>
                 <p>Select an audio example to try
@@ -134,13 +172,14 @@
                 </p>
                 <p>Impulse response:</p>
                 <audio id="impulseResponse" controls></audio>
+
                 <p>Result:</p>
                 <audio id="outputSound" controls></audio>
                 <output id="list"></output>
             </div>
-
-        </div>
-    </div>
+			<!-- Audio convolution stuff ends -->
+        </div> <!-- tab content -->
+    </div> <!-- tabs -->
 
 </body>
 </html>

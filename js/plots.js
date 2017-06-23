@@ -1,6 +1,7 @@
-
-//Author: ANTHONY OMIUNU
-
+// File	  :	plots.js
+// Author : Anthony Omiunu
+// HAW Hamburg, CJ1, SS2017
+// ?
 
 // Global Variables
 var signalArray1 =[];   // graph 1 Y-axis values for signal 1 (function 1)
@@ -49,8 +50,7 @@ function generateResultPoints(){
 
 // This function is called when the visualization tab is opened
 // It plots the rect() and tri() functions with default settings
-function start(brd,brd2){
-
+function start(brd, brd2){
     graph1 = brd.create('curve',[[0],[0]]);
     graph2 = brd.create('curve',[[0],[0]], {strokeColor:'#0fff00',strokeWidth:1.5});
     graph3 = brd2.create('curve',[[0],[0]], {strokeWidth:1.7});
@@ -87,7 +87,6 @@ function start(brd,brd2){
 // Replot function 1 graph on upper board if user makes
 // changes to the specification of function 2
 function plot1(brd){
-
     var signal = document.getElementById("functionList1").value; // get the position value of the function plot
 
     var widthTextObj = document.getElementById("F1_width");
@@ -137,13 +136,11 @@ function plot1(brd){
     };
 
     brd.update();
-
  }
 
 // Replot function 2 graph on upper board if user makes
 // changes to the specification of function 2
 function plot2(brd){
-
     var signal = document.getElementById("functionList2").value; // get the position value of the function plot
 
     var widthTextObj = document.getElementById("F2_width");
@@ -192,7 +189,16 @@ function plot2(brd){
     };
 
     brd.update();
+}
 
+// This function plots the currently evaluated user-defined function on the passed board 
+function plotUDF(board) {
+	var graphUDF = board.create('curve', [[0],[0]], {strokeColor:'#FF0000', strokeWidth:1.5}); // red
+	graphUDF.updateDataArray = function(){
+        this.dataX = samplePoints;
+        this.dataY = evaluateCurrentUserDefinedFunction(samplePoints);
+    };
+	board.update();
 }
 
 // Gets and plots the convolution values for the selected functions
