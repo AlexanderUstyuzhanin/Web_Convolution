@@ -3,53 +3,54 @@
 
 
 // Global Variables
-var signalArray1 =[];   // graph 1 Y-axis values for signal 1 (function 1)
-var signalArray2 =[];   // graph 2 Y-axis values for signal 2 (function 2)
-var signalArray3 =[];   // graph 3 Y-axis values from convolution or correlation result
-var samplePoints =[];   // X-axis values for signals 1 & 2
-var sliderSamplePoints = [];
+var signalArray1 =[];   	// graph 1 Y-axis values for signal 1 (function 1)
+var signalArray2 =[];   	// graph 2 Y-axis values for signal 2 (function 2)
+var signalArray3 =[];   	// graph 3 Y-axis values from convolution or correlation result
+var samplePoints =[];   	// X-axis values for signals 1 & 2
+var sliderSamplePoints = []; // slider dependent sample points 
 var samplePeriod = 1 / 128; // 128 samples per unit on the X-axis 
-var resultPoints =[];    // X-axis values for signals 3
-var widthSignal1;  // width of function 1 gotten from text box 
-var widthSignal2;   // width of function 2 gotten from text box 
-var shiftSignal1;   // shift of function 1 along the X-axis gotten from text box 
-var shiftSignal2;   // shift of function 2 along the X-axis gotten from text box 
-var convoCorr = -1; // 0 for convolution and 1 for correlation
-var s; // slider variable
-var flipSignalArray2;
+var resultPoints =[];   	 // X-axis values for signals 3
+var widthSignal1;  			// width of function 1 gotten from text box 
+var widthSignal2;   		// width of function 2 gotten from text box 
+var shiftSignal1;   		// shift of function 1 along the X-axis gotten from text box 
+var shiftSignal2;   		// shift of function 2 along the X-axis gotten from text box 
+var convoCorr = -1; 		// 0 for convolution and 1 for correlation
+var s; 			            // slider variable
+var multiplier;             // zoom factor
 
 // Results from convolution and correlation need to be scaled down 
 // by a factor of the sampling frequency = 1 / samplePeriod
 function scaleResult(){
     for(i=0; i < signalArray3.length; ++i){
-        signalArray3[i] = signalArray3[i] * samplePeriod * 2;
+        signalArray3[i] = signalArray3[i] * samplePeriod * 2*multiplier;
     }
 }
 
 // Generate Graphs 1&2 X-axis array
 function generateSamplePoints(leftBound, rightBound){
-    //console.log(leftBound);
+	
 	var x = 0;
-	samplePoints.length = Math.round((rightBound - leftBound) / samplePeriod);
-	t = leftBound;
+	multiplier = rightBound / 4;
+	samplePoints.length = Math.round((4*rightBound - 4*leftBound) / multiplier /samplePeriod);
+	t = 4*leftBound;
 	for (x = 0; x < samplePoints.length; x++ ) {
         samplePoints[x] = t;
-        t = t + samplePeriod;
-       // x = x + 1;
+        t = t + samplePeriod*multiplier;
+       
     }
-	//console.log(samplePoints);
+	
 }
 
 // Generate Graph 3 X-axis array
 function generateResultPoints(){
     var N = signalArray3.length;
-    var t_range = N*samplePeriod; // get the required range of the X-axis
+    var t_range = N*samplePeriod*multiplier; // get the required range of the X-axis
     var t_out =[];
     var t_start = -1*t_range/2, t_end = t_range/2; // define the starting and ending point for the X-axis
     
     for(t = t_start ; t < t_end;){
         t_out.push(t);
-        t = t + samplePeriod;
+        t = t + samplePeriod*multiplier;
     }
     
     resultPoints = t_out;
@@ -95,9 +96,9 @@ function start(brd,brd2){
 }
 
 // Replot function 1 graph on upper board if user makes 
-// changes to the specification of function 2
+// changes to the specification of function 1
 function plot1(brd){
-
+	
     var signal = document.getElementById("functionList1").value; // get the position value of the function plot
 
     var widthTextObj = document.getElementById("F1_width");
@@ -109,7 +110,7 @@ function plot1(brd){
         widthTextObj.value = ''+ widthSignal1+''; // put the previous value in the text box
     
     }
-    else if(widthTextObj.value <= 0){
+    else if(widthTextObj.value <= 0){ // width must be greater than 0
     	alert('Width field for function 1 must be greater than 0');
         widthTextObj.value = ''+ widthSignal1+''; // put the previous value in the text box
     }    
@@ -159,7 +160,7 @@ function plot1(brd){
 // Replot function 2 graph on upper board if user makes 
 // changes to the specification of function 2
 function plot2(brd){
-
+	
     var signal = document.getElementById("functionList2").value; // get the position value of the function plot
 
     var widthTextObj = document.getElementById("F2_width"); 
@@ -170,7 +171,7 @@ function plot2(brd){
         alert('Width field for function 2 cannot be empty');
         widthTextObj.value = ''+ widthSignal2+''; // put the previous value in the text box
     }
-    else if(widthTextObj.value <= 0){
+    else if(widthTextObj.value <= 0){  // width must be greater than 0
     	alert('Width field for function 2 must be greater than 0');
         widthTextObj.value = ''+ widthSignal1+''; // put the previous value in the text box
     }    
@@ -251,32 +252,42 @@ function doCorrelation(brd2){
 
 function reDrawSignal2(){
 	
+	resizeBoard(); 
+	
 	graph2.updateDataArray = function(){
-		//flipSignalArray2 = flip(signalArray2);
-		genSliderSamplePoints();
+		for (x = 0; x < samplePoints.length; x++ ) {
+			Q = shiftSignal2 - s.Value();
+	        sliderSamplePoints[x] =  samplePoints[x] - Q;
+		}
 		this.dataX = sliderSamplePoints;
 		this.dataY = signalArray2;
 	};
-	brd.update();
 	
+	brd.update();	
 }
  
-function genSliderSamplePoints(){
+// resize the board to ensure that function graphs 1 and 2 do not overlap
+function resizeBoard(){
     //console.log(leftBound);
 	var x = 0;
-	
 	coords = brd.getBoundingBox();
-	newShift = coords[0];
-	//newShift = shiftSignal1 - (widthSignal1/2 + widthSignal2/2 + 1);
-	//console.log(samplePoints);
+	currentLeftBound = coords[0];
+
+	// value that ensures that function 2 does not overlap function 1
+	maxStartingPoint = shiftSignal1 - (widthSignal1/2 + widthSignal2/2 + 1);
 	
-	s.setMax(-1*newShift);
-	s.setMin(newShift);
-	//console.log(s.max + ' ' + s.min);
 	
-	for (x = 0; x < samplePoints.length; x++ ) {
-		Q = shiftSignal2 - s.Value();
-        sliderSamplePoints[x] =  samplePoints[x] - Q;
+	//zoom out until the 2 functions do not overlap
+	while(maxStartingPoint < currentLeftBound){ 
+		
+		brd.zoomOut();
+		coords = brd.getBoundingBox();
+		currentLeftBound = coords[0];
+		
 	}
+	
+	s.setMax(-1*currentLeftBound); // set slider upper limit
+	s.setMin(currentLeftBound);	   // set slider lower limit	
+	
 	
 }
