@@ -291,3 +291,13 @@ function resizeBoard(){
 	
 	
 }
+
+// This function plots the currently evaluated user-defined function on the passed board 
+function plotUDF(board) {
+	var graphUDF = board.create('curve', [[0],[0]], {strokeColor:'#FF0000', strokeWidth:1.5}); // red
+	graphUDF.updateDataArray = function(){
+		 this.dataX = samplePoints;
+		 this.dataY = evaluateCurrentUserDefinedFunction(samplePoints);
+	 };
+	board.update();
+}
