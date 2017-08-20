@@ -15,14 +15,18 @@ var widthSignal2;   		// width of function 2 gotten from text box
 var shiftSignal1;   		// shift of function 1 along the X-axis gotten from text box 
 var shiftSignal2;   		// shift of function 2 along the X-axis gotten from text box 
 var convoCorr = -1; 		// 0 for convolution and 1 for correlation
-var s; 			            // slider variable
-var multiplier;             // zoom factor
+var s; 			// slider variable
+var pnt;		// moving red point 
+var multiplier; // zoom factor
+var sliderSnapWidth  = 0.05; // slider step
+var sliderLeftCoord;    // X, Y coordinate of left border of slider
+var sliderRightCoord;	// X, Y coordinate of right border of slider
 
 // Results from convolution and correlation need to be scaled down 
 // by a factor of the sampling frequency = 1 / samplePeriod
 function scaleResult(){
     for(i=0; i < signalArray3.length; ++i){
-        signalArray3[i] = signalArray3[i] * samplePeriod * 2*multiplier;
+        signalArray3[i] = signalArray3[i] * samplePeriod * multiplier;
     }
 }
 
@@ -60,11 +64,15 @@ function generateResultPoints(){
 // It plots the rect() and tri() functions with default settings
 function start(brd,brd2){
 	brd1 = brd;
-	s = brd.create('slider',[[1,1.5],[3,1.5],[0,0,6]], {name:'s',snapWidth:0.2});
+	
+	s = brd.create('slider',[[1,1.5],[3,1.5],[0,0,6]], {name:'s',snapWidth:0.05});
     graph1 = brd.create('curve',[[0],[0]]); 
     graph2 = brd.create('curve',[[0],[0]], {strokeColor:'#0fff00',strokeWidth:1.5}); 
     graph3 = brd2.create('curve',[[0],[0]], {strokeWidth:1.7});
-
+    pnt = brd2.create('point',[100,0], {name: ''});
+    
+    sliderLeftCoord = [1,1.5];
+    sliderRightCoord = [3,1.5];
     
     graph1.updateDataArray = function(){ 
         var yAxisValues;
@@ -93,6 +101,7 @@ function start(brd,brd2){
 
     brd.update(); // refresh the upper board with latest data
     
+    pnt.moveTo([100,0]);
 }
 
 // Replot function 1 graph on upper board if user makes 
@@ -154,6 +163,9 @@ function plot1(brd){
     };
 
     brd.update();
+    
+    pnt.moveTo([100,0]); // take red point out of sight
+	
     plot2(brd);
  }
 
@@ -213,7 +225,8 @@ function plot2(brd){
     };
 
     brd.update();
-
+    
+    pnt.moveTo([100,0]); // take red point out of sight
 }
 
 // Gets and plots the convolution values for the selected functions
@@ -224,12 +237,15 @@ function doConvo(brd2){
         signalArray3 = conv(signalArray1 , signalArray2);
         scaleResult();
         
-        generateResultPoints(); // X-axis points for graph 3
+        generateResultPoints(); 	// X-axis points for graph 3
         this.dataX = resultPoints;  // X axis values for graph 2 on the upper board
         this.dataY = signalArray3;  // Y axis values for graph 2 on the upper board
         
     };
     brd2.update();
+    
+    pnt.moveTo([100,0]); // take red point out of sight
+    
     plot2(brd);
 }
 
@@ -246,26 +262,53 @@ function doCorrelation(brd2){
         this.dataY = signalArray3;
         
     };
+    
     brd2.update();
+    
+    pnt.moveTo([100,0]);
+    
     plot2(brd);
 }
 
 function reDrawSignal2(){
-	
+	var arrayIndex;
 	resizeBoard(); 
 	
 	graph2.updateDataArray = function(){
 		for (x = 0; x < samplePoints.length; x++ ) {
 			Q = shiftSignal2 - s.Value();
-	        sliderSamplePoints[x] =  samplePoints[x] - Q;
+			if (convoCorr == 0){ // convolution
+				sliderSamplePoints[x] =  samplePoints[x] - Q - (shiftSignal2);
+			}
+			else{ // Correlation
+				sliderSamplePoints[x] =  samplePoints[x] - Q + (shiftSignal2);
+			}
 		}
+		
+		if (s.Value() == s._smin){ // slider at lowest value
+    		arrayIndex = 3584; 
+    	}
+    	else if (s.Value() == s._smax){ // slider at highest value
+    		arrayIndex = 4608;
+    	}
+    	else 
+    	{
+    		maxNumberOfIntervals = (s._smax - s._smin) / sliderSnapWidth;
+    		currNumberOfIntervals = (s.Value() - s._smin) / sliderSnapWidth;
+    		intervalSize = (1024 / maxNumberOfIntervals);
+    		arrayIndex = Math.floor(intervalSize * currNumberOfIntervals) + 3584;
+    	}	
+    	
 		this.dataX = sliderSamplePoints;
 		this.dataY = signalArray2;
+		
+		pnt.moveTo([s.Value(), signalArray3[arrayIndex]]);
+		
 	};
-	
-	brd.update();	
+		
+	brd.update();
 }
- 
+
 // resize the board to ensure that function graphs 1 and 2 do not overlap
 function resizeBoard(){
     //console.log(leftBound);
@@ -274,7 +317,7 @@ function resizeBoard(){
 	currentLeftBound = coords[0];
 
 	// value that ensures that function 2 does not overlap function 1
-	maxStartingPoint = shiftSignal1 - (widthSignal1/2 + widthSignal2/2 + 1);
+	maxStartingPoint = shiftSignal1 - (widthSignal1/2 + widthSignal2/2 + 2);
 	
 	
 	//zoom out until the 2 functions do not overlap
@@ -289,5 +332,34 @@ function resizeBoard(){
 	s.setMax(-1*currentLeftBound); // set slider upper limit
 	s.setMin(currentLeftBound);	   // set slider lower limit	
 	
-	
 }
+
+// adjust slider size and position based on zoom factor
+function adjustSlider(){
+	if (currentCoordinateArray[2] < previousCoordinateArray[2]){ // zoom in
+	// set new slider coordinates
+		sliderLeftCoord[0] = sliderLeftCoord[0]/1.25;
+		sliderLeftCoord[1] = sliderLeftCoord[1]/1.15;
+		sliderRightCoord[0] = sliderRightCoord[0] / 1.25;
+		sliderRightCoord[1] = sliderRightCoord[1] / 1.15;
+	//-------------------------------------------------------
+	
+	// Update slider slider position
+		s.baseline.point1.setPosition(JXG.COORDS_BY_USER,[sliderLeftCoord[0],sliderLeftCoord[1]] );
+		s.baseline.point2.setPosition(JXG.COORDS_BY_USER,[sliderRightCoord[0],sliderRightCoord[1]] );
+	}
+	else if (currentCoordinateArray[2] > previousCoordinateArray[2]){ // zoom out
+	// set new slider coordinates
+		sliderLeftCoord[0] = sliderLeftCoord[0]*1.25;
+		sliderLeftCoord[1] = sliderLeftCoord[1]*1.15;
+		sliderRightCoord[0] = sliderRightCoord[0] * 1.25;
+		sliderRightCoord[1] = sliderRightCoord[1] * 1.15;
+	// ------------------------------------------------------
+	
+	// Update slider slider position
+		s.baseline.point1.setPosition(JXG.COORDS_BY_USER,[sliderLeftCoord[0],sliderLeftCoord[1]] );
+		s.baseline.point2.setPosition(JXG.COORDS_BY_USER,[sliderRightCoord[0],sliderRightCoord[1]] );
+	}
+	else{}
+	brd.fullUpdate();
+} 
