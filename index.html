@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 
 <html>
 <head>
@@ -129,17 +127,21 @@
 					<div id="jxgbox" class="jxgbox" style="width:600px; height:300px" ></div>
 					
 						<script type="text/javascript">
-							// The upper board goes from -4 to 4 on the X-axis and -0.3 to 2 on the Y-axis
-							var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-4, 2, 4, -0.3], axis:true});
+							// The upper board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
+							var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-4, 2, 4, -0.3], axis:true, 
+								showCopyright: false});
 							
 						</script>
 							
 					<div  style="width:600px; height:20px" ></div>   <!-- small space between the boards -->
 					
-					<div id="jxgbox2" class="jxgbox" style="width:600px; height:300px" ></div>   						
+					<div id="jxgbox2" class="jxgbox" style="width:600px; height:300px" ></div>   
+						
 						<script type="text/javascript">
-			
-							// The lower board goes from -8 to 8 on the X-axis and -1 to 2 on the Y-axis
+							
+							var previousCoordinateArray;
+							var currentCoordinateArray;
+							// The lower board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
 							var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {boundingbox: [-4, 2, 4, -1], axis:true, 
 								showCopyright: false}); 
 							//-----------------------------------------------------------------------------------
@@ -157,7 +159,28 @@
 								
 								plot1(brd);                   	
 								plot2(brd);
+								
+								adjustSlider(); 
+								
+								previousCoordinateArray = currentCoordinateArray;
 											
+							});
+							
+							brd2.on('boundingbox', function(){ 
+								
+								currentCoordinateArray = brd2.getBoundingBox(); // get upper board coordinates
+								brd.setBoundingBox(brd2.getBoundingBox());
+								
+								// generate sample points for the 2 functions in the upper graph
+								generateSamplePoints(currentCoordinateArray[0], currentCoordinateArray[2]); 
+								
+								plot1(brd);                   	
+								plot2(brd);
+								
+								adjustSlider(); 
+								
+								previousCoordinateArray = currentCoordinateArray;
+										
 							});
 								
 							// generate sample points for the 2 functions in the upper graph
@@ -165,9 +188,9 @@
 							
 							// Plot 2 functions (rect() and tri()) as start up case on the upper board
 							start(brd,brd2); // plot pre-selected functions on start-up
-					   
+						   
 						</script>
-					</div>
+				 </div> 
             </div>
 			
 			<!-- Audio convolution stuff -->
