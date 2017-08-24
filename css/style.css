@@ -1,18 +1,22 @@
 /*---Author: Adib---*/
 
 html {
-    height: 100%;
+    /* height: 100%; */
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
     background: #70bg32;
     background-repeat:no-repeat;
-    background: -webkit-linear-gradient( to top, blue, red);
-    background: -moz-linear-gradient( to left top, blue, red);
-    background: -ms-linear-gradient( to left top, blue, red);
-    background: -o-linear-gradient( to left top, blue, red);
-    background: linear-gradient( to left top, blue, red);
+    background: -webkit-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+    background: -moz-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+    background: -ms-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+    background: -o-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+    background: linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+}
+
+h1{
+    color: #00369D;
 }
 /*----- Tabs -----*/
 .tabs {
@@ -31,7 +35,7 @@ html {
 .tab-links li {
     margin:0px 5px;
     float:left;
-    width:45%;
+    width:49%;
     list-style:none;
 }
 
@@ -61,7 +65,7 @@ li.active a, li.active a:hover {
     padding:15px;
     border-radius:3px;
     box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
-    background:#fff;
+    /* background:#fff; */
 }
 
 .tab {
