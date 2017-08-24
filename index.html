@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 
 <html>
 <head>
@@ -96,6 +94,9 @@
                                 <button id="corrBtn" onclick="doCorrelation(brd2); return false;" >
                                     Correlation
                                 </button>
+								<button id="slideBtn" onclick="reDrawSignal2(); return false;" >
+									Slide Along
+								</button>
                             </p>
 
                         </fieldset>
@@ -122,27 +123,75 @@
                 <!-- User input area ends ------------------------------------------------------------------------>
 
                 <!-- Create two JSXGRAPH boards to hold all the plots -->
-                <div id ="boxGroup" class="boxGroup">
+				<div id ="boxGroup" class="boxGroup">
 
-                    <div id="jxgbox" class="jxgbox" style="width:600px; height:300px" ></div>
-
-                    <script type="text/javascript">
-						// The upper board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
-						var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-4, 2, 4, -1], axis:true});
-                    </script>
-
-                    <div  style="width:600px; height:20px" ></div>   <!-- small space between the boards -->
-
-                    <div id="jxgbox2" class="jxgbox" style="width:600px; height:300px" ></div>
-
-                    <script type="text/javascript">
-						// The lower board goes from -8 to 8 on the X-axis and -1 to 2 on the Y-axis
-						var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {boundingbox: [-8, 2, 8, -1], axis:true});
-						// Plot 2 functions (rect() and tri()) as start up case on the upper board
-						generateSamplePoints(); // generate sample points for the 2 functions in the upper graph
-						start(brd,brd2); // plot pre-selected functions on start-up
-                    </script>
-                </div>
+					<div id="jxgbox" class="jxgbox" style="width:600px; height:300px" ></div>
+					
+						<script type="text/javascript">
+							// The upper board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
+							var brd = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-4, 2, 4, -0.3], axis:true, 
+								showCopyright: false});
+							
+						</script>
+							
+					<div  style="width:600px; height:20px" ></div>   <!-- small space between the boards -->
+					
+					<div id="jxgbox2" class="jxgbox" style="width:600px; height:300px" ></div>   
+						
+						<script type="text/javascript">
+							
+							var previousCoordinateArray;
+							var currentCoordinateArray;
+							// The lower board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
+							var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {boundingbox: [-4, 2, 4, -1], axis:true, 
+								showCopyright: false}); 
+							//-----------------------------------------------------------------------------------
+												 
+							previousCoordinateArray = brd.getBoundingBox(); // get upper board coordinates
+							
+							// upper board zoom event handler
+							brd.on('boundingbox', function(){ 
+								
+								currentCoordinateArray = brd.getBoundingBox(); // get upper board coordinates
+								brd2.setBoundingBox(brd.getBoundingBox());
+								
+								// generate sample points for the 2 functions in the upper graph
+								generateSamplePoints(currentCoordinateArray[0], currentCoordinateArray[2]); 
+								
+								plot1(brd);                   	
+								plot2(brd);
+								
+								adjustSlider(); 
+								
+								previousCoordinateArray = currentCoordinateArray;
+											
+							});
+							
+							brd2.on('boundingbox', function(){ 
+								
+								currentCoordinateArray = brd2.getBoundingBox(); // get upper board coordinates
+								brd.setBoundingBox(brd2.getBoundingBox());
+								
+								// generate sample points for the 2 functions in the upper graph
+								generateSamplePoints(currentCoordinateArray[0], currentCoordinateArray[2]); 
+								
+								plot1(brd);                   	
+								plot2(brd);
+								
+								adjustSlider(); 
+								
+								previousCoordinateArray = currentCoordinateArray;
+										
+							});
+								
+							// generate sample points for the 2 functions in the upper graph
+							generateSamplePoints(previousCoordinateArray[0], previousCoordinateArray[2]); 
+							
+							// Plot 2 functions (rect() and tri()) as start up case on the upper board
+							start(brd,brd2); // plot pre-selected functions on start-up
+						   
+						</script>
+				 </div> 
             </div>
 			
 			<!-- Audio convolution stuff -->
