@@ -16,7 +16,16 @@ html {
 }
 
 h1{
+    padding:15px;
     color: #00369D;
+}
+
+#files, #iFiles{
+    padding: 1px;
+    background: #fff;
+}
+#haw_logo{
+    padding:15px;
 }
 /*----- Tabs -----*/
 .tabs {
