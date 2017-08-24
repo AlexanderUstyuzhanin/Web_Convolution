@@ -8,7 +8,7 @@ html {
     background-size: cover;
     background: #70bg32;
     background-repeat:no-repeat;
-    background: -webkit-linear-gradient( to left top, blue, red);
+    background: -webkit-linear-gradient( to top, blue, red);
     background: -moz-linear-gradient( to left top, blue, red);
     background: -ms-linear-gradient( to left top, blue, red);
     background: -o-linear-gradient( to left top, blue, red);
