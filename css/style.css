@@ -1,5 +1,32 @@
 /*---Author: Adib---*/
 
+html {
+    /* height: 100%; */
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background: #70bg32;
+    background-repeat:no-repeat;
+    background: -webkit-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+    background: -moz-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+    background: -ms-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+    background: -o-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+    background: linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+}
+
+h1{
+    padding:15px;
+    color: #00369D;
+}
+
+#files, #iFiles{
+    padding: 1px;
+    background: #fff;
+}
+#haw_logo{
+    padding:15px;
+}
 /*----- Tabs -----*/
 .tabs {
     width:100%;
@@ -17,7 +44,7 @@
 .tab-links li {
     margin:0px 5px;
     float:left;
-    width:45%;
+    width:49%;
     list-style:none;
 }
 
@@ -47,7 +74,7 @@ li.active a, li.active a:hover {
     padding:15px;
     border-radius:3px;
     box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
-    background:#fff;
+    /* background:#fff; */
 }
 
 .tab {
