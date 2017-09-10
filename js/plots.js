@@ -24,9 +24,11 @@ var sliderRightCoord;	// X, Y coordinate of right border of slider
 
 // Results from convolution and correlation need to be scaled down 
 // by a factor of the sampling frequency = 1 / samplePeriod
-function scaleResult(){
-    for(i=0; i < signalArray3.length; ++i){
-        signalArray3[i] = signalArray3[i] * samplePeriod * multiplier;
+// Made it so you have to pass the array to be scaled - the function has to be able to work
+// with different convolution output arrays, not just one. - AU
+function scaleResult(sigAr){
+    for(i=0; i < sigAr.length; ++i){
+        sigAr[i] = sigAr[i] * samplePeriod * multiplier;
     }
 }
 
@@ -46,19 +48,21 @@ function generateSamplePoints(leftBound, rightBound){
 }
 
 // Generate Graph 3 X-axis array
-function generateResultPoints(){
-    var N = signalArray3.length;
-    var t_range = N*samplePeriod*multiplier; // get the required range of the X-axis
-    var t_out =[];
+function generateResultPoints(pointAr, resAr){
+    var N = resAr.length;
+    var t_range = N * samplePeriod * multiplier; // get the required range of the X-axis
+    var t_out = [];
     var t_start = -1*t_range/2, t_end = t_range/2; // define the starting and ending point for the X-axis
     
     for(t = t_start ; t < t_end;){
         t_out.push(t);
-        t = t + samplePeriod*multiplier;
+        t = t + samplePeriod * multiplier;
     }
-    
-    resultPoints = t_out;
-};
+    // pointAr = t_out; // JavaScript is pass by value :(
+	for (i = 0; i < t_out.length; i++) { // TODO: fix this part, it's too lame
+		pointAr[i] = t_out[i];
+	}
+}
 
 // This function is called when the visualization tab is opened
 // It plots the rect() and tri() functions with default settings
@@ -233,13 +237,14 @@ function plot2(brd){
 function doConvo(brd2){
 	convoCorr = 0;
      graph3.updateDataArray = function(){ 
+        signalArray3 = conv(signalArray1, signalArray2);
+        scaleResult(signalArray3);
         
-        signalArray3 = conv(signalArray1 , signalArray2);
-        scaleResult();
-        
-        generateResultPoints(); 	// X-axis points for graph 3
+        generateResultPoints(resultPoints, signalArray3); 	// X-axis points for graph 3
         this.dataX = resultPoints;  // X axis values for graph 2 on the upper board
         this.dataY = signalArray3;  // Y axis values for graph 2 on the upper board
+		// console.log(resultPoints);
+		// console.log(signalArray3);
         
     };
     brd2.update();
@@ -256,9 +261,9 @@ function doCorrelation(brd2){
     graph3.updateDataArray = function(){ 
         
         signalArray3 = xcorr(signalArray1 , signalArray2);
-        scaleResult();
+        scaleResult(signalArray3);
         
-        generateResultPoints(); // X-axis points for graph 3
+        generateResultPoints(resultPoints, signalArray3); // X-axis points for graph 3
         this.dataX = resultPoints;
         this.dataY = signalArray3;
         
@@ -365,14 +370,3 @@ function adjustSlider(){
 	else{}
 	brd.fullUpdate();
 } 
-
-
-//This function plots the currently evaluated user-defined function on the passed board 
-function plotUDF(board) {
-	var graphUDF = board.create('curve', [[0],[0]], {strokeColor:'#FF0000', strokeWidth:1.5}); // red
-	graphUDF.updateDataArray = function(){
-		 this.dataX = samplePoints;
-		 this.dataY = evaluateCurrentUserDefinedFunction(samplePoints);
-	 };
-	board.update();
-}
