@@ -4,6 +4,10 @@
 // User-defined functions for Web Convolution project
  
 var userDefinedExpression;
+var udfTimes = [];
+var udfValues = [];
+var udfConvoResult = []; // array similar to signalArray3
+var udfCorrResult = []; // array similar to signalArray3
 
 function parseMathExpr() {
 	userDefinedExpression = document.getElementById("txtUserExpression").value; // get UDF from the text field
@@ -65,4 +69,55 @@ function evaluateCurrentUserDefinedFunctionAtValue(value) { // this assumes user
 	ret = math.eval(['x = ' + value, userDefinedExpression]); // [x, f(x)]
 
 	return ret[1]; // select f(x)
+}
+
+// This function plots the currently evaluated user-defined function on the passed board 
+function plotUDF(board) {
+	var graphUDF = board.create('curve', [[0],[0]], {strokeColor:'#FF0000', strokeWidth:1.5}); // red
+	graphUDF.updateDataArray = function(){
+		 this.dataX = samplePoints;
+		 udfValues = evaluateCurrentUserDefinedFunction(samplePoints);
+		 this.dataY = udfValues; 
+	};
+	 
+	board.update();
+}
+
+function convolveWithUDF(brd2){
+	convoCorr = 0;
+    graph3.updateDataArray = function(){ 
+        udfConvoResult = conv(signalArray1, udfValues); // for now convolving with the first selected function
+        scaleResult(udfConvoResult);
+        
+        generateResultPoints(udfTimes, udfConvoResult); 	// X-axis points for graph 3
+        this.dataX = udfTimes;  // X axis values for graph 2 on the upper board
+        this.dataY = udfConvoResult;  // Y axis values for graph 2 on the upper board
+        
+    };
+	
+    brd2.update();
+    pnt.moveTo([100,0]); // take red point out of sight
+	
+	return false;
+}
+
+// Gets and plots the correlation values for the selected functions
+function correlateWithUDF(brd2){
+	convoCorr = 1;
+    graph3.updateDataArray = function(){ 
+        
+        signalArray3 = xcorr(signalArray1 , signalArray2);
+        scaleResult();
+        
+        generateResultPoints(); // X-axis points for graph 3
+        this.dataX = resultPoints;
+        this.dataY = signalArray3;
+        
+    };
+    
+    brd2.update();
+    
+    pnt.moveTo([100,0]);
+    
+    plot2(brd);
 }

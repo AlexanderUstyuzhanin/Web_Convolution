@@ -107,10 +107,11 @@
 							<div id="divUDF">
 								<p>
 									<label>Your function </label>
-									<input type="text" id="txtUserExpression" value="0.3*(x^2 + 5*x)" /> <br> <br>
+									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" /> <br> <br>
 									<label>Evaluate at </label> 
 									<input type="text" id="txtEvalPoint" value="0" /> <br> <br>
 									<button name="btnParse" onclick="return parseMathExpr()">Parse expression</button> <br> <br>
+									<button name="btnConvolveUDF" onclick="return convolveWithUDF(brd2)">Convolve</button> <br> <br>
 									<label>Result </label>
 									<input type="text" id="txtEvalRes" value="N/A" /> <br> <br>
 								</p>
