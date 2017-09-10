@@ -105,19 +105,15 @@ function convolveWithUDF(brd2){
 function correlateWithUDF(brd2){
 	convoCorr = 1;
     graph3.updateDataArray = function(){ 
+        udfCorrResult = xcorr(signalArray1, udfValues);
+        scaleResult(udfCorrResult);
         
-        signalArray3 = xcorr(signalArray1 , signalArray2);
-        scaleResult();
-        
-        generateResultPoints(); // X-axis points for graph 3
-        this.dataX = resultPoints;
-        this.dataY = signalArray3;
-        
+        generateResultPoints(udfTimes, udfCorrResult); // X-axis points for graph 3
+        this.dataX = udfTimes;
+        this.dataY = udfCorrResult;
     };
-    
     brd2.update();
-    
     pnt.moveTo([100,0]);
     
-    plot2(brd);
+	return false;
 }
