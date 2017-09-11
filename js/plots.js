@@ -35,8 +35,8 @@ function generateSamplePoints(leftBound, rightBound){
 	
 	var x = 0;
 	multiplier = rightBound / 4;
-	samplePoints.length = Math.round((4*rightBound - 4*leftBound) / multiplier /samplePeriod);
-	t = 4*leftBound;
+	samplePoints.length = Math.round((2*rightBound - 2*leftBound) / multiplier /samplePeriod);
+	t = 2*leftBound;
 	for (x = 0; x < samplePoints.length; x++ ) {
         samplePoints[x] = t;
         t = t + samplePeriod*multiplier;
@@ -247,6 +247,7 @@ function doConvo(brd2){
     pnt.moveTo([100,0]); // take red point out of sight
     
     plot2(brd);
+    
 }
 
 // Gets and plots the correlation values for the selected functions
@@ -286,17 +287,17 @@ function reDrawSignal2(){
 		}
 		
 		if (s.Value() == s._smin){ // slider at lowest value
-    		arrayIndex = 3584; 
+    		arrayIndex = 1536; // size of convolution array divided 2 minus 512
     	}
     	else if (s.Value() == s._smax){ // slider at highest value
-    		arrayIndex = 4608;
+    		arrayIndex = 2560; // size of convolution array divided 2 plus 512
     	}
     	else 
     	{
     		maxNumberOfIntervals = (s._smax - s._smin) / sliderSnapWidth;
     		currNumberOfIntervals = (s.Value() - s._smin) / sliderSnapWidth;
     		intervalSize = (1024 / maxNumberOfIntervals);
-    		arrayIndex = Math.floor(intervalSize * currNumberOfIntervals) + 3584;
+    		arrayIndex = Math.floor(intervalSize * currNumberOfIntervals) + 1536;
     	}	
     	
 		this.dataX = sliderSamplePoints;
@@ -350,8 +351,8 @@ function adjustSlider(){
 	}
 	else if (currentCoordinateArray[2] > previousCoordinateArray[2]){ // zoom out
 	// set new slider coordinates
-		sliderLeftCoord[0] = sliderLeftCoord[0]*1.25;
-		sliderLeftCoord[1] = sliderLeftCoord[1]*1.15;
+		sliderLeftCoord[0] = sliderLeftCoord[0] * 1.25;
+		sliderLeftCoord[1] = sliderLeftCoord[1] * 1.15;
 		sliderRightCoord[0] = sliderRightCoord[0] * 1.25;
 		sliderRightCoord[1] = sliderRightCoord[1] * 1.15;
 	// ------------------------------------------------------
@@ -364,7 +365,8 @@ function adjustSlider(){
 	brd.fullUpdate();
 } 
 
-// This function plots the currently evaluated user-defined function on the passed board 
+
+//This function plots the currently evaluated user-defined function on the passed board 
 function plotUDF(board) {
 	var graphUDF = board.create('curve', [[0],[0]], {strokeColor:'#FF0000', strokeWidth:1.5}); // red
 	graphUDF.updateDataArray = function(){
