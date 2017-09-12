@@ -8,10 +8,14 @@ var udfTimes = [];
 var udfValues = [];
 var udfConvoResult = []; // array similar to signalArray3
 var udfCorrResult = []; // array similar to signalArray3
+var leftLimiter;
+var rightLimiter;
 
 function parseMathExpr() {
 	userDefinedExpression = document.getElementById("txtUserExpression").value; // get UDF from the text field
 	var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
+	leftLimiter = parseFloat( document.getElementById("txtLeftLimiter").value );
+	rightLimiter = parseFloat( document.getElementById("txtRightLimiter").value ); 
 	var udfDivId = "divUDF"; // HTML element for displaying the pretty function
 	var texDisplayFieldId = "divTexExpr"; // HTML element for displaying the pretty function
 	
@@ -26,6 +30,7 @@ function parseMathExpr() {
 	
 	var input = [ 0, 1 ];
 	var output = evaluateCurrentUserDefinedFunction(input);
+	udfValues = evaluateCurrentUserDefinedFunction(samplePoints);
 	
 	plotUDF(brd); // call for (re)drawing
 	
@@ -60,7 +65,8 @@ function evaluateCurrentUserDefinedFunction(values) { // this assumes user input
 		ret = math.eval(['x = ' + values[i], userDefinedExpression]); // [x, f(x)]
 		output[i] = ret[1]; // select f(x)
 	}
-	// console.log(output);
+	
+	// udfValues = output;
 	return output;
 }
 
@@ -76,10 +82,9 @@ function plotUDF(board) {
 	var graphUDF = board.create('curve', [[0],[0]], {strokeColor:'#FF0000', strokeWidth:1.5}); // red
 	graphUDF.updateDataArray = function(){
 		 this.dataX = samplePoints;
-		 udfValues = evaluateCurrentUserDefinedFunction(samplePoints);
 		 this.dataY = udfValues; 
 	};
-	 
+	
 	board.update();
 }
 
@@ -115,5 +120,37 @@ function correlateWithUDF(brd2){
     brd2.update();
     pnt.moveTo([100,0]);
     
+	return false;
+}
+
+function applyRectToUDF(left, right, samplePoints) {
+	var crossedLeft = false;
+	var leftIndex, rightIndex;
+	for (i = 0; i < samplePoints.length; i++) {
+		if (!crossedLeft) { if (samplePoints[i]>=left) {crossedLeft = true; leftIndex = i; } }
+		else { if (samplePoints[i]>=right) {rightIndex = i; break; } }
+	}
+	
+	for (i = 0; i < udfValues.length; i++) {
+		if (i < leftIndex) udfValues[i] = 0;
+		if (i > rightIndex) udfValues[i] = 0;
+	}
+	
+	plotUDF(brd);
+	
+	return false;
+}
+
+function applyStepToUDF(start, samplePoints) {
+	var startIndex;
+	for (i = 0; i < samplePoints.length; i++) {
+		if (samplePoints[i]>=start) {startIndex = i; break;}
+	}
+	for (i = 0; i < udfValues.length; i++) {
+		if (i < startIndex) udfValues[i] = 0;
+	}	
+	
+	plotUDF(brd);
+	
 	return false;
 }
