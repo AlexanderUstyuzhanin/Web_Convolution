@@ -107,17 +107,19 @@
 							<div id="divUDF">
 								<p>
 									<label>Your function </label>
-									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" /> <br> <br>
+									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" /> 
+									<button name="btnParse" onclick="return parseMathExpr()">refresh</button> <br> <br>
+									<label>For rect() and step() parameters</label>  <br>
+									<label>Leftmost point of rect / start of step</label> 
+									<input type="text" id="txtLeftLimiter" value="-1" />  <br> 
+									<label>Rightmost point of rect</label> <br>
+									<input type="text" id="txtRightLimiter" value="1" /> <br> <br>
+									<button name="btnConvolveUDF" onclick="return convolveWithUDF(brd2)">Convolve</button>
+									<button name="btnCorrelateUDF" onclick="return correlateWithUDF(brd2)">Correlate</button> <br> <br>
+									<button name="btnApplyRectUDF" onclick="return applyRectToUDF(leftLimiter, rightLimiter, samplePoints)">Apply rect</button>
+									<button name="btnApplyStepUDF" onclick="return applyStepToUDF(leftLimiter, samplePoints)">Apply step</button> <br> <br>
 									<label>Evaluate at </label> 
 									<input type="text" id="txtEvalPoint" value="0" /> <br> <br>
-									<label>For rect() and step() parameters</label> 
-									<input type="text" id="txtLeftLimiter" value="-1" />
-									<input type="text" id="txtRightLimiter" value="1" /> <br> <br>
-									<button name="btnParse" onclick="return parseMathExpr()">Parse expression</button> <br> <br>
-									<button name="btnConvolveUDF" onclick="return convolveWithUDF(brd2)">Convolve</button> <br> <br>
-									<button name="btnCorrelateUDF" onclick="return correlateWithUDF(brd2)">Correlate</button> <br> <br>
-									<button name="btnApplyRectUDF" onclick="return applyRectToUDF(leftLimiter, rightLimiter, samplePoints)">Apply rect</button> <br> <br>
-									<button name="btnApplyStepUDF" onclick="return applyStepToUDF(leftLimiter, samplePoints)">Apply step</button> <br> <br>
 									<label>Result </label>
 									<input type="text" id="txtEvalRes" value="N/A" /> <br> <br>
 								</p>
