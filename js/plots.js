@@ -333,6 +333,7 @@ function resizeBoard(){
 	s.setMax(-1*currentLeftBound); // set slider upper limit
 	s.setMin(currentLeftBound);	   // set slider lower limit	
 	
+	
 }
 
 // adjust slider size and position based on zoom factor
