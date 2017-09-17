@@ -113,3 +113,17 @@ function gaussian(x, vari=1, expect=0) {
     }
     return y;
 }
+
+//DIRAC FUNCTION
+function dirac(x, shift=0) {
+    //returns the dirac function of the input array x, centered on shift
+	var hit =0;
+    N=x.length;
+    y=Array(N).fill(0);
+    for(i=0;i<x.length;++i){
+    	
+		if(x[i]>=shift && hit==0)	{y[i]=1; ++hit;}
+		else			{y[i]=0;}
+    }
+    return y;
+}

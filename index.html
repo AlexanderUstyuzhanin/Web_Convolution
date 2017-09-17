@@ -62,6 +62,7 @@
                                     <option value = "3">Gaussian</option>
                                     <option value = "4">Sinc</option>
                                     <option value = "5">Step</option>
+									<option value = "6">Dirac</option>
                                 </select><br>
 
                                 Function 1 Width: <input type="text" id="F1_width" 
@@ -79,6 +80,7 @@
                                     <option value = "3">Gaussian</option>
                                     <option value = "4">Sinc</option>
                                     <option value = "5">Step</option>
+									<option value = "6">Dirac</option>
                                 </select><br>
 
                                 Function 2 Width: <input type="text" id="F2_width" 
@@ -94,10 +96,13 @@
                                 <button id="corrBtn" onclick="doCorrelation(brd2); return false;" >
                                     Correlation
                                 </button>
-								<button id="slideBtn" onclick="reDrawSignal2(); return false;" >
-									Slide Along
-								</button>
+								
                             </p>
+							<p id ="sliderParagraph">
+								<input type ="checkbox" id="slideCheckBox" onchange="reDrawSignal2(); return false;" />
+								<label for="slideCheckBox">Show Graphically</label>
+						   
+							</p>
 
                         </fieldset>
 						
