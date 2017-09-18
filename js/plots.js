@@ -26,27 +26,18 @@ var sliderLeftCoord;    // X, Y coordinate of left border of slider
 var sliderRightCoord;	// X, Y coordinate of right border of slider
 var overlap;
 
-
-
-// Results from convolution and correlation need to be scaled down 
-// by a factor of the sampling frequency = 1 / samplePeriod
-function scaleResult(){
-	var signal1 = document.getElementById("functionList1").value;
-	var signal2 = document.getElementById("functionList2").value;
-	if(signal1 != "6" && signal2 != "6"){
-	    for(i=0; i < signalArray3.length; ++i){
-	        signalArray3[i] = signalArray3[i] * samplePeriod * multiplier;
-	    }
-	}
-}
 // Results from convolution and correlation need to be scaled down 
 // by a factor of the sampling frequency = 1 / samplePeriod
 // Made it so you have to pass the array to be scaled - the function has to be able to work
 // with different convolution output arrays, not just one. - AU
 function scaleResult(sigAr){
-    for(i=0; i < sigAr.length; ++i){
-        sigAr[i] = sigAr[i] * samplePeriod * multiplier;
-    }
+	var signal1 = document.getElementById("functionList1").value;
+	var signal2 = document.getElementById("functionList2").value;
+	if(signal1 != "6" && signal2 != "6") {
+		for(i=0; i < sigAr.length; ++i){
+			sigAr[i] = sigAr[i] * samplePeriod * multiplier;
+		}
+	}
 }
 
 // Generate Graphs 1&2 X-axis array
