@@ -111,6 +111,8 @@
 							<legend>User-defined function</legend>
 							<div id="divUDF">
 								<p>
+									<input type ="checkbox" id="cbxUdfUsage" onchange="return parseMathExpr()" />
+									<label for="cbxUdfUsage">Use UDF instead of 1st function</label>
 									<label>Your function </label>
 									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" /> 
 									<button name="btnParse" onclick="return parseMathExpr()">refresh</button> <br> <br>
