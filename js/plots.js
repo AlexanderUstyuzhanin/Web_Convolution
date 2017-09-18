@@ -285,6 +285,8 @@ function plot2(brd){
     brd.update();
     
     pnt.moveTo([100,0]); // take red point out of sight
+	
+	console.log("Plotted successfully");
 }
 
 function resetArrows(){
@@ -314,7 +316,8 @@ function doConvo(brd2){
     pnt.moveTo([100,0]); // take red point out of sight
     
     plot2(brd);
-    
+	console.log("Did convolution");
+    return false;
 }
 
 // Gets and plots the correlation values for the selected functions
@@ -340,6 +343,8 @@ function doCorrelation(brd2){
     pnt.moveTo([100,0]);
     
     plot2(brd);
+	console.log("Did correlation");
+	return false;
 }
 
 function reDrawSignal2(){
@@ -459,3 +464,8 @@ function adjustSlider(){
 	else{}
 	brd.fullUpdate();
 } 
+
+function cancelGraphicalView(){
+	document.getElementById("sliderParagraph").classList.remove('greyed');
+	document.getElementById("slideCheckBox").checked = false;	
+}
