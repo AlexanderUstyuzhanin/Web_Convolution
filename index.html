@@ -63,7 +63,7 @@
                                     <option value = "4">Sinc</option>
                                     <option value = "5">Step</option>
 									<option value = "6">Dirac</option>
-									<option value = "7">User defined</option>
+									<option id = "opdlUDF" value = "7">User defined</option>
                                 </select><br>
 
                                 Function 1 Width: <input type="text" id="F1_width" 
@@ -112,24 +112,17 @@
 							<legend>User-defined function</legend>
 							<div id="divUDF">
 								<p>
-									<input type ="checkbox" id="cbxUdfUsage" onchange="return parseMathExpr()" />
+									<input type ="checkbox" id="cbxUdfUsage" onchange="return toggleUDF()" />
 									<label for="cbxUdfUsage">Use UDF instead of 1st function</label>
-									<label>Your function </label>
 									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" /> 
-									<button name="btnParse" onclick="return parseMathExpr()">refresh</button> <br> <br>
-									<label>For rect() and step() parameters</label>  <br>
-									<label>Leftmost point of rect / start of step</label> 
-									<input type="text" id="txtLeftLimiter" value="-1" />  <br> 
-									<label>Rightmost point of rect</label> <br>
-									<input type="text" id="txtRightLimiter" value="1" /> <br> <br>
-									<button name="btnConvolveUDF" onclick="return convolveWithUDF(brd2)">Convolve</button>
-									<button name="btnCorrelateUDF" onclick="return correlateWithUDF(brd2)">Correlate</button> <br> <br>
-									<button name="btnApplyRectUDF" onclick="return applyRectToUDF(leftLimiter, rightLimiter, samplePoints)">Apply rect</button>
-									<button name="btnApplyStepUDF" onclick="return applyStepToUDF(leftLimiter, samplePoints)">Apply step</button> <br> <br>
-									<label>Evaluate at </label> 
-									<input type="text" id="txtEvalPoint" value="0" /> <br> <br>
-									<label>Result </label>
-									<input type="text" id="txtEvalRes" value="N/A" /> <br> <br>
+									<label for="txtUserExpression">Your function: </label> <br><br>
+									<label for="cbxUdfRect">Limit UDF</label>
+									<input type ="checkbox" id="cbxUdfRect" onchange="return applyRectToUDF(leftLimiter, rightLimiter, samplePoints)" />
+									<input type="text" id="txtLeftLimiter" value="-1" />
+									<label for="txtLeftLimiter">Left limit</label> 
+									<label for="txtRightLimiter">Right limit</label> 
+									<input type="text" id="txtRightLimiter" value="1" />
+									<!-- <input type ="checkbox" id="cbxUdfStep" onchange="return applyStepToUDF(leftLimiter, samplePoints)" /> -->
 								</p>
 							</div>
 							<div id="divTexExpr">Your expression: ${}$</div>
@@ -206,7 +199,7 @@
 							
 							// Plot 2 functions (rect() and tri()) as start up case on the upper board
 							start(brd,brd2); // plot pre-selected functions on start-up
-						   
+						    onPageLoadUdf(); // TODO: move this to page load f-n 
 						</script>
 				 </div> 
             </div>

@@ -10,10 +10,22 @@ var udfConvoResult = []; // array similar to signalArray3
 var udfCorrResult = []; // array similar to signalArray3
 var leftLimiter;
 var rightLimiter;
+var isUdfDisabled = false;
+
+function onPageLoadUdf() {
+	toggleUDF();
+}
+
+function toggleUDF() {
+	isUdfDisabled = !isUdfDisabled; // toggle
+	opdlUDF.disabled = isUdfDisabled;
+	
+	return false;
+}
 
 function parseMathExpr() {
 	userDefinedExpression = document.getElementById("txtUserExpression").value; // get UDF from the text field
-	var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
+	// var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
 	leftLimiter = parseFloat( document.getElementById("txtLeftLimiter").value );
 	rightLimiter = parseFloat( document.getElementById("txtRightLimiter").value ); 
 	var udfDivId = "divUDF"; // HTML element for displaying the pretty function
@@ -22,10 +34,10 @@ function parseMathExpr() {
 	var node = math.parse(userDefinedExpression); // build expression tree - http://mathjs.org/docs/expressions/expression_trees.html
 	var code = node.compile(); // compile to JS code 
 	var texExpr = node.toTex(); // compile to LaTeX for printing
-	var scope = { x : eval_x };
-	var result = code.eval(scope); 
+	// var scope = { x : eval_x };
+	// var result = code.eval(scope); 
 	// updateUDTexExpression(texExpr);
-	document.getElementById("txtEvalRes").value = result;
+	// document.getElementById("txtEvalRes").value = result;
 	// displayTex(udfDivId, texDisplayFieldId, texExpr);
 	
 	var input = [ 0, 1 ];
