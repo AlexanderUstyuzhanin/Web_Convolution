@@ -32,7 +32,7 @@ function parseMathExpr() {
 	var output = evaluateCurrentUserDefinedFunction(input);
 	udfValues = evaluateCurrentUserDefinedFunction(samplePoints);
 	
-	plotUDF(brd); // call for (re)drawing
+	// plotUDF(brd); // call for (re)drawing
 	
 	return false; // prevent page reload
 }

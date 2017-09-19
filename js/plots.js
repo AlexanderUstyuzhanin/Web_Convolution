@@ -143,7 +143,6 @@ function plot1(brd){
     var shiftTextObj = document.getElementById("F1_shift");
     widthTextObj.disabled = false;
     
-    
     if(widthTextObj.value == '' && signal != "5"){  // if a value is required but none is provided 
         alert('Width field for function 1 cannot be empty');
         widthTextObj.value = ''+ widthSignal1+''; // put the previous value in the text box
@@ -196,7 +195,13 @@ function plot1(brd){
         	   widthTextObj.disabled = true;
                yAxisValues = dirac(samplePoints, shiftSignal1);              
                pntArrow1.moveTo([shiftSignal1, 0.95]);
-           } ;
+           } 
+		   else if (signal == "7") {
+			   // enable controls
+			   parseMathExpr();
+			   yAxisValues = udfValues;              
+			   pntArrow1.moveTo([100,0]);
+		   };
 
         this.dataX = samplePoints;  // X axis values for graph 2 on the upper board
         this.dataY = yAxisValues;   // Y axis values for graph 2 on the upper board
