@@ -18,6 +18,8 @@
 	<script type="text/javascript" src="js/libs/math.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="js/libs/jsxgraphcore.js" charset="utf-8"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	
 	<!-- Custom JS Scripts -->
     <script type="text/javascript" src="js/style.js"></script>
@@ -31,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <link rel="stylesheet" type="text/css" href="css/jsxgraph.css"/>
     <link rel="stylesheet" type="text/css" href="css/visualization.css"/>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	
 </head>
 
@@ -113,19 +116,40 @@
 							<div id="divUDF">
 								<p>
 									<input type ="checkbox" id="cbxUdfUsage" onchange="return toggleUDF()" />
-									<label for="cbxUdfUsage">Use UDF instead of 1st function</label>
-									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" /> 
+									<label for="cbxUdfUsage">Use UDF instead of 1st function</label> <br><br>
 									<label for="txtUserExpression">Your function: </label> <br><br>
-									<label for="cbxUdfRect">Limit UDF</label>
-									<input type ="checkbox" id="cbxUdfRect" onchange="return applyRectToUDF(leftLimiter, rightLimiter, samplePoints)" />
-									<input type="text" id="txtLeftLimiter" value="-1" />
-									<label for="txtLeftLimiter">Left limit</label> 
-									<label for="txtRightLimiter">Right limit</label> 
-									<input type="text" id="txtRightLimiter" value="1" />
+									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" /> <br><br>
+									<label for="cbxUdfRect">Limit UDF</label> 
+									<input type ="checkbox" id="cbxUdfRect" onchange=" updateUdfLimits(); return applyRectToUDF(leftLimiter, rightLimiter, samplePoints)" />
 									<!-- <input type ="checkbox" id="cbxUdfStep" onchange="return applyStepToUDF(leftLimiter, samplePoints)" /> -->
+									
+									<script>
+									  $( function() {
+										$( "#slider-range" ).slider({
+										  range: true,
+										  min: -5,
+										  max: 5,
+										  step: 0.1,
+										  values: [ -1, 1 ],
+										  slide: function( event, ui ) {
+											$( "#amount" ).val( ui.values[ 0 ] + " to " + ui.values[ 1 ] );
+											updateUdfLimits();
+											applyRectToUDF(leftLimiter, rightLimiter, samplePoints);
+										  }
+										});
+										$( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) +
+										  " to " + $( "#slider-range" ).slider( "values", 1 ) );
+									  } );
+									</script>
+									<p>
+										<label for="amount">Range:</label>
+										<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+									</p>
+									<div id="slider-range"></div>
+									
 								</p>
 							</div>
-							<div id="divTexExpr">Your expression: ${}$</div>
+							<!-- <div id="divTexExpr">Your expression: ${}$</div> -->
 						</fieldset>
                     </form>
 

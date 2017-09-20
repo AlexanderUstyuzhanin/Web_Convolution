@@ -197,10 +197,9 @@ function plot1(brd){
                pntArrow1.moveTo([shiftSignal1, 0.95]);
            } 
 		   else if (signal == "7") {
-			   // enable controls
-			   parseMathExpr();
 			   yAxisValues = udfValues;              
 			   pntArrow1.moveTo([100,0]);
+			   // console.log("Updated UDF array");
 		   };
 
         this.dataX = samplePoints;  // X axis values for graph 2 on the upper board
@@ -212,7 +211,7 @@ function plot1(brd){
     
     pnt.moveTo([100,0]); // take red point out of sight
 	
-    console.log(pntArrow1.X());
+    // console.log(pntArrow1.X());
     plot2(brd);
     
  }
@@ -430,9 +429,9 @@ function resizeBoard(){
 	}
 	
 	s.setMax(-1*currentLeftBound); // set slider upper limit
-	s.setMin(currentLeftBound);	   // set slider lower limit	
+	s.setMin(currentLeftBound);	   // set slider lower limit
 	
-	
+	// updateUdfSliderLimits(brd); // udf slider
 }
 
 // adjust slider size and position based on zoom factor
