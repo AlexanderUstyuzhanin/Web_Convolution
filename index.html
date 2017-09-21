@@ -118,9 +118,9 @@
 									<input type ="checkbox" id="cbxUdfUsage" onchange="return toggleUDF()" />
 									<label for="cbxUdfUsage">Use UDF instead of 1st function</label> <br><br>
 									<label for="txtUserExpression">Your function: </label> <br><br>
-									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" /> <br><br>
+									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" onchange="return updateUdfParsingReq()" /> <br><br>
 									<label for="cbxUdfRect">Limit UDF</label> 
-									<input type ="checkbox" id="cbxUdfRect" onchange=" updateUdfLimits(); return applyRectToUDF(leftLimiter, rightLimiter, samplePoints)" />
+									<input type ="checkbox" id="cbxUdfRect" onchange="return updateUdfLimits()" />
 									<!-- <input type ="checkbox" id="cbxUdfStep" onchange="return applyStepToUDF(leftLimiter, samplePoints)" /> -->
 									
 									<script>
@@ -134,7 +134,7 @@
 										  slide: function( event, ui ) {
 											$( "#amount" ).val( ui.values[ 0 ] + " to " + ui.values[ 1 ] );
 											updateUdfLimits();
-											applyRectToUDF(leftLimiter, rightLimiter, samplePoints);
+											<!-- applyRectToUDF(leftLimiter, rightLimiter, samplePoints); -->
 										  }
 										});
 										$( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) +

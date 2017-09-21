@@ -19,14 +19,19 @@ function onPageLoadUdf() {
 	opdlUDF.disabled = true;
 }
 
+function updateUdfParsingReq() {
+	udfNeedsParsing = true;
+}
+
 function toggleUDF() {
 	isUdfDisabled = !isUdfDisabled; // toggle
 	opdlUDF.disabled = isUdfDisabled;
 	if (!isUdfDisabled) { 
 		if (udfNeedsParsing) parseMathExpr();
-		document.getElementById("functionList1").value = "7";
-		plot1(brd);
 		
+		document.getElementById("functionList1").value = "7";
+		
+		plot1(brd);
 	}
 	
 	return false;
@@ -55,6 +60,7 @@ function parseMathExpr() {
 	udfOriginalValues = evaluateCurrentUserDefinedFunction(samplePoints);
 	udfValues = udfOriginalValues.slice();
 	// plotUDF(brd); // call for (re)drawing
+	udfNeedsParsing = false; // just parsed
 	
 	return false; // prevent page reload
 }
@@ -146,10 +152,18 @@ function correlateWithUDF(brd2){
 }
 
 function updateUdfLimits() {
-	// leftLimiter = parseFloat( document.getElementById("txtLeftLimiter").value );
-	// rightLimiter = parseFloat( document.getElementById("txtRightLimiter").value ); 
 	leftLimiter = $( "#slider-range" ).slider( "values", 0 );
 	rightLimiter = $( "#slider-range" ).slider( "values", 1 );
+	
+	if (document.getElementById("cbxUdfRect").checked) {
+		applyRectToUDF(leftLimiter, rightLimiter, samplePoints);
+	}
+	else {
+		udfValues = udfOriginalValues.slice();
+		plot1(brd);
+	}
+	
+	
 	// console.log("Updated udf limits");
 	return false;
 }
