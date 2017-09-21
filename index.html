@@ -59,7 +59,7 @@
                             <p>
                                 <label>Select Function 1:</label>
 
-                                <select id = "functionList1" onchange="plot1(brd)">
+                                <select id = "functionList1" onchange="checkUdfSelected(); plot1(brd);">
                                     <option value = "1">Rectangle</option>
                                     <option value = "2">Triangle</option>
                                     <option value = "3">Gaussian</option>
@@ -115,38 +115,42 @@
 							<legend>User-defined function</legend>
 							<div id="divUDF">
 								<p>
-									<input type ="checkbox" id="cbxUdfUsage" onchange="return toggleUDF()" />
-									<label for="cbxUdfUsage">Use UDF instead of 1st function</label> <br><br>
-									<label for="txtUserExpression">Your function: </label> <br><br>
-									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" onchange="return updateUdfParsingReq()" /> <br><br>
-									<label for="cbxUdfRect">Limit UDF</label> 
-									<input type ="checkbox" id="cbxUdfRect" onchange="return updateUdfLimits()" />
-									<!-- <input type ="checkbox" id="cbxUdfStep" onchange="return applyStepToUDF(leftLimiter, samplePoints)" /> -->
-									
-									<script>
-									  $( function() {
-										$( "#slider-range" ).slider({
-										  range: true,
-										  min: -5,
-										  max: 5,
-										  step: 0.1,
-										  values: [ -1, 1 ],
-										  slide: function( event, ui ) {
-											$( "#amount" ).val( ui.values[ 0 ] + " to " + ui.values[ 1 ] );
-											updateUdfLimits();
-											<!-- applyRectToUDF(leftLimiter, rightLimiter, samplePoints); -->
-										  }
-										});
-										$( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) +
-										  " to " + $( "#slider-range" ).slider( "values", 1 ) );
-									  } );
-									</script>
 									<p>
-										<label for="amount">Range:</label>
-										<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+										<!-- <input type ="checkbox" id="cbxUdfUsage" onchange="return toggleUDF()" /> -->
+										<!-- <label for="cbxUdfUsage">Use UDF instead of 1st function</label> <br><br> -->
+										<label for="txtUserExpression">Your function: </label> <br><br>
+										<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" onchange="return updateUdfParsingReq()" /> 
+										<button id="btnUpdateUdf" onclick="return parseMathExpr(); plot1(brd);" >Update</button>
 									</p>
-									<div id="slider-range"></div>
-									
+									<p>
+										<label for="cbxUdfRect">Limit UDF</label> 
+										<input type ="checkbox" id="cbxUdfRect" onchange="return updateUdfLimits()" />
+										<!-- <input type ="checkbox" id="cbxUdfStep" onchange="return applyStepToUDF(leftLimiter, samplePoints)" /> -->
+										
+										<script>
+										  $( function() {
+											$( "#slider-range" ).slider({
+											  range: true,
+											  min: -5,
+											  max: 5,
+											  step: 0.1,
+											  values: [ -1, 1 ],
+											  slide: function( event, ui ) {
+												$( "#amount" ).val( ui.values[ 0 ] + " to " + ui.values[ 1 ] );
+												updateUdfLimits();
+												<!-- applyRectToUDF(leftLimiter, rightLimiter, samplePoints); -->
+											  }
+											});
+											$( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) +
+											  " to " + $( "#slider-range" ).slider( "values", 1 ) );
+										  } );
+										</script>
+										<p>
+											<label for="amount">Range:</label>
+											<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+										</p>
+										<div id="slider-range"></div>
+									</p>
 								</p>
 							</div>
 							<!-- <div id="divTexExpr">Your expression: ${}$</div> -->

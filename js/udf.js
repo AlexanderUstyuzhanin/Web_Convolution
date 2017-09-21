@@ -12,29 +12,64 @@ var udfCorrResult = []; // array similar to signalArray3
 var leftLimiter;
 var rightLimiter;
 var isUdfDisabled = true;
-var udfNeedsParsing = true; // TODO - implement detection of text field change
+var udfNeedsParsing = true;
 
 function onPageLoadUdf() {
 	// toggleUDF();
-	opdlUDF.disabled = true;
+	// opdlUDF.disabled = true;
 }
 
 function updateUdfParsingReq() {
 	udfNeedsParsing = true;
+	document.getElementById("btnUpdateUdf").disabled = false;
 }
 
-function toggleUDF() {
-	isUdfDisabled = !isUdfDisabled; // toggle
-	opdlUDF.disabled = isUdfDisabled;
-	if (!isUdfDisabled) { 
-		if (udfNeedsParsing) parseMathExpr();
+function checkUdfSelected() {
+	var fl = document.getElementById("functionList1");
+	if (fl.value == 7) {
+		// toggleUDF();
+		activateUdf();
+	}
+	else {
+		deactivateUdf();
+	}
+}
+
+// function toggleUDF() {
+	// isUdfDisabled = !isUdfDisabled; // toggle
+	// opdlUDF.disabled = isUdfDisabled;
+	// if (!isUdfDisabled) { 
+		// if (udfNeedsParsing) parseMathExpr();
 		
-		document.getElementById("functionList1").value = "7";
+		// document.getElementById("functionList1").value = "7";
 		
+		// plot1(brd);
+	// }
+	// else {
+		
+	// }
+	
+	// return false;
+// }
+
+function activateUdf() {
+	if (isUdfDisabled) {
+		if (udfNeedsParsing) {
+			parseMathExpr();
+		}
+		document.getElementById("F1_width").disabled = true; // TODO - this doesn't work!
+		document.getElementById("F1_shift").disabled = true;
 		plot1(brd);
 	}
-	
-	return false;
+	isUdfDisabled = false;
+}
+
+function deactivateUdf() {
+	if (!isUdfDisabled) {
+		document.getElementById("F1_width").disabled = false;
+		document.getElementById("F1_shift").disabled = false;
+	}
+	isUdfDisabled = true;
 }
 
 function parseMathExpr() {
@@ -61,6 +96,8 @@ function parseMathExpr() {
 	udfValues = udfOriginalValues.slice();
 	// plotUDF(brd); // call for (re)drawing
 	udfNeedsParsing = false; // just parsed
+	document.getElementById("btnUpdateUdf").disabled = true;
+	plot1(brd);
 	
 	return false; // prevent page reload
 }
