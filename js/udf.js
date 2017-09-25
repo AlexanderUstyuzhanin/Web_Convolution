@@ -4,26 +4,100 @@
 // User-defined functions for Web Convolution project
  
 var userDefinedExpression;
+var udfTimes = [];
+var udfOriginalValues = []; // stores complete function for modfication
+var udfValues = [];
+var udfConvoResult = []; // array similar to signalArray3
+var udfCorrResult = []; // array similar to signalArray3
+var leftLimiter;
+var rightLimiter;
+var isUdfDisabled = true;
+var udfNeedsParsing = true;
+
+function onPageLoadUdf() {
+	// toggleUDF();
+	// opdlUDF.disabled = true;
+}
+
+function updateUdfParsingReq() {
+	udfNeedsParsing = true;
+	document.getElementById("btnUpdateUdf").disabled = false;
+}
+
+function checkUdfSelected() {
+	var fl = document.getElementById("functionList1");
+	if (fl.value == 7) {
+		// toggleUDF();
+		activateUdf();
+	}
+	else {
+		deactivateUdf();
+	}
+}
+
+// function toggleUDF() {
+	// isUdfDisabled = !isUdfDisabled; // toggle
+	// opdlUDF.disabled = isUdfDisabled;
+	// if (!isUdfDisabled) { 
+		// if (udfNeedsParsing) parseMathExpr();
+		
+		// document.getElementById("functionList1").value = "7";
+		
+		// plot1(brd);
+	// }
+	// else {
+		
+	// }
+	
+	// return false;
+// }
+
+function activateUdf() {
+	if (isUdfDisabled) {
+		if (udfNeedsParsing) {
+			parseMathExpr();
+		}
+		document.getElementById("F1_width").disabled = true; // TODO - this doesn't work!
+		document.getElementById("F1_shift").disabled = true;
+		plot1(brd);
+	}
+	isUdfDisabled = false;
+}
+
+function deactivateUdf() {
+	if (!isUdfDisabled) {
+		document.getElementById("F1_width").disabled = false;
+		document.getElementById("F1_shift").disabled = false;
+	}
+	isUdfDisabled = true;
+}
 
 function parseMathExpr() {
 	userDefinedExpression = document.getElementById("txtUserExpression").value; // get UDF from the text field
-	var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
+	// var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
+	// leftLimiter = parseFloat( document.getElementById("txtLeftLimiter").value );
+	// rightLimiter = parseFloat( document.getElementById("txtRightLimiter").value ); 
+	updateUdfLimits();
 	var udfDivId = "divUDF"; // HTML element for displaying the pretty function
 	var texDisplayFieldId = "divTexExpr"; // HTML element for displaying the pretty function
 	
 	var node = math.parse(userDefinedExpression); // build expression tree - http://mathjs.org/docs/expressions/expression_trees.html
 	var code = node.compile(); // compile to JS code 
 	var texExpr = node.toTex(); // compile to LaTeX for printing
-	var scope = { x : eval_x };
-	var result = code.eval(scope); 
+	// var scope = { x : eval_x };
+	// var result = code.eval(scope); 
 	// updateUDTexExpression(texExpr);
-	document.getElementById("txtEvalRes").value = result;
+	// document.getElementById("txtEvalRes").value = result;
 	// displayTex(udfDivId, texDisplayFieldId, texExpr);
 	
 	var input = [ 0, 1 ];
 	var output = evaluateCurrentUserDefinedFunction(input);
-	
-	plotUDF(brd); // call for (re)drawing
+	udfOriginalValues = evaluateCurrentUserDefinedFunction(samplePoints);
+	udfValues = udfOriginalValues.slice();
+	// plotUDF(brd); // call for (re)drawing
+	udfNeedsParsing = false; // just parsed
+	document.getElementById("btnUpdateUdf").disabled = true;
+	plot1(brd);
 	
 	return false; // prevent page reload
 }
@@ -56,7 +130,8 @@ function evaluateCurrentUserDefinedFunction(values) { // this assumes user input
 		ret = math.eval(['x = ' + values[i], userDefinedExpression]); // [x, f(x)]
 		output[i] = ret[1]; // select f(x)
 	}
-	// console.log(output);
+	
+	// udfValues = output;
 	return output;
 }
 
@@ -65,4 +140,115 @@ function evaluateCurrentUserDefinedFunctionAtValue(value) { // this assumes user
 	ret = math.eval(['x = ' + value, userDefinedExpression]); // [x, f(x)]
 
 	return ret[1]; // select f(x)
+}
+
+// This function plots the currently evaluated user-defined function on the passed board 
+function plotUDF(board) {
+	var graphUDF = board.create('curve', [[0],[0]], {strokeColor:'#FF0000', strokeWidth:1.5}); // red
+	graphUDF.updateDataArray = function(){
+		 this.dataX = samplePoints;
+		 this.dataY = udfValues; 
+	};
+	
+	board.update();
+}
+
+function convolveWithUDF(brd2){
+	convoCorr = 0;
+    graph3.updateDataArray = function(){ 
+        udfConvoResult = conv(signalArray1, udfValues); // for now convolving with the first selected function
+        scaleResult(udfConvoResult);
+        
+        generateResultPoints(udfTimes, udfConvoResult); 	// X-axis points for graph 3
+        this.dataX = udfTimes;  // X axis values for graph 2 on the upper board
+        this.dataY = udfConvoResult;  // Y axis values for graph 2 on the upper board
+        
+    };
+	
+    brd2.update();
+    pnt.moveTo([100,0]); // take red point out of sight
+	
+	return false;
+}
+
+// Gets and plots the correlation values for the selected functions
+function correlateWithUDF(brd2){
+	convoCorr = 1;
+    graph3.updateDataArray = function(){ 
+        udfCorrResult = xcorr(signalArray1, udfValues);
+        scaleResult(udfCorrResult);
+        
+        generateResultPoints(udfTimes, udfCorrResult); // X-axis points for graph 3
+        this.dataX = udfTimes;
+        this.dataY = udfCorrResult;
+    };
+    brd2.update();
+    pnt.moveTo([100,0]);
+    
+	return false;
+}
+
+function updateUdfLimits() {
+	leftLimiter = $( "#slider-range" ).slider( "values", 0 );
+	rightLimiter = $( "#slider-range" ).slider( "values", 1 );
+	
+	if (document.getElementById("cbxUdfRect").checked) {
+		applyRectToUDF(leftLimiter, rightLimiter, samplePoints);
+	}
+	else {
+		udfValues = udfOriginalValues.slice();
+		plot1(brd);
+	}
+	
+	
+	// console.log("Updated udf limits");
+	return false;
+}
+
+function applyRectToUDF(left, right, samplePoints) {
+	var crossedLeft = false;
+	var leftIndex, rightIndex;
+	udfValues = udfOriginalValues.slice();
+	for (i = 0; i < samplePoints.length; i++) {
+		if (!crossedLeft) { if (samplePoints[i]>=left) {crossedLeft = true; leftIndex = i; } }
+		else { if (samplePoints[i]>=right) {rightIndex = i; break; } }
+	}
+	
+	for (i = 0; i < udfValues.length; i++) {
+		if (i < leftIndex) udfValues[i] = 0;
+		if (i > rightIndex) udfValues[i] = 0;
+	}
+	
+	// plotUDF(brd);
+	plot1(brd);
+	
+	console.log("Modified UDF plot");
+	return false;
+}
+
+function applyStepToUDF(start, samplePoints) {
+	var startIndex;
+	for (i = 0; i < samplePoints.length; i++) {
+		if (samplePoints[i]>=start) {startIndex = i; break;}
+	}
+	for (i = 0; i < udfValues.length; i++) {
+		if (i < startIndex) udfValues[i] = 0;
+	}	
+	
+	// plotUDF(brd);
+	plot1(brd);
+	
+	return false;
+}
+
+function updateUdfSliderLimits(board) { // I know it's ugly, but it will have to do for now
+	leftLimiter = board.getBoundingBox()[0];
+	rightLimiter = -1*currentLeftBound;
+	
+	$('#slider-range').slider( "option", "min", leftLimiter );
+	$('#slider-range').slider( "option", "max", rightLimiter );
+	 
+	// console.log("Updated slider limits");
+	
+	return false;
 }
