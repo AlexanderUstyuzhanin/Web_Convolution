@@ -33,7 +33,7 @@ var overlap;
 function scaleResult(sigAr){
 	var signal1 = document.getElementById("functionList1").value;
 	var signal2 = document.getElementById("functionList2").value;
-	if(signal1 != "6" && signal2 != "6") {
+	if(signal1 != "6" && signal2 != "6" && signal1 != "8" ) {
 		for(i=0; i < sigAr.length; ++i){
 			sigAr[i] = sigAr[i] * samplePeriod * multiplier;
 		}
@@ -78,7 +78,7 @@ function start(brd,brd2){
 	brd1 = brd;
 	//document.getElementById("slideCheckBox").disabled = true;
 	document.getElementById("slideCheckBox").style.backgroundColor = '#ff0000';
-	s = brd.create('slider',[[1,1.5],[3,1.5],[0,0,6]], {name:'s',snapWidth:0.05});
+	s = brd.create('slider',[[1,1.5],[3,1.5],[0,0,6]], {name:'s',snapWidth:0.05,  withLabel: false});
     graph1 = brd.create('curve',[[0],[0]], {
 									        name:'s1',
 									        strokeColor: 'green'
@@ -90,7 +90,7 @@ function start(brd,brd2){
     											strokeWidth: 1.7
         									
         										}); 
-    graph3 = brd2.create('curve',[[0],[0]], {strokeWidth:1.7, fillColor: 'red', fillOpacity: 0.5});
+    graph3 = brd2.create('curve',[[0],[0]], {strokeWidth:1.7});
     //overlap = brd.create('curve', [[],[]], {fillColor: 'blue', fillOpacity: 0.4});
     pnt = brd2.create('point',[100,0], {name: ''});
     pntArrow2 = brd.create('point',[100,0.95], {name: '', face:'^', fillColor: 'blue', strokeColor: 'blue', size: 4 }); 
@@ -142,7 +142,8 @@ function plot1(brd){
     var widthTextObj = document.getElementById("F1_width");
     var shiftTextObj = document.getElementById("F1_shift");
     widthTextObj.disabled = false;
-    
+    shiftTextObj.disabled = false;
+	
     if(widthTextObj.value == '' && signal != "5"){  // if a value is required but none is provided 
         alert('Width field for function 1 cannot be empty');
         widthTextObj.value = ''+ widthSignal1+''; // put the previous value in the text box
@@ -170,28 +171,28 @@ function plot1(brd){
         var yAxisValues;
             if (signal == "1"){
                 yAxisValues = rect(samplePoints, widthSignal1, shiftSignal1);
-                pntArrow1.moveTo([100,0]);//resetArrows();
+                pntArrow1.moveTo([100,0]);
             }
             else if (signal == "2"){
                 yAxisValues = tri(samplePoints, widthSignal1, shiftSignal1);
-                pntArrow1.moveTo([100,0]);//resetArrows();
+                pntArrow1.moveTo([100,0]);
             }
             else if (signal == "3"){
                yAxisValues = gaussian(samplePoints, widthSignal1, shiftSignal1);
-               pntArrow1.moveTo([100,0]);//resetArrows();
+               pntArrow1.moveTo([100,0]);
             }
             else if (signal == "4"){
             	
                yAxisValues = sinc(samplePoints, widthSignal1, shiftSignal1);
-               pntArrow1.moveTo([100,0]);//resetArrows();
+               pntArrow1.moveTo([100,0]);
            }
            else if (signal == "5"){
                widthTextObj.disabled = true;
                yAxisValues = step(samplePoints, shiftSignal1);
-               pntArrow1.moveTo([100,0]);//resetArrows();
+               pntArrow1.moveTo([100,0]);
            }
            else if (signal == "6"){
-        	   //resetArrows();
+        	  
         	   widthTextObj.disabled = true;
                yAxisValues = dirac(samplePoints, shiftSignal1);              
                pntArrow1.moveTo([shiftSignal1, 0.95]);
@@ -200,10 +201,18 @@ function plot1(brd){
 			   yAxisValues = udfValues;              
 			   pntArrow1.moveTo([100,0]);
 			   // console.log("Updated UDF array");
+		   }
+		   else if (signal == "8"){
+        	   
+			   shiftTextObj.disabled = true;
+        	   widthTextObj.disabled = true;
+               yAxisValues = diracComb(samplePoints);              
+               pntArrow1.moveTo([100, 0]);
+			   
 		   };
 
-        this.dataX = samplePoints;  // X axis values for graph 2 on the upper board
-        this.dataY = yAxisValues;   // Y axis values for graph 2 on the upper board
+        this.dataX = samplePoints;  // X axis values for graph 1 on the upper board
+        this.dataY = yAxisValues;   // Y axis values for graph 1 on the upper board
         signalArray1 = yAxisValues; // save values for convolution or correlation in global
     };
     
