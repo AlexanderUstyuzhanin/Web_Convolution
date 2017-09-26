@@ -8,16 +8,21 @@ html {
     background-size: cover;
     background: #70bg32;
     background-repeat:no-repeat;
-    background: -webkit-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
-    background: -moz-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
-    background: -ms-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
-    background: -o-linear-gradient( to bottom, #B1C9E1, #FFFFFF);
-    background: linear-gradient( to bottom, #B1C9E1, #FFFFFF);
+    background: -webkit-linear-gradient( to bottom, #a0bedc, #FFFFFF); /* For Safari 5.1 to 6.0 */
+    background: -moz-linear-gradient( to bottom, #a0bedc, #FFFFFF); /* For Firefox 3.6 to 15 */
+    background: -o-linear-gradient( to bottom, #a0bedc, #FFFFFF); /* For Opera 11.1 to 12.0 */
+    background: linear-gradient( to bottom, #a0bedc, #FFFFFF); /* Standard syntax */    
 }
 
 h1{
-    padding:15px;
-    color: #00369D;
+    text-align: center;
+    margin:20px 50px;
+    padding:20px 50px;
+    vertical-align: bottom;
+    color: rgb(0, 60, 160);
+    font-family: "Open Sans";
+    /* -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em; */
 }
 
 #files, #iFiles{
@@ -25,62 +30,108 @@ h1{
     background: #fff;
 }
 #haw_logo{
-    padding:15px;
+    padding: 0px 15px;
+    float: left;
 }
+
+/* ------- From visualisation.css by Anthony ------*/
+/* .next {
+    float:right;
+    width: 300px;
+    padding: 10px;
+ }
+.space{
+    clear : none;
+    float : left;
+    position : relative;
+    width : 100px;
+    height : 50px;
+} */
+/* .boxGroup{
+    clear : none;
+    float : left;
+    position : relative;
+} */
+.jxgbox1{
+    clear : both;
+    float : none;
+    position : relative;
+    border-style: solid;
+    margin: 50px;
+    padding: 50px 60px;
+}
+.jxgbox2{
+    clear : both;
+    float : none;
+    position : relative;
+    margin: 50px;
+    padding: 50px 60px;
+}
+.formField{
+    clear : none;
+    float : left;
+    position : relative;
+    padding: 20px 60px;
+    width : 300px;
+    height : 400px;
+}
+
 /*----- Tabs -----*/
 .tabs {
-    width:100%;
-    display:inline-block;
+    width:90%;
+    display: inline-block;
+    /* margin: 0 0 -5px; */
+    border: 1px solid transparent;
+    
 }
-
-/*----- Tab Links -----*/
-/* Clearfix */
-.tab-links:after {
-    display:block;
-    clear:both;
-    content:'';
-}
-
-.tab-links li {
-    margin:0px 5px;
-    float:left;
-    width:49%;
-    list-style:none;
-}
-
-.tab-links a {
-    padding:12px 30%;
-    display:inline-block;
-    border-radius:3px 3px 0px 0px;
-    background:#7FB5DA;
-    font-size:16px;
-    font-weight:600;
-    color:#4c4c4c;
-    transition:all linear 0.15s;
-}
-
-.tab-links a:hover {
-    background:#a7cce5;
-    text-decoration:none;
-}
-
-li.active a, li.active a:hover {
-    background:#fff;
-    color:#4c4c4c;
-}
-
-/*----- Content of Tabs -----*/
-.tab-content {
-    padding:15px;
-    border-radius:3px;
-    box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
-    /* background:#fff; */
-}
-
-.tab {
-    display:none;
-}
-
-.tab.active {
-    display:block;
-}
+ 
+    /*----- Tab Links -----*/
+    /* Clearfix */
+    .tab-links:after {
+        display:block;
+        clear:both;
+        content:'';
+    }
+ 
+    .tab-links li {
+        margin:0px 5px;
+        float:left;
+        list-style:none;
+    }
+ 
+        .tab-links a {
+            padding:9px 15px;
+            display:inline-block;
+            border-radius:3px 3px 0px 0px;
+            background:#7FB5DA;
+            font-size:16px;
+            font-weight:600;
+            color:#4c4c4c;
+            transition:all linear 0.15s;
+        }
+ 
+        .tab-links a:hover {
+            background:#a7cce5;
+            text-decoration:none;
+        }
+ 
+    li.active a, li.active a:hover {
+        background:#fff;
+        color:#4c4c4c;
+    }
+ 
+    /*----- Content of Tabs -----*/
+    .tab-content {
+        padding:15px;
+        border-radius:5px;
+        box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
+        background:#fff;
+    }
+ 
+        .tab {
+            display:none;
+        }
+ 
+        .tab.active {
+            display:block;
+        }
