@@ -17,17 +17,27 @@ var shiftSignal2;   		// shift of function 2 along the X-axis gotten from text b
 var convoCorr = -1; 		// 0 for convolution and 1 for correlation
 var s; 			// slider variable
 var pnt;		// moving red point 
+var pntArrow2;
+var pntArrow1;
+var pntArrow3;
 var multiplier; // zoom factor
 var sliderSnapWidth  = 0.05; // slider step
 var sliderLeftCoord;    // X, Y coordinate of left border of slider
 var sliderRightCoord;	// X, Y coordinate of right border of slider
+var overlap;
 
 // Results from convolution and correlation need to be scaled down 
 // by a factor of the sampling frequency = 1 / samplePeriod
-function scaleResult(){
-    for(i=0; i < signalArray3.length; ++i){
-        signalArray3[i] = signalArray3[i] * samplePeriod * multiplier;
-    }
+// Made it so you have to pass the array to be scaled - the function has to be able to work
+// with different convolution output arrays, not just one. - AU
+function scaleResult(sigAr){
+	var signal1 = document.getElementById("functionList1").value;
+	var signal2 = document.getElementById("functionList2").value;
+	if(signal1 != "6" && signal2 != "6" && signal1 != "8" ) {
+		for(i=0; i < sigAr.length; ++i){
+			sigAr[i] = sigAr[i] * samplePeriod * multiplier;
+		}
+	}
 }
 
 // Generate Graphs 1&2 X-axis array
@@ -35,8 +45,8 @@ function generateSamplePoints(leftBound, rightBound){
 	
 	var x = 0;
 	multiplier = rightBound / 4;
-	samplePoints.length = Math.round((4*rightBound - 4*leftBound) / multiplier /samplePeriod);
-	t = 4*leftBound;
+	samplePoints.length = Math.round((2*rightBound - 2*leftBound) / multiplier /samplePeriod);
+	t = 2*leftBound;
 	for (x = 0; x < samplePoints.length; x++ ) {
         samplePoints[x] = t;
         t = t + samplePeriod*multiplier;
@@ -46,31 +56,47 @@ function generateSamplePoints(leftBound, rightBound){
 }
 
 // Generate Graph 3 X-axis array
-function generateResultPoints(){
-    var N = signalArray3.length;
-    var t_range = N*samplePeriod*multiplier; // get the required range of the X-axis
-    var t_out =[];
+function generateResultPoints(pointAr, resAr){
+    var N = resAr.length;
+    var t_range = N * samplePeriod * multiplier; // get the required range of the X-axis
+    var t_out = [];
     var t_start = -1*t_range/2, t_end = t_range/2; // define the starting and ending point for the X-axis
     
     for(t = t_start ; t < t_end;){
         t_out.push(t);
-        t = t + samplePeriod*multiplier;
+        t = t + samplePeriod * multiplier;
     }
-    
-    resultPoints = t_out;
-};
+    // pointAr = t_out; // JavaScript is pass by value :(
+	for (i = 0; i < t_out.length; i++) { // TODO: fix this part, it's too lame
+		pointAr[i] = t_out[i];
+	}
+}
 
 // This function is called when the visualization tab is opened
 // It plots the rect() and tri() functions with default settings
 function start(brd,brd2){
 	brd1 = brd;
-	
-	s = brd.create('slider',[[1,1.5],[3,1.5],[0,0,6]], {name:'s',snapWidth:0.05});
-    graph1 = brd.create('curve',[[0],[0]]); 
-    graph2 = brd.create('curve',[[0],[0]], {strokeColor:'#0fff00',strokeWidth:1.5}); 
+	//document.getElementById("slideCheckBox").disabled = true;
+	document.getElementById("slideCheckBox").style.backgroundColor = '#ff0000';
+	s = brd.create('slider',[[1,1.5],[3,1.5],[0,0,6]], {name:'s',snapWidth:0.05,  withLabel: false});
+    graph1 = brd.create('curve',[[0],[0]], {
+									        name:'s1',
+									        strokeColor: 'green'
+									        //fillColor: 'green', fillOpacity: 1
+									     }); 
+    graph2 = brd.create('Curve',[[0],[0]], {
+    										name:'s2',
+    										strokeColor: 'blue',
+    											strokeWidth: 1.7
+        									
+        										}); 
     graph3 = brd2.create('curve',[[0],[0]], {strokeWidth:1.7});
+    //overlap = brd.create('curve', [[],[]], {fillColor: 'blue', fillOpacity: 0.4});
     pnt = brd2.create('point',[100,0], {name: ''});
-    
+    pntArrow2 = brd.create('point',[100,0.95], {name: '', face:'^', fillColor: 'blue', strokeColor: 'blue', size: 4 }); 
+    pntArrow1 = brd.create('point',[100,0.95], {name: '', face:'^', fillColor: 'green', strokeColor: 'green', size: 4 }); 
+    pntArrow3 = brd.create('point',[100,0.95], {name: '', face:'^', fillColor: 'blue', strokeColor: 'blue', size: 4 }); 
+
     sliderLeftCoord = [1,1.5];
     sliderRightCoord = [3,1.5];
     
@@ -83,7 +109,8 @@ function start(brd,brd2){
         this.dataX = samplePoints; // x axis values for graph 1 on the upper board
         this.dataY = yAxisValues;  // y axis values for graph 1 on the upper board
         signalArray1 = yAxisValues; // send values for convolution or correlation
-       // console.log(signalArray1);
+        //console.log(samplePoints);
+        //console.log(signalArray1);
 
     };
     
@@ -101,19 +128,22 @@ function start(brd,brd2){
 
     brd.update(); // refresh the upper board with latest data
     
-    pnt.moveTo([100,0]);
+    //pntArrow.moveTo([shiftSignal2, 0.95]);  
 }
 
 // Replot function 1 graph on upper board if user makes 
 // changes to the specification of function 1
 function plot1(brd){
-	
+	pntArrow1.moveTo([100,0]);
+    
+	cancelGraphicalView();
     var signal = document.getElementById("functionList1").value; // get the position value of the function plot
 
     var widthTextObj = document.getElementById("F1_width");
     var shiftTextObj = document.getElementById("F1_shift");
     widthTextObj.disabled = false;
-
+    shiftTextObj.disabled = false;
+	
     if(widthTextObj.value == '' && signal != "5"){  // if a value is required but none is provided 
         alert('Width field for function 1 cannot be empty');
         widthTextObj.value = ''+ widthSignal1+''; // put the previous value in the text box
@@ -141,43 +171,71 @@ function plot1(brd){
         var yAxisValues;
             if (signal == "1"){
                 yAxisValues = rect(samplePoints, widthSignal1, shiftSignal1);
+                pntArrow1.moveTo([100,0]);
             }
             else if (signal == "2"){
                 yAxisValues = tri(samplePoints, widthSignal1, shiftSignal1);
+                pntArrow1.moveTo([100,0]);
             }
             else if (signal == "3"){
                yAxisValues = gaussian(samplePoints, widthSignal1, shiftSignal1);
+               pntArrow1.moveTo([100,0]);
             }
             else if (signal == "4"){
+            	
                yAxisValues = sinc(samplePoints, widthSignal1, shiftSignal1);
-
+               pntArrow1.moveTo([100,0]);
            }
            else if (signal == "5"){
                widthTextObj.disabled = true;
-               yAxisValues = step(samplePoints, shiftSignal1)
-           };
+               yAxisValues = step(samplePoints, shiftSignal1);
+               pntArrow1.moveTo([100,0]);
+           }
+           else if (signal == "6"){
+        	  
+        	   widthTextObj.disabled = true;
+               yAxisValues = dirac(samplePoints, shiftSignal1);              
+               pntArrow1.moveTo([shiftSignal1, 0.95]);
+           } 
+		   else if (signal == "7") {
+			   yAxisValues = udfValues;              
+			   pntArrow1.moveTo([100,0]);
+			   // console.log("Updated UDF array");
+		   }
+		   else if (signal == "8"){
+        	   
+			   shiftTextObj.disabled = true;
+        	   widthTextObj.disabled = true;
+               yAxisValues = diracComb(samplePoints);              
+               pntArrow1.moveTo([100, 0]);
+			   
+		   };
 
-        this.dataX = samplePoints;  // X axis values for graph 2 on the upper board
-        this.dataY = yAxisValues;   // Y axis values for graph 2 on the upper board
+        this.dataX = samplePoints;  // X axis values for graph 1 on the upper board
+        this.dataY = yAxisValues;   // Y axis values for graph 1 on the upper board
         signalArray1 = yAxisValues; // save values for convolution or correlation in global
     };
-
+    
     brd.update();
     
     pnt.moveTo([100,0]); // take red point out of sight
 	
+    // console.log(pntArrow1.X());
     plot2(brd);
+    
  }
 
 // Replot function 2 graph on upper board if user makes 
 // changes to the specification of function 2
 function plot2(brd){
-	
+	pntArrow2.moveTo([100,0]);
+	cancelGraphicalView();
     var signal = document.getElementById("functionList2").value; // get the position value of the function plot
 
     var widthTextObj = document.getElementById("F2_width"); 
     var shiftTextObj = document.getElementById("F2_shift");
     widthTextObj.disabled = false;
+ 
 
     if(widthTextObj.value == '' && signal != "5"){      // if a value is required but none is provided 
         alert('Width field for function 2 cannot be empty');
@@ -202,22 +260,35 @@ function plot2(brd){
     //change the Y attribute of the graph to match new user specification
     graph2.updateDataArray = function(){ 
         var yAxisValues;
+        	
             if (signal == "1"){
-                yAxisValues = tri(samplePoints, widthSignal2, shiftSignal2);
+                yAxisValues = tri(samplePoints,  widthSignal2,  shiftSignal2);// 
+                pntArrow2.moveTo([100,0]);//resetArrows();
             }
             else if (signal == "2"){
                 yAxisValues = rect(samplePoints, widthSignal2, shiftSignal2);
+                pntArrow2.moveTo([100,0]);//resetArrows();
             }
             else if (signal == "3"){
                yAxisValues = gaussian(samplePoints, widthSignal2, shiftSignal2);
+               pntArrow2.moveTo([100,0]);//resetArrows();
             }
             else if (signal == "4"){
                yAxisValues = sinc(samplePoints, widthSignal2, shiftSignal2);
+               pntArrow2.moveTo([100,0]);//resetArrows();
            }
            else if (signal == "5"){
+        	   
                widthTextObj.disabled = true;
-               yAxisValues = step(samplePoints, shiftSignal2)
-           };
+               yAxisValues = step(samplePoints, shiftSignal2);
+               pntArrow2.moveTo([100,0]);//resetArrows();
+           }
+           else if (signal == "6"){
+        	    
+        	    widthTextObj.disabled = true;
+                yAxisValues = dirac(samplePoints, shiftSignal2);//  widthSignal2, 
+                pntArrow2.moveTo([shiftSignal2, 0.95]);
+            };
 
         this.dataX = samplePoints;
         this.dataY = yAxisValues;
@@ -227,19 +298,30 @@ function plot2(brd){
     brd.update();
     
     pnt.moveTo([100,0]); // take red point out of sight
+	
+	console.log("Plotted successfully");
 }
 
+function resetArrows(){
+	pntArrow1.moveTo([100,0]);
+    pntArrow2.moveTo([100,0]);
+    pntArrow3.moveTo([100,0]);
+}
 // Gets and plots the convolution values for the selected functions
 function doConvo(brd2){
+	cancelGraphicalView();
 	convoCorr = 0;
+	var signal1 = document.getElementById("functionList1").value;
+	var signal2 = document.getElementById("functionList2").value;
      graph3.updateDataArray = function(){ 
+        signalArray3 = conv(signalArray1, signalArray2);
+        scaleResult(signalArray3);
         
-        signalArray3 = conv(signalArray1 , signalArray2);
-        scaleResult();
-        
-        generateResultPoints(); 	// X-axis points for graph 3
+        generateResultPoints(resultPoints, signalArray3); 	// X-axis points for graph 3
         this.dataX = resultPoints;  // X axis values for graph 2 on the upper board
         this.dataY = signalArray3;  // Y axis values for graph 2 on the upper board
+		// console.log(resultPoints);
+		// console.log(signalArray3);
         
     };
     brd2.update();
@@ -247,17 +329,23 @@ function doConvo(brd2){
     pnt.moveTo([100,0]); // take red point out of sight
     
     plot2(brd);
+	console.log("Did convolution");
+    return false;
 }
 
 // Gets and plots the correlation values for the selected functions
 function doCorrelation(brd2){
+	cancelGraphicalView();
 	convoCorr = 1;
+	var signal1 = document.getElementById("functionList1").value;
+	var signal2 = document.getElementById("functionList2").value;
+	
     graph3.updateDataArray = function(){ 
         
         signalArray3 = xcorr(signalArray1 , signalArray2);
-        scaleResult();
+        scaleResult(signalArray3);
         
-        generateResultPoints(); // X-axis points for graph 3
+        generateResultPoints(resultPoints, signalArray3); // X-axis points for graph 3
         this.dataX = resultPoints;
         this.dataY = signalArray3;
         
@@ -268,52 +356,72 @@ function doCorrelation(brd2){
     pnt.moveTo([100,0]);
     
     plot2(brd);
+	console.log("Did correlation");
+	return false;
 }
 
 function reDrawSignal2(){
 	var arrayIndex;
-	resizeBoard(); 
-	
-	graph2.updateDataArray = function(){
-		for (x = 0; x < samplePoints.length; x++ ) {
+	var checkBox = document.getElementById("slideCheckBox");
+	document.getElementById("sliderParagraph").classList.toggle('greyed');
+	if(checkBox.checked == true){		
+		resizeBoard(); 		
+		graph2.updateDataArray = function(){
+			
+			var signal = document.getElementById("functionList2").value;
 			Q = shiftSignal2 - s.Value();
 			if (convoCorr == 0){ // convolution
-				sliderSamplePoints[x] =  samplePoints[x] - Q - (shiftSignal2);
+				if(signal == "6") {var xVal = s.Value() - (shiftSignal2); 
+											  //console.log(xVal);
+											  pntArrow2.moveTo([xVal, 0.95]); }
+				for (x = 0; x < samplePoints.length; x++ ) {
+					sliderSamplePoints[x] =  samplePoints[x] - Q - (shiftSignal2);
+					
+				}
 			}
 			else{ // Correlation
-				sliderSamplePoints[x] =  samplePoints[x] - Q + (shiftSignal2);
+				if(signal == "6") {var xVal = s.Value() + (shiftSignal2); 
+				  							  pntArrow2.moveTo([xVal, 0.95]); }
+				for (x = 0; x < samplePoints.length; x++ ) {
+					sliderSamplePoints[x] =  samplePoints[x] - Q + (shiftSignal2);
+				}
 			}
-		}
+			
+			
+			if (s.Value() == s._smin){ // slider at lowest value
+	    		arrayIndex = 1536; // size of convolution array divided 2 minus 512
+	    	}
+	    	else if (s.Value() == s._smax){ // slider at highest value
+	    		arrayIndex = 2560; // size of convolution array divided 2 plus 512
+	    	}
+	    	else 
+	    	{
+	    		maxNumberOfIntervals = (s._smax - s._smin) / sliderSnapWidth;
+	    		currNumberOfIntervals = (s.Value() - s._smin) / sliderSnapWidth;
+	    		intervalSize = (1024 / maxNumberOfIntervals);
+	    		arrayIndex = Math.floor(intervalSize * currNumberOfIntervals) + 1536;
+	    	}	
+	    	
+			this.dataX = sliderSamplePoints;
+			this.dataY = signalArray2;
+			
+			pnt.moveTo([s.Value(), signalArray3[arrayIndex]]);
+			
+		};
 		
-		if (s.Value() == s._smin){ // slider at lowest value
-    		arrayIndex = 3584; 
-    	}
-    	else if (s.Value() == s._smax){ // slider at highest value
-    		arrayIndex = 4608;
-    	}
-    	else 
-    	{
-    		maxNumberOfIntervals = (s._smax - s._smin) / sliderSnapWidth;
-    		currNumberOfIntervals = (s.Value() - s._smin) / sliderSnapWidth;
-    		intervalSize = (1024 / maxNumberOfIntervals);
-    		arrayIndex = Math.floor(intervalSize * currNumberOfIntervals) + 3584;
-    	}	
-    	
-		this.dataX = sliderSamplePoints;
-		this.dataY = signalArray2;
-		
-		pnt.moveTo([s.Value(), signalArray3[arrayIndex]]);
-		
-	};
-		
-	brd.update();
+		brd.update();
+	}
+	else{
+		//document.getElementById("sliderParagraph").classList.toggle('greyed');
+		plot2(brd);
+	}
 }
 
 // resize the board to ensure that function graphs 1 and 2 do not overlap
 function resizeBoard(){
     //console.log(leftBound);
 	var x = 0;
-	coords = brd.getBoundingBox();
+	var coords = brd.getBoundingBox();
 	currentLeftBound = coords[0];
 
 	// value that ensures that function 2 does not overlap function 1
@@ -330,19 +438,22 @@ function resizeBoard(){
 	}
 	
 	s.setMax(-1*currentLeftBound); // set slider upper limit
-	s.setMin(currentLeftBound);	   // set slider lower limit	
+	s.setMin(currentLeftBound);	   // set slider lower limit
 	
-	
+	// updateUdfSliderLimits(brd); // udf slider
 }
 
 // adjust slider size and position based on zoom factor
 function adjustSlider(){
+	
 	if (currentCoordinateArray[2] < previousCoordinateArray[2]){ // zoom in
+		var yCoord = 0.7826 * (currentCoordinateArray[1] - currentCoordinateArray[3]) + currentCoordinateArray[3];
 	// set new slider coordinates
 		sliderLeftCoord[0] = sliderLeftCoord[0]/1.25;
-		sliderLeftCoord[1] = sliderLeftCoord[1]/1.15;
+		sliderLeftCoord[1] = yCoord;
 		sliderRightCoord[0] = sliderRightCoord[0] / 1.25;
-		sliderRightCoord[1] = sliderRightCoord[1] / 1.15;
+		sliderRightCoord[1] = yCoord;
+		console.log(currentCoordinateArray[1] +' '+ sliderRightCoord[1]);
 	//-------------------------------------------------------
 	
 	// Update slider slider position
@@ -350,11 +461,13 @@ function adjustSlider(){
 		s.baseline.point2.setPosition(JXG.COORDS_BY_USER,[sliderRightCoord[0],sliderRightCoord[1]] );
 	}
 	else if (currentCoordinateArray[2] > previousCoordinateArray[2]){ // zoom out
+		var yCoord = 0.7826 * (currentCoordinateArray[1] - currentCoordinateArray[3]) + currentCoordinateArray[3];
 	// set new slider coordinates
-		sliderLeftCoord[0] = sliderLeftCoord[0]*1.25;
-		sliderLeftCoord[1] = sliderLeftCoord[1]*1.15;
+		sliderLeftCoord[0] = sliderLeftCoord[0] * 1.25;
+		sliderLeftCoord[1] = yCoord;
 		sliderRightCoord[0] = sliderRightCoord[0] * 1.25;
-		sliderRightCoord[1] = sliderRightCoord[1] * 1.15;
+		sliderRightCoord[1] = yCoord;
+		
 	// ------------------------------------------------------
 	
 	// Update slider slider position
@@ -365,12 +478,7 @@ function adjustSlider(){
 	brd.fullUpdate();
 } 
 
-// This function plots the currently evaluated user-defined function on the passed board 
-function plotUDF(board) {
-	var graphUDF = board.create('curve', [[0],[0]], {strokeColor:'#FF0000', strokeWidth:1.5}); // red
-	graphUDF.updateDataArray = function(){
-		 this.dataX = samplePoints;
-		 this.dataY = evaluateCurrentUserDefinedFunction(samplePoints);
-	 };
-	board.update();
+function cancelGraphicalView(){
+	document.getElementById("sliderParagraph").classList.remove('greyed');
+	document.getElementById("slideCheckBox").checked = false;	
 }
