@@ -15,8 +15,8 @@ html {
 }
 
 h1{
-    text-align: center;
-    margin:20px 50px;
+    /* text-align: center; */
+    margin-left:12em;
     padding:20px 50px;
     color: rgb(0, 60, 160);
     font-family: "Open Sans";
@@ -51,26 +51,21 @@ h1{
     float : left;
     position : relative;
 } */
-.jxgbox1{
-    clear : both;
+.jxgbox{
+    /* clear : both;
     float : none;
     position : relative;
-    border-style: solid;
-    margin: 50px;
-    padding: 50px 60px;
+    border-style: solid; */
+    margin: 20px;
 }
-.jxgbox2{
-    clear : both;
-    float : none;
-    position : relative;
-    margin: 50px;
-    padding: 50px 60px;
+#jxgbox2{
+    margin-top: 40px;
 }
 .formField{
     clear : none;
     float : left;
     position : relative;
-    padding: 20px 60px;
+    padding: 20px 50px;
     width : 300px;
     height : 400px;
 }
@@ -155,3 +150,8 @@ h1{
         .tab.active {
             display:block;
         }
+
+
+    #tab2{
+        padding: 10px 20px;
+    }
