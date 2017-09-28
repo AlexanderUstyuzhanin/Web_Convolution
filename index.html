@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -32,8 +32,8 @@
 	<!-- Cascading Style Sheets -->
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <link rel="stylesheet" type="text/css" href="css/jsxgraph.css"/>
-    <link rel="stylesheet" type="text/css" href="css/visualization.css"/>
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	
 </head>
 
@@ -48,7 +48,6 @@
 
         <div class="tab-content">
             <div id="tab1" class="tab active">
-                <div id ="space" class ="space" > </div> <!-- Create some space on the left of the screen -->
 
                 <!-- User input area -->
                 <div id ="formField" class="formField" align="top" >
@@ -139,7 +138,6 @@
 							
 						</script>
 							
-					<div  style="width:600px; height:20px" ></div>   <!-- small space between the boards -->
 					
 					<div id="jxgbox2" class="jxgbox" style="width:600px; height:300px" ></div>   
 						
@@ -218,7 +216,13 @@
                         <option value="" disabled selected style="display:none;">Select an impulse response...</option>
                         <option value="carpark" title="Underground car park">Car park</option>
                         <option value="slinky" title="Slinky toy">Slinky</option>
-                        <option value="centreStalls" title="Central Hall, University of York">Central Hall</option>
+                        <option value="centre_stalls" title="Central Hall, University of York">Central Hall</option>
+                        <option value="aula_carolina" title="Aula Carolina, RWTH Aachen">Aula Carolina</option>
+                        <option value="corridor" >Corridor</option>
+                        <option value="meeting_room" >Meeting room</option>
+                        <option value="office" >Office</option>
+                        <option value="stairway" >Stairway</option>
+
                     </select>
                     &emsp; &emsp; &emsp; OR &emsp; &emsp; Choose an impulse response
                     <input type="file" id="iFiles" name="files[]" />
