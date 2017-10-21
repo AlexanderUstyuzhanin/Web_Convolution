@@ -204,7 +204,7 @@ function diracComb(x) {
 //ONE-SIDED DECREASING EXPONENTIAL FUNCTION
 function oneSideExp(x, rate=1){
     //returns the one-sided decreasing exponential function of the input array x
-    //input: numeric array x
+    //input: numeric array x, numeric rate (default 1)
     const N = x.length;
     var y = Array(N).fill(0);
     for(let i=0 ; i<N ; ++i){
