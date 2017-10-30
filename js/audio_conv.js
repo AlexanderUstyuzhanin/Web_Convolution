@@ -92,26 +92,11 @@ function audioConv(){
             case 'slinky':
             loadIRPreset('music/slinky_ir.wav');
             break;
-            case 'centre_stalls':
+            case 'centreStalls':
             loadIRPreset('music/ir_centre_stalls.wav');
             break;
-            case 'aula_carolina':
-            loadIRPreset('music/aula_carolina.wav');
-            break;
-            case 'corridor':
-            loadIRPreset('music/corridor.wav');
-            break;
-            case 'meeting_room':
-            loadIRPreset('music/meeting_room.wav');
-            break;
-            case 'office':
-            loadIRPreset('music/office.wav');
-            break;
-            case 'stairway':
-            loadIRPreset('music/stairway.wav');
-            break;
             default:
-            alert('preset not selected');
+            alert('preset selected');
         }
     }
 

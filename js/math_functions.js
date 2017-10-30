@@ -1,11 +1,7 @@
-//Author: Nicola Giaconi
-//Last revision: 27/9/2017
-//Math functions for Web-based Convolution Demonstrator
 
 //ZERO_PADDING
 function zeroPad(x1, x2){
-    //returns the zero padded arrays
-    //input: numeric arrays x1 and x2
+    //Input: Two arrays, returns the zero padded arrays
     x1=x1.concat(Array(x2.length-1).fill(0));
     x2=x2.concat(Array(x1.length-1).fill(0));
     return [x1,x2];
@@ -13,8 +9,7 @@ function zeroPad(x1, x2){
 
 //FLIPPING ARRAY
 function flip(x){
-    //returns the index-reverse array of the input array
-    //input: numeric array x
+    //returns an array which is the index-reversed version of the input array
     N=x.length;
     x_flipped=Array(N).fill(0);
     for(i=0;i<N;++i){
@@ -25,12 +20,9 @@ function flip(x){
 
 //CONVOLUTION
 function conv(x1, x2){
-    //returns the linear convolution of the input arrays
-    //input: numeric arrays x1 and x2
+    //returns the convolution of the input arrays
     x=zeroPad(x1,x2); 			//Zero-padding
-    x1=x[0];
-    x2=x[1];
-    N=x[0].length;
+    x1=x[0]; x2=x[1]; N=x[0].length;
     y=Array(N).fill(0); 		//Preallocating
     for(n=0;n<N;++n){			//for-loop implementation following definition
         for(k=0;k<N;++k){
@@ -44,11 +36,8 @@ function conv(x1, x2){
 //CORRELATION
 function xcorr(x1, x2){
     //returns the cross-correlation of the input arrays
-    //input: numeric arrays x1 and x2
-    x=zeroPad(x1,flip(x2)); 	//Zero-padding and index-reversing
-    x1=x[0];
-    x2=x[1];
-    N=x[0].length;
+    x=zeroPad(x1,flip(x2)); 		//Zero-padding and index-reversing
+    x1=x[0]; x2=x[1]; N=x[0].length;
     y=Array(N).fill(0); 		//Preallocating
     for(n=0;n<N;++n){			//for-loop implementation following definition
         for(k=0;k<N;++k){
@@ -61,8 +50,7 @@ function xcorr(x1, x2){
 
 //RECT FUNCTION
 function rect(x, width=1, shift=0){
-    //returns the rect function of the input array x, centered on shift, and of width w
-    //input: numeric array x, numeric width (default 1), numeric shift (default 0)
+    //return the rect function of the input array x, centered on shift, and of width w.
     N=x.length;
     y=Array(N).fill(0);
     for(i=0;i<x.length;++i){
@@ -76,8 +64,7 @@ function rect(x, width=1, shift=0){
 
 //TRIANGLE FUNCTION
 function tri(x, width=1, shift=0){
-    //returns the triangle function of the input array x, centered on shift, and of width w
-    //input: numeric array x, numeric width (default 1), numeric shift (default 0)
+    //return the triangle function of the input array x, centered on shift, and of width w.
     N=x.length;
     y=Array(N).fill(0);
     for(i=0;i<x.length;++i){
@@ -92,7 +79,6 @@ function tri(x, width=1, shift=0){
 //STEP FUNCTION
 function step(x, shift=0) {
     //returns the step function of the input array x, centered on shift
-    //input: numeric array x, numeric shift (default 0)
     N=x.length;
     y=Array(N).fill(0);
     for(i=0;i<x.length;++i){
@@ -106,7 +92,6 @@ function step(x, shift=0) {
 //SINC FUNCTION
 function sinc(x, width=1, shift=0) {
     //returns the sinc function of the input array x
-    //input: numeric array x, numeric width (default 1), numeric shift (default 0)
     N=x.length;
     y=Array(N).fill(0);
     for(i=0;i<x.length;++i){
@@ -121,7 +106,6 @@ function sinc(x, width=1, shift=0) {
 function gaussian(x, vari=1, expect=0) {
     //returns the gaussian-normalized function of the input array x, with
     //expectation expect, and variance vari
-    //input: numeric array x, numeric vari (default 1), numeric expect (default 0)
     N=x.length;
     y=Array(N).fill(0);
     for(i=0;i<N;++i){
@@ -133,13 +117,13 @@ function gaussian(x, vari=1, expect=0) {
 //DIRAC FUNCTION
 function dirac(x, shift=0) {
     //returns the dirac function of the input array x, centered on shift
-    //input: numeric array x, numeric shift (default 0)
-    var hit =0;
+	var hit =0;
     N=x.length;
     y=Array(N).fill(0);
     for(i=0;i<x.length;++i){
-        if(x[i]>=shift && hit==0)    {y[i]=1; ++hit;}
-        else			     {y[i]=0;}
+    	
+		if(x[i]>=shift && hit==0)	{y[i]=1; ++hit;}
+		else			{y[i]=0;}
     }
     return y;
 }
@@ -147,13 +131,12 @@ function dirac(x, shift=0) {
 //DIRAC-COMB FUNCTION
 function diracComb(x) {
     //returns the dirac-comb function of the input array x
-    //input: numeric array x
     N=x.length;
     y=Array(N).fill(0);
-    xMin=Math.ceil(Math.min.apply(Math,x));
+	xMin=Math.ceil(Math.min.apply(Math,x));
     for(i=0;i<N;++i){
-        if(x[i]<xMin)   {y[i]=0;}
-        else	        {y[i]=1;++xMin;} //xMin updates after every peak
+    	if	(x[i]<xMin)		{y[i]=0;}
+    	else				{y[i]=1;++xMin;}
     }
     return y;
 }

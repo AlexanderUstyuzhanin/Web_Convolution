@@ -77,7 +77,7 @@ function parseMathExpr() {
 	// var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
 	// leftLimiter = parseFloat( document.getElementById("txtLeftLimiter").value );
 	// rightLimiter = parseFloat( document.getElementById("txtRightLimiter").value ); 
-	// updateUdfLimits();
+	updateUdfLimits();
 	var udfDivId = "divUDF"; // HTML element for displaying the pretty function
 	var texDisplayFieldId = "divTexExpr"; // HTML element for displaying the pretty function
 	
