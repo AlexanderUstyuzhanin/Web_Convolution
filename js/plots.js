@@ -148,7 +148,7 @@ function start(brd,brd2) {
 					strokeColor: 'green',
 					size: 4
 			});
-    // pntArrow3 = brd.create('point', [100,0.95],
+  // pntArrow3 = brd.create('point', [100,0.95],
   // 												{ name: '',
   // 													face: '^',
   // 													fillColor: 'blue',
