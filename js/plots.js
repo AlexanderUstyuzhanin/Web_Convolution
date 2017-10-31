@@ -148,7 +148,7 @@ function start(brd,brd2) {
 					strokeColor: 'green',
 					size: 4
 			});
-    // pntArrow3 = brd.create('point', [100,0.95],
+  // pntArrow3 = brd.create('point', [100,0.95],
   // 												{ name: '',
   // 													face: '^',
   // 													fillColor: 'blue',
@@ -363,11 +363,6 @@ function plot2(brd) {
 		reDrawSignal2();
 }
 
-/*function resetArrows(){
-  pntArrow1.moveTo([100,0]);
-    pntArrow2.moveTo([100,0]);
-    pntArrow3.moveTo([100,0]);
-}*/
 
 // Gets and plots the convolution values for the selected functions
 // it takes the lower board as argument and updates the signalArray3 global variable
@@ -445,11 +440,12 @@ function reDrawSignal2() {
 
   graph2.updateDataArray = function () {
 			const signal = document.getElementById('functionList2').value;
-			//Q = shiftSignal2 - slide.Value();
+			
 			if (convoCorr === 0) { // convolution
 				if (signal === '6') { // dirac pulse selected
-					const xVal = slide.Value() - (shiftSignal2);
-					pntArrow2.moveTo([(-1 * xVal), 0.95]); // set arrow on dirac plot
+					const xVal = (shiftSignal2 * -1) + slide.Value();
+					console.log(xVal)
+					pntArrow2.moveTo([(xVal), 0.95]); // set arrow on dirac plot
 				}
 				for (let x = 0; x < samplePoints.length; x++) {
 					sliderSamplePoints[x] = samplePoints[x] + slide.Value(); //- Q - (shiftSignal2);
