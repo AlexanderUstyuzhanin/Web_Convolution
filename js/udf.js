@@ -30,11 +30,9 @@ function checkUdfSelected() {
 	if (fl.value == 9) {
 		// toggleUDF();
 		activateUdf();
-		toggleBlockVisibility("divUDF");
 	}
 	else {
 		deactivateUdf();
-		toggleBlockVisibility("divUDF");
 	}
 }
 
@@ -63,6 +61,7 @@ function activateUdf() {
 		document.getElementById("F1_width").disabled = true; // TODO - this doesn't work!
 		document.getElementById("F1_shift").disabled = true;
 		plot1(brd);
+		toggleBlockVisibility("divUDF");
 	}
 	isUdfDisabled = false;
 }
@@ -71,6 +70,7 @@ function deactivateUdf() {
 	if (!isUdfDisabled) {
 		document.getElementById("F1_width").disabled = false;
 		document.getElementById("F1_shift").disabled = false;
+		toggleBlockVisibility("divUDF");
 	}
 	isUdfDisabled = true;
 }
