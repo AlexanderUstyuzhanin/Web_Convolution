@@ -17,6 +17,7 @@ var udfNeedsParsing = true;
 function onPageLoadUdf() {
 	// toggleUDF();
 	// opdlUDF.disabled = true;
+	toggleBlockVisibility("divUDF");
 }
 
 function updateUdfParsingReq() {
@@ -26,7 +27,7 @@ function updateUdfParsingReq() {
 
 function checkUdfSelected() {
 	var fl = document.getElementById("functionList1");
-	if (fl.value == 7) {
+	if (fl.value == 9) {
 		// toggleUDF();
 		activateUdf();
 	}
@@ -60,6 +61,7 @@ function activateUdf() {
 		document.getElementById("F1_width").disabled = true; // TODO - this doesn't work!
 		document.getElementById("F1_shift").disabled = true;
 		plot1(brd);
+		toggleBlockVisibility("divUDF");
 	}
 	isUdfDisabled = false;
 }
@@ -68,6 +70,7 @@ function deactivateUdf() {
 	if (!isUdfDisabled) {
 		document.getElementById("F1_width").disabled = false;
 		document.getElementById("F1_shift").disabled = false;
+		toggleBlockVisibility("divUDF");
 	}
 	isUdfDisabled = true;
 }
@@ -77,7 +80,7 @@ function parseMathExpr() {
 	// var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
 	// leftLimiter = parseFloat( document.getElementById("txtLeftLimiter").value );
 	// rightLimiter = parseFloat( document.getElementById("txtRightLimiter").value ); 
-	updateUdfLimits();
+	// updateUdfLimits();
 	var udfDivId = "divUDF"; // HTML element for displaying the pretty function
 	var texDisplayFieldId = "divTexExpr"; // HTML element for displaying the pretty function
 	
@@ -251,4 +254,13 @@ function updateUdfSliderLimits(board) { // I know it's ugly, but it will have to
 	// console.log("Updated slider limits");
 	
 	return false;
+}
+
+function toggleBlockVisibility(divID) {
+    var x = document.getElementById(divID);
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
 }
