@@ -1,6 +1,6 @@
 //Author: Adib Ali
 
-
+function audioConv(){
     // Check for the various File API support.
     if (window.File && window.FileReader && window.FileList && window.Blob) {
         // Great success! All the File APIs are supported.
@@ -14,9 +14,20 @@
     var audioPreset = document.getElementById('audioPreset');
     var irPreset = document.getElementById('irPreset');
 
-    //
     function handleFileSelect(evt) {
         var files = evt.target.files; // FileList object
+
+        // // files is a FileList of File objects. List some properties.
+        // var output = [];
+        // for (var i = 0, f; f = files[i]; i++) {
+        //   output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+        //   f.size, ' bytes, last modified: ',
+        //   f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+        //   '</li>');
+        //
+        // }
+        // document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+
 
         var inputSound = document.getElementById('inputSound');
         inputSound.src = URL.createObjectURL(this.files[0]);
@@ -81,26 +92,11 @@
             case 'slinky':
             loadIRPreset('music/slinky_ir.wav');
             break;
-            case 'centre_stalls':
+            case 'centreStalls':
             loadIRPreset('music/ir_centre_stalls.wav');
             break;
-            case 'aula_carolina':
-            loadIRPreset('music/aula_carolina.wav');
-            break;
-            case 'corridor':
-            loadIRPreset('music/corridor.wav');
-            break;
-            case 'meeting_room':
-            loadIRPreset('music/meeting_room.wav');
-            break;
-            case 'office':
-            loadIRPreset('music/office.wav');
-            break;
-            case 'stairway':
-            loadIRPreset('music/stairway.wav');
-            break;
             default:
-            alert('preset not selected');
+            alert('preset selected');
         }
     }
 
@@ -109,12 +105,20 @@
         convolver.connect(audioCtx.destination);
     }
 
-    //Event listeners 
+    //pauseOutput event needed to remove trailing sound due to convolution
+    // function pauseOutput(evt){
+    //     convolver.disconnect();
+    // }
+
+
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
     document.getElementById('iFiles').addEventListener('change', handleImResFileSelect, false);
     document.getElementById('outputSound').addEventListener('play', playOutput, false);
+    // document.getElementById('outputSound').addEventListener('pause', pauseOutput, false);
     irPreset.addEventListener('change', onIrPresetSelect, false);
     audioPreset.addEventListener('change', onAudioSelect, false);
+    //document.getElementById('irPreset').onchange = onIrPresetSelect;
 
     var outputSound = document.getElementById('outputSound');
     output = audioCtx.createMediaElementSource(outputSound);
+}
