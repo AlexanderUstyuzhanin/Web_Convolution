@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>Graphical Convolution Demonstrator & More</title>
 
-	<!-- JS Libraries -->
-	<script type="text/x-mathjax-config">
+
+    <!-- JS Libraries -->
+    <script type="text/x-mathjax-config">
+
 		MathJax.Hub.Config({
 			extensions: ["tex2jax.js"],
 			jax: ["input/TeX", "output/HTML-CSS"],
 			tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
 		});
 	</script>
-	<script type="text/javascript" async
-		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-	</script>
-	<script type="text/javascript" src="js/libs/math.min.js"></script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script type="text/javascript" src="js/libs/math.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="js/libs/jsxgraphcore.js" charset="utf-8"></script>
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-	<!-- Custom JS Scripts -->
+
+    <!-- Custom JS Scripts -->
+
     <script type="text/javascript" src="js/style.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
-    <script type="text/javascript" src="js/audio_conv.js"></script>
     <script type="text/javascript" src="js/plots.js"></script>
     <script type="text/javascript" src="js/math_functions.js"></script>
     <script type="text/javascript" src="js/udf.js"></script>
 
-	<!-- Cascading Style Sheets -->
-    <link rel="stylesheet" type="text/css" href="css/style.css"/>
-    <link rel="stylesheet" type="text/css" href="css/jsxgraph.css"/>
+
+    <!-- Cascading Style Sheets -->
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/jsxgraph.css" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 </head>
 
@@ -42,20 +42,27 @@
     <h1>Web-based Convolution Demonstrator</h1>
     <div class="tabs">
         <ul class="tab-links">
-            <li class="active"><a href="#tab1">Convolution graph</a></li>
-            <li><a href="#tab2">Audio Convolution</a></li>
+            <li>
+                <a href="#tab1">Convolution graph</a>
+            </li>
+            <li class="active">
+                <a href="#tab2">Audio Convolution</a>
+            </li>
         </ul>
 
         <div class="tab-content">
+
             <div id="tab1" class="tab active">
 
+
                 <!-- User input area -->
-                <div id ="formField" class="formField" align="top" >
+                <div id="formField" class="formField" align="top">
 
                     <form>
                         <fieldset>
                             <legend>Functions</legend>
                             <p>
+
                                 <label id = "function1Label">Select Function 1:</label>
                                 <select id = "functionList1" onchange="checkUdfSelected(); plot1(brd);">
                                     <option value = "1">Rectangle</option>
@@ -76,10 +83,12 @@
 									size="4" value="1" onchange="plot1(brd)" /><br>
                                 Function 1 Shift: <input type="text" id="F1_shift"
 									size="4" value="0" onchange="plot1(brd)" /><br>
+
                             </p>
 
                             <p>
                                 <label id = "function2Label">Select Function 2:</label>
+
 
                                 <select id = "functionList2" onchange = "plot2(brd)">
                                     <option value = "1">Triangle</option>
@@ -119,11 +128,13 @@
 								</p>
 							</div>
 						</fieldset>
+
                     </form>
                 </div>
                 <!-- User input area ends ------------------------------------------------------------------------>
 
                 <!-- Create two JSXGRAPH boards to hold all the plots -->
+
 				<div id ="boxGroup" class="boxGroup">
 
 					<div id="jxgbox" class="jxgbox" style="width:600px; height:300px" ></div>
@@ -232,10 +243,15 @@
                 <p>Result:</p>
                 <audio id="outputSound" controls></audio>
                 <output id="list"></output>
+
             </div>
-			<!-- Audio convolution stuff ends -->
-        </div> <!-- tab content -->
-    </div> <!-- tabs -->
+            <script type="text/javascript" src="js/audio_conv.js"></script>
+            <!-- Audio convolution stuff ends -->
+        </div>
+        <!-- tab content -->
+    </div>
+    <!-- tabs -->
 
 </body>
+
 </html>
