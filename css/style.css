@@ -156,9 +156,6 @@ input{
  
         .tab.active {
             /* display:block; */
-            display: flex;
-            flex-direction: row;
-            /* justify-content: flex-start; */
             /* border: 1px black solid; */
             /* margin: 0 auto; */
         }
@@ -166,11 +163,17 @@ input{
 
     #tab2{
         padding: 10px 20px;
+        display: flex;
+        /* flex-direction: row; */
     }
 
     /*----- audio convolution tab -----*/
-    .audiobox{
-        flex-grow: 1;
+    .inputcontainer{
+        width: 55%;
+        flex-direction: column;
+    }
+
+    .inputbox{
         padding: 1em;
         margin: 5px;
         border: 1px black;
@@ -178,9 +181,13 @@ input{
         box-shadow:-1px 1px 1px 1px rgba(0,0,0,0.15);
     }
     
-    #inputbox, #irbox{
-        width: 35%;
-    }
-    #resultbox{
-        width: 30%;
+    .outputbox {
+        align-self: center;
+        width: 45%;
+        height: 100%;
+        padding: 1em;
+        margin: 5px;
+        border: 1px black;
+        border-radius:3px;
+        box-shadow:-1px 1px 1px 1px rgba(0,0,0,0.15);
     }
