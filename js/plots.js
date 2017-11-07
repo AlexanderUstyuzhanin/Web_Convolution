@@ -3,9 +3,9 @@
 
 
 // Global Variables
-let graph1;
-let graph2;
-let graph3;
+let graph1; // graph of function 1
+let graph2; // graph of function 2
+let graph3; // graph of function 3
 let signalArray1 = []; // graph 1 Y-axis values for signal 1 (function 1)
 let signalArray2 = []; // graph 2 Y-axis values for signal 2 (function 2)
 let signalArray3 = []; // graph 3 Y-axis values from convolution or correlation result
@@ -22,7 +22,6 @@ let slide; // slider variable
 let pnt; // moving red point
 let pntArrow2;
 let pntArrow1;
-//let pntArrow3;
 let multiplier; // zoom factor
 const sliderSnapWidth = 0.05; // slider step
 let sliderLeftCoord; // X, Y coordinate of left border of slider
@@ -56,8 +55,8 @@ function generateSamplePoints(leftBound, rightBound) {
   let x = 0;
   let t = 2 * leftBound;
   multiplier = rightBound / 4;
-	const outerRange = Math.round((2 * rightBound) - (2 * leftBound));
-	samplePoints.length = outerRange / multiplier / samplePeriod;
+	const outerRange = (2 * rightBound) - (2 * leftBound);
+	samplePoints.length = Math.round(outerRange / multiplier / samplePeriod);
   for (x = 0; x < samplePoints.length; x++) {
         samplePoints[x] = t;
         t += (samplePeriod * multiplier);
@@ -148,13 +147,6 @@ function start(brd,brd2) {
 					strokeColor: 'green',
 					size: 4
 			});
-  // pntArrow3 = brd.create('point', [100,0.95],
-  // 												{ name: '',
-  // 													face: '^',
-  // 													fillColor: 'blue',
-  // 													strokeColor: 'blue',
-  // 													size: 4
-  // 												});
 
   // get the coordinates of the slider
     sliderLeftCoord = [1, 1.5];
@@ -171,8 +163,6 @@ function start(brd,brd2) {
         this.dataX = samplePoints; // x axis values for graph 1 on the upper board
         this.dataY = yAxisValues; // y axis values for graph 1 on the upper board
         signalArray1 = yAxisValues; // send values for convolution or correlation
-        //console.log(samplePoints);
-        //console.log(signalArray1);
     };
 
   // plot function two on the upper board
@@ -182,7 +172,7 @@ function start(brd,brd2) {
   // get shift from textbox
         shiftSignal2 = parseFloat(document.getElementById('F2_shift').value);
 
-        const yAxisValues = tri(samplePoints, widthSignal2, shiftSignal2);
+        const yAxisValues = rect(samplePoints, widthSignal2, shiftSignal2);
         this.dataX = samplePoints; // x axis values for graph 2 on the upper board
         this.dataY = yAxisValues; // y axis values for graph 2 on the upper board
         signalArray2 = yAxisValues; // send values for convolution or correlation
@@ -360,7 +350,7 @@ function plot2(brd) {
 
     pnt.moveTo([100, 0]); // move red point out of sight
 
-		reDrawSignal2();
+	reDrawSignal2();
 }
 
 
@@ -392,6 +382,8 @@ function doConvo(brd2) {
   pnt.moveTo([100, 0]); // take red point out of view
 
   plot2(brd); 	// re-plot the second function which is tied to animation with slider
+  
+  console.log(signalArray3);
 
   return false;
 }
@@ -435,8 +427,12 @@ function reDrawSignal2() {
   let maxNumberOfIntervals;
   let currNumberOfIntervals;
   let intervalSize;
-
-  resizeBoard();
+  let coords = brd.getBoundingBox();
+  let currentLeftBound = coords[0];
+  
+  //resizeBoard();
+  slide.setMax(-1 * currentLeftBound); // set slider upper limit
+  slide.setMin(currentLeftBound);	 // set slider lower limit
 
   graph2.updateDataArray = function () {
 			const signal = document.getElementById('functionList2').value;
@@ -462,7 +458,7 @@ function reDrawSignal2() {
 				}
 			}
 
-
+			
 			if (slide.Value() === slide._smin) { // slider at lowest value
 				arrayIndex = 1536; // size of convolution array divided 2 minus 512
 			} else if (slide.Value() === slide._smax) { // slider at highest value
@@ -473,7 +469,7 @@ function reDrawSignal2() {
 				intervalSize = (1024 / maxNumberOfIntervals);
 				arrayIndex = Math.floor(intervalSize * currNumberOfIntervals) + 1536;
 			}
-
+			//console.log(arrayIndex);
 			this.dataX = sliderSamplePoints;
 			this.dataY = signalArray2;
 
@@ -498,7 +494,7 @@ function resizeBoard() {
 		coords = brd.getBoundingBox();
 		currentLeftBound = coords[0];
   }
-
+  
   slide.setMax(-1 * currentLeftBound); // set slider upper limit
   slide.setMin(currentLeftBound);	 // set slider lower limit
 }
@@ -534,8 +530,3 @@ function adjustSlider() {
   }
   brd.fullUpdate(); // slider is updated
 }
-
-/*function cancelGraphicalView(){
-  //document.getElementById("sliderParagraph").classList.remove('greyed');
-  //document.getElementById("slideCheckBox").checked = false;
-}*/
