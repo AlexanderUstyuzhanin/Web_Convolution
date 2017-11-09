@@ -222,7 +222,7 @@ function applyRectToUDF(left, right, samplePoints) {
 	// plotUDF(brd);
 	plot1(brd);
 	
-	console.log("Modified UDF plot");
+	// console.log("Modified UDF plot");
 	return false;
 }
 
