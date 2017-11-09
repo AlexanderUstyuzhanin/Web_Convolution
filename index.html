@@ -219,7 +219,7 @@
                             <input type="file" id="files" name="files[]" />
                             <br>
                         </form>
-                        <audio id="inputSound" controls></audio>
+                        <audio id="inputSound" controls controlsList="nodownload"></audio>
                         <p>(Audio <a href="http://www.moviesoundclips.net/sound.php?id=219">source</a>)</p>
                     </div>
 
@@ -243,7 +243,7 @@
                                 <br>
                                 <input type="radio" name="impulseResponse" id="ownIrFile">Choose an impulse response
                                 <input type="file" id="iFiles" name="files[]" /><br>
-                                <audio id="impulseResponse" controls></audio>
+                                <audio id="impulseResponse" controls controlsList="nodownload"></audio>
                                 <p>(Impuse responses courtesy of
                                     <a href="https://www.iks.rwth-aachen.de/en/research/tools-downloads/databases/aachen-impulse-response-database/">RWTH Aachen</a> and
                                     <a href="http://www.openairlib.net/">Open AIR Library</a>)</p>
@@ -254,9 +254,10 @@
                 </div>
                 <div class="outputbox">
                     <h2>Result:</h2>
-                    <audio id="outputSound" controls></audio>
-                    <button type="button" id="resultDownload">Download</button>
-
+                    <audio id="outputSound" controls controlsList="nodownload"></audio>
+                    <input type="button" id="convolve" value="Convolve"/>
+                    <input type="button" id="downloadButton" value="Download file"/>
+                    <p id="renderStatus"></p>
                 </div>
 
             </div>
