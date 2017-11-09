@@ -156,41 +156,6 @@ function plotUDF(board) {
 	board.update();
 }
 
-function convolveWithUDF(brd2){
-	convoCorr = 0;
-    graph3.updateDataArray = function(){ 
-        udfConvoResult = conv(signalArray1, udfValues); // for now convolving with the first selected function
-        scaleResult(udfConvoResult);
-        
-        generateResultPoints(udfTimes, udfConvoResult); 	// X-axis points for graph 3
-        this.dataX = udfTimes;  // X axis values for graph 2 on the upper board
-        this.dataY = udfConvoResult;  // Y axis values for graph 2 on the upper board
-        
-    };
-	
-    brd2.update();
-    pnt.moveTo([100,0]); // take red point out of sight
-	
-	return false;
-}
-
-// Gets and plots the correlation values for the selected functions
-function correlateWithUDF(brd2){
-	convoCorr = 1;
-    graph3.updateDataArray = function(){ 
-        udfCorrResult = xcorr(signalArray1, udfValues);
-        scaleResult(udfCorrResult);
-        
-        generateResultPoints(udfTimes, udfCorrResult); // X-axis points for graph 3
-        this.dataX = udfTimes;
-        this.dataY = udfCorrResult;
-    };
-    brd2.update();
-    pnt.moveTo([100,0]);
-    
-	return false;
-}
-
 function toggleBlockVisibility(divID) {
     var x = document.getElementById(divID);
     if (x.style.display === "none") {
