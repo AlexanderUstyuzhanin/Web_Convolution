@@ -37,6 +37,7 @@ var files;
 
 
 function onAudioSelect(evt) {
+
     var selectedPreset = audioPreset.value;
 
     switch (selectedPreset) {
@@ -286,6 +287,7 @@ document.getElementById('files').addEventListener('change', handleAudioFileSelec
 document.getElementById('iFiles').addEventListener('change', handleIRFileSelect, false);
 irPresetList.addEventListener('change', onIrPresetSelect, false);
 audioPreset.addEventListener('change', onAudioSelect, false);
+
 //radio buttons
 document.getElementById('audioPresetRadio').addEventListener('click', onAudioSelect, false);
 document.getElementById('ownAudioFile').addEventListener('click', onOwnAudioClick, false);
@@ -294,6 +296,5 @@ document.getElementById('ownIrFile').addEventListener('click', onOwnIRClick, fal
 document.getElementById('downloadButton').addEventListener("click", downloadFile, false);
 
 var outputSound = document.getElementById('outputSound');
-var output = audioCtx.createMediaElementSource(outputSound);
 
 document.getElementById('convolve').addEventListener('click', convolve, false);
