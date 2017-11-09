@@ -8,22 +8,31 @@ var udfValues = []; // stores the UDF function values for the Y axis
 var udfDisabled = true;
 var udfNeedsParsing = true;
 
+// shows or hides the desired div block on the webpage
+function toggleBlockVisibility(divID) {
+    var x = document.getElementById(divID);
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
 // performs actions necessary after the initial page load
 function onPageLoadUdf() {
-	// toggleUDF();
-	// opdlUDF.disabled = true;
 	toggleBlockVisibility("divUDF");
 }
 
+// updates the flag and enables the update button for UDF
 function updateUdfParsingReq() {
 	udfNeedsParsing = true;
 	document.getElementById("btnUpdateUdf").disabled = false;
 }
 
+// checks if the user selected UDF from the list of available functions
 function checkUdfSelected() {
 	var fl = document.getElementById("functionList1");
-	if (fl.value == 9) {
-		// toggleUDF();
+	if (fl.value == 9) { // 9 corresponds to the UDF id in the list
 		activateUdf();
 	}
 	else {
@@ -31,23 +40,8 @@ function checkUdfSelected() {
 	}
 }
 
-// function toggleUDF() {
-	// udfDisabled = !udfDisabled; // toggle
-	// opdlUDF.disabled = udfDisabled;
-	// if (!udfDisabled) { 
-		// if (udfNeedsParsing) parseMathExpr();
-		
-		// document.getElementById("functionList1").value = "7";
-		
-		// plot1(brd);
-	// }
-	// else {
-		
-	// }
-	
-	// return false;
-// }
-
+// enables the udf functionality: updates necessary flags, enables UDF UI, 
+// calls for parsing the expression and redraws the function 1 replacing it by the UDF
 function activateUdf() {
 	if (udfDisabled) {
 		if (udfNeedsParsing) {
@@ -61,6 +55,7 @@ function activateUdf() {
 	udfDisabled = false;
 }
 
+// disables the UDF interface and updates necessary flags
 function deactivateUdf() {
 	if (!udfDisabled) {
 		document.getElementById("F1_width").disabled = false;
@@ -70,6 +65,7 @@ function deactivateUdf() {
 	udfDisabled = true;
 }
 
+// reads and parses the expression input in the UDF input field
 function parseMathExpr() {
 	userDefinedExpression = document.getElementById("txtUserExpression").value; // get UDF from the text field
 	// var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
@@ -84,11 +80,8 @@ function parseMathExpr() {
 	// updateUDTexExpression(texExpr);
 	// document.getElementById("txtEvalRes").value = result;
 	// displayTex(udfDivId, texDisplayFieldId, texExpr);
-	
-	var input = [ 0, 1 ];
-	var output = evaluateCurrentUserDefinedFunction(input);
-	udfValues = evaluateCurrentUserDefinedFunction(samplePoints);
-	// plotUDF(brd); // call for (re)drawing
+
+	udfValues = evaluateCurrentUserDefinedFunction(samplePoints); // calculate function values
 	udfNeedsParsing = false; // just parsed
 	document.getElementById("btnUpdateUdf").disabled = true;
 	plot1(brd);
@@ -104,7 +97,7 @@ function parseMathExpr() {
 	// disp_div.innerHTML = "$$" + tex + "$$"; // formula display
 // }
 
-
+// updates the TeX hint for what the system parsed from the user input
 function updateUDTexExpression(TeX) {
     var QUEUE = MathJax.Hub.queue;  // shorthand for the queue
     var math = null;                // the element jax for the math output.
@@ -115,6 +108,7 @@ function updateUDTexExpression(TeX) {
 	QUEUE.Push(["Text",math,"\\displaystyle{"+TeX+"}"]);
 }
 
+// returns corresponding UDF Y axis values based on the input vector of X axis values
 function evaluateCurrentUserDefinedFunction(values) { // this assumes user input format like x^2 + 5*x
 	len = values.length;
 	var ret = new Array(2); // eval returns a vector of all inputs concatenated with output
@@ -125,22 +119,13 @@ function evaluateCurrentUserDefinedFunction(values) { // this assumes user input
 		output[i] = ret[1]; // select f(x)
 	}
 	
-	// udfValues = output;
 	return output;
 }
 
+// returns UDF values at a point
 function evaluateCurrentUserDefinedFunctionAtValue(value) { // this assumes user input format like x^2 + 5*x
 	var ret = new Array(2); // eval returns a vector of all inputs concatenated with output
 	ret = math.eval(['x = ' + value, userDefinedExpression]); // [x, f(x)]
 
 	return ret[1]; // select f(x)
-}
-
-function toggleBlockVisibility(divID) {
-    var x = document.getElementById(divID);
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
 }
