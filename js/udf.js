@@ -1,5 +1,8 @@
 // File	  :	udf.js
- 
+// This file contains code related to the user-defined functions implementation.
+// The UDFs functionality relies on the functions present in the plots.js for plotting
+// as well as on the functions located in math_functions.js for convolution & correlation.
+
 var userDefinedExpression;
 var udfTimes = [];
 var udfOriginalValues = []; // stores complete function for modfication
