@@ -11,14 +11,18 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
 
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 var convolver = audioCtx.createConvolver();
-var offlineCtx = new OfflineAudioContext(2, 48000 * 45, 48000);
-var offlineConvolver = offlineCtx.createConvolver();
-var source = offlineCtx.createBufferSource();
+var offlineCtx;
+var offlineConvolver;
+var convolverBuffer;
+var offlineContextSource;
+var inputAudioBuffer;
 
 var audioPreset = document.getElementById('audioPreset');
 var irPresetList = document.getElementById('irPresetList');
 var inputSound = document.getElementById('inputSound');
 
+var fileArrayBufferDecoded;
+var IRFileArrayBufferDecoded;
 var ownAudioFileURL;
 var inputAudioPresetURL;
 var ownIRFileURL;
@@ -28,6 +32,8 @@ var buffer = presetAudioBuffer;
 var ownIRFileBuffer;
 var outputBlobURL;
 var blob;
+var worker;
+var files;
 
 
 function onAudioSelect(evt) {
@@ -44,9 +50,9 @@ function onAudioSelect(evt) {
             alert('preset selected');
     }
 
-
     //Sets the player's src to control playback
     inputSound.src = inputAudioPresetURL;
+    // outputSound.src = inputAudioPresetURL;
 
     //Check radio button
     document.getElementById('audioPresetRadio').checked = true;
@@ -58,40 +64,56 @@ function onAudioSelect(evt) {
 
     ajaxRequest.onload = function (e) {
         var audioData = ajaxRequest.response;
-        audioCtx.decodeAudioData(audioData, function (buffer) {
-            source.buffer = buffer;
-        }, function (e) { "Error with decoding audio data" + e.err });
+        audioCtx.decodeAudioData(audioData, setInputBuffer, function (e) { "Error with decoding audio data" + e.err });
     }
     ajaxRequest.send();
 }
 
 function onAudioPresetClick() {
-    inputSound.src = inputAudioPresetURL;
+
 }
 
 function onOwnAudioClick() {
+    setInputBuffer(fileArrayBufferDecoded);
     inputSound.src = ownAudioFileURL;
 }
 
 function handleAudioFileSelect(evt) {
     var files = evt.target.files; // FileList object
 
-    ownAudioFileURL = URL.createObjectURL(this.files[0]);
     //Set src for the player
+    ownAudioFileURL = URL.createObjectURL(this.files[0]);
     inputSound.src = ownAudioFileURL;
 
     var fileReader = new FileReader();
     fileReader.readAsArrayBuffer(this.files[0]);
     fileReader.onload = function () {
-        var arrayBuffer = this.result;
-        audioCtx.decodeAudioData(arrayBuffer, function (buffer) {
-            source.buffer = buffer;
+        var fileArrayBuffer = this.result;
+        audioCtx.decodeAudioData(fileArrayBuffer, function (buffer) {
+            fileArrayBufferDecoded = buffer;
+            setInputBuffer(buffer);
         });
     }
     // outputSound.src = ownAudioFileURL;
     document.getElementById('ownAudioFile').checked = true;
 }
 
+setInputBuffer = function (buffer) {
+
+    inputAudioBuffer = audioCtx.createBuffer(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
+    for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+        inputAudioBuffer.copyToChannel(buffer.getChannelData(channel), channel);
+    }
+
+}
+
+setConvolverBuffer = function (buffer) {
+
+    convolverBuffer = audioCtx.createBuffer(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
+    for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+        convolverBuffer.copyToChannel(buffer.getChannelData(channel), channel);
+    }
+}
 
 function loadIRPreset(audioURL) {
     document.getElementById('impulseResponse').src = audioURL;
@@ -102,11 +124,7 @@ function loadIRPreset(audioURL) {
 
     ajaxRequest.onload = function (e) {
         var audioData = ajaxRequest.response;
-        audioCtx.decodeAudioData(audioData, function (buffer) {
-            presetAudioBuffer = buffer;
-            convolver.buffer = presetAudioBuffer;
-            offlineConvolver.buffer = presetAudioBuffer;
-        }, function (e) { "Error with decoding audio data" + e.err });
+        audioCtx.decodeAudioData(audioData, setConvolverBuffer, function (e) { "Error with decoding audio data" + e.err });
     }
     ajaxRequest.send();
 }
@@ -156,30 +174,76 @@ function handleIRFileSelect(evt) {
     var fileReader = new FileReader();
     fileReader.readAsArrayBuffer(this.files[0]);
     fileReader.onload = function () {
-        var arrayBuffer = this.result;
-        audioCtx.decodeAudioData(arrayBuffer, function (buffer) {
-            ownIRFileBuffer = buffer;
-            convolver.buffer = ownIRFileBuffer;
-            offlineConvolver.buffer = ownIRFileBuffer;
+        var IRFileArrayBuffer = this.result;
+        audioCtx.decodeAudioData(IRFileArrayBuffer, function (buffer) {
+            IRFileArrayBufferDecoded = buffer;
+            setConvolverBuffer(buffer);
         });
     }
+
 
     document.getElementById('ownIrFile').checked = true;
 }
 
 function onIRPresetClick() {
     loadIRPreset(irPresetURL);
-    convolver.buffer = presetAudioBuffer;
+    convolverBuffer = presetAudioBuffer;
 }
 
 function onOwnIRClick() {
     loadIRPreset(ownIRFileURL);
-    convolver.buffer = ownIRFileBuffer;
+    convolverBuffer = ownIRFileBuffer;
 }
 
-function playOutput(evt) {
-    output.connect(convolver);
-    convolver.connect(audioCtx.destination);
+function convolve() {
+
+    offlineCtx = new OfflineAudioContext(2, 48000 * 45, 48000);
+    offlineContextSource = offlineCtx.createBufferSource();
+    offlineContextSource.buffer = inputAudioBuffer;
+
+    offlineConvolver = offlineCtx.createConvolver();
+    offlineConvolver.buffer = convolverBuffer;
+
+    offlineContextSource.connect(offlineConvolver);
+    offlineConvolver.connect(offlineCtx.destination);
+    offlineContextSource.start();
+
+    offlineCtx.startRendering().then(function (renderedBuffer) {
+        console.log("rendering complete");
+
+        // start a new worker 
+        worker = new Worker('js/libs/recorderWorker.js');
+
+        // initialize the new worker
+        worker.postMessage({
+            command: 'init',
+            config: { sampleRate: offlineCtx.sampleRate }
+        });
+
+        // callback for `exportWAV`
+        worker.onmessage = function (e) {
+            blob = e.data;
+            outputBlobURL = URL.createObjectURL(blob);
+            outputSound.src = outputBlobURL;
+        };
+
+        var shortBuffer = trimBuffer(renderedBuffer);
+
+        // send the channel data from our buffer to the worker
+        worker.postMessage({
+            command: 'record',
+            buffer: [
+                shortBuffer.getChannelData(0),
+                shortBuffer.getChannelData(1)
+            ]
+        });
+
+        // ask the worker for a WAV
+        worker.postMessage({
+            command: 'exportWAV',
+            type: 'audio/wav'
+        });
+    });
 }
 
 //Removes trailing zeroes in audio buffer because buffer is fixed size and convolution result is shorter
@@ -201,72 +265,29 @@ function trimBuffer(audioBuffer) {
 
 function downloadFile() {
 
-    source.connect(offlineConvolver);
-    offlineConvolver.connect(offlineCtx.destination);
-    // var recorder = new Recorder(offlineCtx.destination);
-    source.start();
 
-    offlineCtx.startRendering().then(function (renderedBuffer) {
-        // start a new worker 
-        // we can't use Recorder directly, since it doesn't support what we're trying to do
-        console.log("rendering complete");
-        var worker = new Worker('js/libs/recorderWorker.js');
+    var filename = "output.wav";
+    var element = document.createElement('a');
 
-        // initialize the new worker
-        worker.postMessage({
-            command: 'init',
-            config: { sampleRate: offlineCtx.sampleRate }
-        });
+    element.setAttribute('href', outputBlobURL);
+    element.setAttribute('download', filename);
 
-        // callback for `exportWAV`
-        worker.onmessage = function (e) {
-            blob = e.data;
-            outputBlobURL = URL.createObjectURL(blob);
-            var filename = "output.wav";
-            var element = document.createElement('a');
+    element.style.display = 'none';
+    document.body.appendChild(element);
 
-            element.setAttribute('href', outputBlobURL);
-            element.setAttribute('download', filename);
+    element.click();
 
-            element.style.display = 'none';
-            document.body.appendChild(element);
-
-            element.click();
-
-            document.body.removeChild(element);
-
-        };
-
-        var shortBuffer = trimBuffer(renderedBuffer);
-
-        // send the channel data from our buffer to the worker
-        worker.postMessage({
-            command: 'record',
-            buffer: [
-                shortBuffer.getChannelData(0),
-                shortBuffer.getChannelData(1)
-            ]
-        });
-
-        // ask the worker for a WAV
-        worker.postMessage({
-            command: 'exportWAV',
-            type: 'audio/wav'
-        });
-
-
-    });
+    document.body.removeChild(element);
 
 }
 
 //Event listeners 
 document.getElementById('files').addEventListener('change', handleAudioFileSelect, false);
 document.getElementById('iFiles').addEventListener('change', handleIRFileSelect, false);
-document.getElementById('outputSound').addEventListener('play', playOutput, false);
 irPresetList.addEventListener('change', onIrPresetSelect, false);
 audioPreset.addEventListener('change', onAudioSelect, false);
 //radio buttons
-document.getElementById('audioPresetRadio').addEventListener('click', onAudioPresetClick, false);
+document.getElementById('audioPresetRadio').addEventListener('click', onAudioSelect, false);
 document.getElementById('ownAudioFile').addEventListener('click', onOwnAudioClick, false);
 document.getElementById('irPresetRadio').addEventListener('click', onIRPresetClick, false);
 document.getElementById('ownIrFile').addEventListener('click', onOwnIRClick, false);
@@ -275,4 +296,4 @@ document.getElementById('downloadButton').addEventListener("click", downloadFile
 var outputSound = document.getElementById('outputSound');
 var output = audioCtx.createMediaElementSource(outputSound);
 
-// document.getElementById('convolve').addEventListener('click', onConvolve, false);
+document.getElementById('convolve').addEventListener('click', convolve, false);
