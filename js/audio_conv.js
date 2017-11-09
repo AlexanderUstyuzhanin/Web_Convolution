@@ -16,7 +16,9 @@ var convolverBuffer;
 var offlineContextSource;
 var inputAudioBuffer;
 var ownAudioFileURL;
+var ownAudioFileName;
 var inputAudioPresetURL;
+var ownIRFileName;
 var ownIRFileURL;
 var irPresetURL;
 var outputBlobURL;
@@ -67,7 +69,7 @@ function handleAudioFileSelect(evt) {
     //Set src for the player
     ownAudioFileURL = URL.createObjectURL(this.files[0]);
     inputSound.src = ownAudioFileURL;
-
+    ownIRFileName = this.files[0].name;
     var fileReader = new FileReader();
     fileReader.readAsArrayBuffer(this.files[0]);
     fileReader.onload = function () {
@@ -140,6 +142,7 @@ function handleIRFileSelect(evt) {
     ownIRFileURL = URL.createObjectURL(this.files[0]);
     //Set src of the player
     impulseResponseSound.src = ownIRFileURL;
+    ownIRFileName = this.files[0].name;
     var files = evt.target.files;
 
     var fileReader = new FileReader();
@@ -154,46 +157,59 @@ function handleIRFileSelect(evt) {
 }
 
 setConvolverBuffer = function (buffer) {
-    
-        convolverBuffer = audioCtx.createBuffer(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
-        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
-            convolverBuffer.copyToChannel(buffer.getChannelData(channel), channel);
-        }
+
+    convolverBuffer = audioCtx.createBuffer(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
+    for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+        convolverBuffer.copyToChannel(buffer.getChannelData(channel), channel);
     }
+}
 
 function convolve() {
+    
+    var renderingText = document.createTextNode("Rendering...");
+    var renderedText = document.createTextNode("Rendered");
+    
+    var node = document.getElementById('renderStatus');
+    if(node.childNodes.length>0){
+        node.removeChild(node.lastChild);
+    }
+    node.appendChild(renderingText);
+    
     //Offline context can only be used once. New one has to be recreated everytime
     //Convolution result length is the sum of both input lengths
     offlineCtx = new OfflineAudioContext(2, inputAudioBuffer.length + convolverBuffer.length, inputAudioBuffer.sampleRate);
     offlineContextSource = offlineCtx.createBufferSource();
     offlineContextSource.buffer = inputAudioBuffer;
-    
+
     offlineConvolver = offlineCtx.createConvolver();
     offlineConvolver.buffer = convolverBuffer;
-    
+
     offlineContextSource.connect(offlineConvolver);
     offlineConvolver.connect(offlineCtx.destination);
     offlineContextSource.start();
-    
+
     offlineCtx.startRendering().then(function (renderedBuffer) {
-        console.log("rendering complete");
-        
+
+        node.removeChild(renderingText);
+        node.appendChild(renderedText);
+
+
         // start a new worker 
         var worker = new Worker('js/libs/recorderWorker.js');
-        
+
         // initialize the new worker
         worker.postMessage({
             command: 'init',
             config: { sampleRate: offlineCtx.sampleRate }
         });
-        
+
         // callback for `exportWAV`
         worker.onmessage = function (e) {
             blob = e.data;
             outputBlobURL = URL.createObjectURL(blob);
             outputSound.src = outputBlobURL;
         };
-        
+
         // send the channel data from our buffer to the worker
         worker.postMessage({
             command: 'record',
@@ -202,7 +218,7 @@ function convolve() {
                 renderedBuffer.getChannelData(1)
             ]
         });
-        
+
         // ask the worker for a WAV
         worker.postMessage({
             command: 'exportWAV',
@@ -212,19 +228,33 @@ function convolve() {
 }
 
 function downloadFile() {
-    var filename = "output.wav";
+    var filename = "";
+    if (document.getElementById('audioPresetRadio').checked) {
+        filename = filename.concat(audioPreset.value);
+    } else if (document.getElementById('ownAudioFile').checked) {
+        filename = filename.concat(ownAudioFileName);
+    }
+
+    filename = filename.concat(" in ");
+
+    if (document.getElementById('irPresetRadio').checked) {
+        filename = filename.concat(irPresetList.value);
+    } else if (document.getElementById('ownIrFile').checked) {
+        filename = filename.concat(ownIRFileName);
+    }
+
     var element = document.createElement('a');
-    
+
     element.setAttribute('href', outputBlobURL);
     element.setAttribute('download', filename);
-    
+
     element.style.display = 'none';
     document.body.appendChild(element);
-    
+
     element.click();
-    
+
     document.body.removeChild(element);
-    
+
 }
 
 function onOwnAudioClick() {
