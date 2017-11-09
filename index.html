@@ -113,7 +113,7 @@
 							<!-- User defined functions -->
 							<div id="divUDF">
 								<p>
-									<label for="txtUserExpression">Your function: </label> <br><br>
+									<label id = "lblUdfExpr" for="txtUserExpression">Your function: </label> <br><br>
 									<input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" onchange="return updateUdfParsingReq()" />
 									<button id="btnUpdateUdf" onclick="return parseMathExpr(); plot1(brd);" >Update</button>
 								</p>
