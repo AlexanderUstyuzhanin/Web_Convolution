@@ -191,43 +191,6 @@ function correlateWithUDF(brd2){
 	return false;
 }
 
-function applyRectToUDF(left, right, samplePoints) {
-	var crossedLeft = false;
-	var leftIndex, rightIndex;
-	udfValues = udfOriginalValues.slice();
-	for (i = 0; i < samplePoints.length; i++) {
-		if (!crossedLeft) { if (samplePoints[i]>=left) {crossedLeft = true; leftIndex = i; } }
-		else { if (samplePoints[i]>=right) {rightIndex = i; break; } }
-	}
-	
-	for (i = 0; i < udfValues.length; i++) {
-		if (i < leftIndex) udfValues[i] = 0;
-		if (i > rightIndex) udfValues[i] = 0;
-	}
-	
-	// plotUDF(brd);
-	plot1(brd);
-	
-	// console.log("Modified UDF plot");
-	return false;
-}
-
-function applyStepToUDF(start, samplePoints) {
-	var startIndex;
-	for (i = 0; i < samplePoints.length; i++) {
-		if (samplePoints[i]>=start) {startIndex = i; break;}
-	}
-	for (i = 0; i < udfValues.length; i++) {
-		if (i < startIndex) udfValues[i] = 0;
-	}	
-	
-	// plotUDF(brd);
-	plot1(brd);
-	
-	return false;
-}
-
-
 function toggleBlockVisibility(divID) {
     var x = document.getElementById(divID);
     if (x.style.display === "none") {
