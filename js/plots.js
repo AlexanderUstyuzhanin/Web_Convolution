@@ -383,7 +383,7 @@ function doConvo(brd2) {
 
   plot2(brd); 	// re-plot the second function which is tied to animation with slider
   
-  console.log(signalArray3);
+  // console.log(signalArray3);
 
   return false;
 }
@@ -440,7 +440,7 @@ function reDrawSignal2() {
 			if (convoCorr === 0) { // convolution
 				if (signal === '6') { // dirac pulse selected
 					const xVal = (shiftSignal2 * -1) + slide.Value();
-					console.log(xVal)
+					// console.log(xVal)
 					pntArrow2.moveTo([(xVal), 0.95]); // set arrow on dirac plot
 				}
 				for (let x = 0; x < samplePoints.length; x++) {
