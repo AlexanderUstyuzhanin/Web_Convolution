@@ -1,7 +1,4 @@
 // File	  :	udf.js
-// Author :	Alexander Ustyuzhanin
-// HAW Hamburg, CJ1, SS2017
-// User-defined functions for Web Convolution project
  
 var userDefinedExpression;
 var udfTimes = [];
