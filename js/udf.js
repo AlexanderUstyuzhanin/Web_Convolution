@@ -18,9 +18,24 @@ function toggleBlockVisibility(divID) {
     }
 }
 
+// disables (greys out) UDF part of the interface
+function disableUdfControls() {
+	document.getElementById("txtUserExpression").disabled = true;
+	document.getElementById("btnUpdateUdf").disabled = true;
+	document.getElementById("lblUdfExpr").disabled = true;
+}
+
+// enables (removes greyout) UDF part of the interface
+function enableUdfControls() {
+	document.getElementById("txtUserExpression").disabled = false;
+	document.getElementById("btnUpdateUdf").disabled = false;
+	document.getElementById("lblUdfExpr").disabled = false;
+}
+
 // performs actions necessary after the initial page load
 function onPageLoadUdf() {
-	toggleBlockVisibility("divUDF");
+	// toggleBlockVisibility("divUDF");
+	disableUdfControls();
 }
 
 // updates the flag and enables the update button for UDF
@@ -50,8 +65,9 @@ function activateUdf() {
 		document.getElementById("F1_width").disabled = true; // TODO - this doesn't work!
 		document.getElementById("F1_shift").disabled = true;
 		plot1(brd);
-		toggleBlockVisibility("divUDF");
+		// toggleBlockVisibility("divUDF");
 	}
+	enableUdfControls();
 	udfDisabled = false;
 }
 
@@ -60,8 +76,9 @@ function deactivateUdf() {
 	if (!udfDisabled) {
 		document.getElementById("F1_width").disabled = false;
 		document.getElementById("F1_shift").disabled = false;
-		toggleBlockVisibility("divUDF");
+		// toggleBlockVisibility("divUDF");
 	}
+	disableUdfControls();
 	udfDisabled = true;
 }
 
