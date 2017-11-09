@@ -188,23 +188,6 @@ function correlateWithUDF(brd2){
 	return false;
 }
 
-function updateUdfLimits() {
-	leftLimiter = $( "#slider-range" ).slider( "values", 0 );
-	rightLimiter = $( "#slider-range" ).slider( "values", 1 );
-	
-	if (document.getElementById("cbxUdfRect").checked) {
-		applyRectToUDF(leftLimiter, rightLimiter, samplePoints);
-	}
-	else {
-		udfValues = udfOriginalValues.slice();
-		plot1(brd);
-	}
-	
-	
-	// console.log("Updated udf limits");
-	return false;
-}
-
 function applyRectToUDF(left, right, samplePoints) {
 	var crossedLeft = false;
 	var leftIndex, rightIndex;
@@ -241,17 +224,6 @@ function applyStepToUDF(start, samplePoints) {
 	return false;
 }
 
-function updateUdfSliderLimits(board) { // I know it's ugly, but it will have to do for now
-	leftLimiter = board.getBoundingBox()[0];
-	rightLimiter = -1*currentLeftBound;
-	
-	$('#slider-range').slider( "option", "min", leftLimiter );
-	$('#slider-range').slider( "option", "max", rightLimiter );
-	 
-	// console.log("Updated slider limits");
-	
-	return false;
-}
 
 function toggleBlockVisibility(divID) {
     var x = document.getElementById(divID);
