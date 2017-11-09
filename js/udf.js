@@ -62,8 +62,6 @@ function activateUdf() {
 		if (udfNeedsParsing) {
 			parseMathExpr();
 		}
-		document.getElementById("F1_width").disabled = true; // TODO - this doesn't work!
-		document.getElementById("F1_shift").disabled = true;
 		plot1(brd);
 		// toggleBlockVisibility("divUDF");
 	}
@@ -74,8 +72,6 @@ function activateUdf() {
 // disables the UDF interface and updates necessary flags
 function deactivateUdf() {
 	if (!udfDisabled) {
-		document.getElementById("F1_width").disabled = false;
-		document.getElementById("F1_shift").disabled = false;
 		// toggleBlockVisibility("divUDF");
 	}
 	disableUdfControls();
