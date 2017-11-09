@@ -3,17 +3,12 @@
 // The UDFs functionality relies on the functions present in the plots.js for plotting
 // as well as on the functions located in math_functions.js for convolution & correlation.
 
-var userDefinedExpression;
-var udfTimes = [];
-var udfOriginalValues = []; // stores complete function for modfication
-var udfValues = [];
-var udfConvoResult = []; // array similar to signalArray3
-var udfCorrResult = []; // array similar to signalArray3
-var leftLimiter;
-var rightLimiter;
-var isUdfDisabled = true;
+var userDefinedExpression; // stores original user input defining the UDF
+var udfValues = []; // stores the UDF function values for the Y axis
+var udfDisabled = true;
 var udfNeedsParsing = true;
 
+// performs actions necessary after the initial page load
 function onPageLoadUdf() {
 	// toggleUDF();
 	// opdlUDF.disabled = true;
@@ -37,9 +32,9 @@ function checkUdfSelected() {
 }
 
 // function toggleUDF() {
-	// isUdfDisabled = !isUdfDisabled; // toggle
-	// opdlUDF.disabled = isUdfDisabled;
-	// if (!isUdfDisabled) { 
+	// udfDisabled = !udfDisabled; // toggle
+	// opdlUDF.disabled = udfDisabled;
+	// if (!udfDisabled) { 
 		// if (udfNeedsParsing) parseMathExpr();
 		
 		// document.getElementById("functionList1").value = "7";
@@ -54,7 +49,7 @@ function checkUdfSelected() {
 // }
 
 function activateUdf() {
-	if (isUdfDisabled) {
+	if (udfDisabled) {
 		if (udfNeedsParsing) {
 			parseMathExpr();
 		}
@@ -63,24 +58,21 @@ function activateUdf() {
 		plot1(brd);
 		toggleBlockVisibility("divUDF");
 	}
-	isUdfDisabled = false;
+	udfDisabled = false;
 }
 
 function deactivateUdf() {
-	if (!isUdfDisabled) {
+	if (!udfDisabled) {
 		document.getElementById("F1_width").disabled = false;
 		document.getElementById("F1_shift").disabled = false;
 		toggleBlockVisibility("divUDF");
 	}
-	isUdfDisabled = true;
+	udfDisabled = true;
 }
 
 function parseMathExpr() {
 	userDefinedExpression = document.getElementById("txtUserExpression").value; // get UDF from the text field
 	// var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
-	// leftLimiter = parseFloat( document.getElementById("txtLeftLimiter").value );
-	// rightLimiter = parseFloat( document.getElementById("txtRightLimiter").value ); 
-	// updateUdfLimits();
 	var udfDivId = "divUDF"; // HTML element for displaying the pretty function
 	var texDisplayFieldId = "divTexExpr"; // HTML element for displaying the pretty function
 	
@@ -95,8 +87,7 @@ function parseMathExpr() {
 	
 	var input = [ 0, 1 ];
 	var output = evaluateCurrentUserDefinedFunction(input);
-	udfOriginalValues = evaluateCurrentUserDefinedFunction(samplePoints);
-	udfValues = udfOriginalValues.slice();
+	udfValues = evaluateCurrentUserDefinedFunction(samplePoints);
 	// plotUDF(brd); // call for (re)drawing
 	udfNeedsParsing = false; // just parsed
 	document.getElementById("btnUpdateUdf").disabled = true;
