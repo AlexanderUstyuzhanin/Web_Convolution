@@ -247,6 +247,8 @@ function plot1(brd) {
                pntArrow1.moveTo([shiftSignal1, 0.95]);
            } else if (signal === '9') {	// user defined function selected
                yAxisValues = udfValues;
+			   widthTextObj.disabled = true;
+			   shiftTextObj.disabled = true;
                pntArrow1.moveTo([100, 0]); //move point out of view
            } else if (signal === '7') { // dirac pulse train selected
                shiftTextObj.disabled = true;
