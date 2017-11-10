@@ -24,6 +24,13 @@ h1{
     -webkit-margin-after: 0em; */
 }
 
+h2{
+    font-size: 1.5em;
+}
+
+input{
+    margin-bottom:1em;
+}
 #files, #iFiles{
     padding: 1px;
     background: #fff;
@@ -34,28 +41,8 @@ h1{
 }
 
 /* ------- From visualisation.css by Anthony ------*/
-/* .next {
-    float:right;
-    width: 300px;
-    padding: 10px;
- }
-.space{
-    clear : none;
-    float : left;
-    position : relative;
-    width : 100px;
-    height : 50px;
-} */
-/* .boxGroup{
-    clear : none;
-    float : left;
-    position : relative;
-} */
+
 .jxgbox{
-    /* clear : both;
-    float : none;
-    position : relative;
-    border-style: solid; */
     margin: 20px;
 }
 #jxgbox2{
@@ -66,10 +53,8 @@ h1{
     float : left;
     position : relative;
     padding: 20px 50px;
-    width : 320px;
+    width : 300px;
     height : 400px;
-    font-family:Tahoma;
-    font-size: 11pt;
 }
 
 #sliderParagraph {
@@ -78,18 +63,6 @@ h1{
  	background-color: white;
 	padding: 0px;
 	margin-right: 100px;
-}
-
-#function1Label {
-  color: green;
-}
-
-#function2Label {
-  color: blue;
-}
-
-#F1_shift, #F2_shift {
-  margin-left: 9px;
 }
 .greyed {
   border-style: solid;
@@ -107,9 +80,9 @@ h1{
     display: block;
     margin: auto;
     border: 1px solid transparent;
-
+    
 }
-
+ 
     /*----- Tab Links -----*/
     /* Clearfix */
     .tab-links:after {
@@ -117,7 +90,7 @@ h1{
         clear:both;
         content:'';
     }
-
+ 
     .tab-links li {
         margin:0px 10px;
         float:left;
@@ -127,7 +100,7 @@ h1{
         /* -webkit-margin-after: 0em; */
         margin-bottom: 0px;
     }
-
+ 
         .tab-links a {
             padding:9px 30px;
             display:inline-block;
@@ -138,17 +111,17 @@ h1{
             color:#4c4c4c;
             transition:all linear 0.15s;
         }
-
+ 
         .tab-links a:hover {
             background:#a7cce5;
             text-decoration:none;
         }
-
+ 
     li.active a, li.active a:hover {
         background:#fff;
         color:#4c4c4c;
     }
-
+ 
     /*----- Content of Tabs -----*/
     .tab-content {
         padding:15px;
@@ -156,13 +129,15 @@ h1{
         box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
         background:#fff;
     }
-
+ 
         .tab {
             display:none;
         }
-
+ 
         .tab.active {
-            display:block;
+            /* display:block; */
+            /* border: 1px black solid; */
+            /* margin: 0 auto; */
         }
 
 
