@@ -247,6 +247,8 @@ function plot1(brd) {
                pntArrow1.moveTo([shiftSignal1, 0.95]);
            } else if (signal === '9') {	// user defined function selected
                yAxisValues = udfValues;
+			   widthTextObj.disabled = true;
+			   shiftTextObj.disabled = true;
                pntArrow1.moveTo([100, 0]); //move point out of view
            } else if (signal === '7') { // dirac pulse train selected
                shiftTextObj.disabled = true;
@@ -383,7 +385,7 @@ function doConvo(brd2) {
 
   plot2(brd); 	// re-plot the second function which is tied to animation with slider
   
-  console.log(signalArray3);
+  // console.log(signalArray3);
 
   return false;
 }
@@ -440,7 +442,7 @@ function reDrawSignal2() {
 			if (convoCorr === 0) { // convolution
 				if (signal === '6') { // dirac pulse selected
 					const xVal = (shiftSignal2 * -1) + slide.Value();
-					console.log(xVal)
+					// console.log(xVal)
 					pntArrow2.moveTo([(xVal), 0.95]); // set arrow on dirac plot
 				}
 				for (let x = 0; x < samplePoints.length; x++) {
