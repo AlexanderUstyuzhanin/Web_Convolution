@@ -1,23 +1,35 @@
 //Author: Nicola Giaconi
-//Last revision: 27/9/2017
+//Last revision: 25/10/2017
 //Math functions for Web-based Convolution Demonstrator
 
 //ZERO_PADDING
 function zeroPad(x1, x2){
-    //returns the zero padded arrays
-    //input: numeric arrays x1 and x2
-    x1=x1.concat(Array(x2.length-1).fill(0));
-    x2=x2.concat(Array(x1.length-1).fill(0));
+    /*
+    This function zero-pads the input arrays
+    @input x1: []Number
+        input array to be zero-padded
+    @input x2: []Number
+        input array to be zero-padded
+    @return: [2][]Number
+        two-dimensional array containing the zero-padded versions of the input arrays
+    */
+    x1 = x1.concat(Array(x2.length-1).fill(0));
+    x2 = x2.concat(Array(x1.length-1).fill(0));
     return [x1,x2];
 }
 
 //FLIPPING ARRAY
 function flip(x){
-    //returns the index-reverse array of the input array
-    //input: numeric array x
-    N=x.length;
-    x_flipped=Array(N).fill(0);
-    for(i=0;i<N;++i){
+    /*
+    This function flips the order of the elements of the input array
+    @input x: []Number
+        input array to be flipped
+    @return: []Number
+        index-reversed array of the input array
+    */
+    const N = x.length;
+    var x_flipped = Array(N).fill(0);
+    for(let i=0 ; i<N ; ++i){
         x_flipped[N-i-1] = x[i];
     }
     return x_flipped;
@@ -25,16 +37,26 @@ function flip(x){
 
 //CONVOLUTION
 function conv(x1, x2){
-    //returns the linear convolution of the input arrays
-    //input: numeric arrays x1 and x2
-    x=zeroPad(x1,x2); 			//Zero-padding
-    x1=x[0];
-    x2=x[1];
-    N=x[0].length;
-    y=Array(N).fill(0); 		//Preallocating
-    for(n=0;n<N;++n){			//for-loop implementation following definition
-        for(k=0;k<N;++k){
-            if(k>n) break;
+    /*
+    This function performs the linear convolution of the input arrays
+    @input x1: []Number
+        input array to be convolved
+    @input x2: []Number
+        input array to be convolved
+    @return: []Number
+        result of the convolution between the input arrays
+    */
+    var x = zeroPad(x1,x2);
+    x1 = x[0];
+    x2 = x[1];
+    const N = x[0].length;
+    var y = Array(N).fill(0);
+    //for-loop implementation following definition
+    for(let n=0 ; n<N ; ++n){
+        for(let k=0 ; k<N ; ++k){
+            if(k>n){
+                break;
+            }
             y[n] += x1[k]*x2[n-k];
         }
     }
@@ -43,16 +65,26 @@ function conv(x1, x2){
 
 //CORRELATION
 function xcorr(x1, x2){
-    //returns the cross-correlation of the input arrays
-    //input: numeric arrays x1 and x2
-    x=zeroPad(x1,flip(x2)); 	//Zero-padding and index-reversing
-    x1=x[0];
-    x2=x[1];
-    N=x[0].length;
-    y=Array(N).fill(0); 		//Preallocating
-    for(n=0;n<N;++n){			//for-loop implementation following definition
-        for(k=0;k<N;++k){
-            if(k>n) break;
+    /*
+    This function performs the cross-correlation of the input arrays
+    @input x1: []Number
+        input array to be cross-correlated
+    @input x2: []Number
+        input array to be cross-correlated
+    @return: []Number
+        result of the cross-correlation between the input arrays
+    */
+    var x = zeroPad(x1,flip(x2));
+    x1 = x[0];
+    x2 = x[1];
+    const N = x[0].length;
+    var y = Array(N).fill(0);
+    //for-loop implementation following definition
+    for(let n=0 ; n<N ; ++n){
+        for(let k=0 ; k<N ; ++k){
+            if(k>n){
+                break;
+            }
             y[n] += x1[k]*x2[n-k];
         }
     }
@@ -61,99 +93,212 @@ function xcorr(x1, x2){
 
 //RECT FUNCTION
 function rect(x, width=1, shift=0){
-    //returns the rect function of the input array x, centered on shift, and of width w
-    //input: numeric array x, numeric width (default 1), numeric shift (default 0)
-    N=x.length;
-    y=Array(N).fill(0);
-    for(i=0;i<x.length;++i){
-        delta=Math.abs((x[i]-shift)/width);
-        if      (delta > 1/2)   {y[i]=0;}
-        else if (delta == 1/2)  {y[i]=1/2;}
-        else                    {y[i]=1;}
+    /*
+    This function returns the rectangular-function of the input array, centered on shift, and of width w.
+    @input x: []Number
+        input array, argument of the rectangular-function
+    @input width: Number
+        width parameter of the rectangular-function, default value 1
+    @input shift: Number
+        shift parameter of the rectangular-function, default value 0
+    @return: []Number
+        result of applying the rectangular-function to the input array
+    */
+    const N = x.length;
+    var y = Array(N).fill(0);
+    var delta;
+    for(let i=0 ; i<N ; ++i){
+        delta = Math.abs((x[i]-shift)/width);
+        if(delta > 1/2){
+            y[i] = 0;
+        }
+        else if(delta == 1/2){
+            y[i] = 1/2;
+        }
+        else{
+            y[i] = 1;
+        }
     }
     return y;
 }
 
 //TRIANGLE FUNCTION
 function tri(x, width=1, shift=0){
-    //returns the triangle function of the input array x, centered on shift, and of width w
-    //input: numeric array x, numeric width (default 1), numeric shift (default 0)
-    N=x.length;
-    y=Array(N).fill(0);
-    for(i=0;i<x.length;++i){
-    	delta=(x[i]-shift)/width;
-        if      (Math.abs(delta) > 1/2)         {y[i]=0;}
-        else if (delta >= 0 && delta <= 1/2)    {y[i]=1-2*(x[i]-shift)/width;}
-        else if (delta < 0 && delta >= -1/2)    {y[i]=1+2*(x[i]-shift)/width;}
-	}
+    /*
+    This function returns the triangle-function of the input array, centered on shift, and of width w.
+    @input x: []Number
+        input array, argument of the triangular-function
+    @input width: Number
+        width parameter of the triangular-function, default value 1
+    @input shift: Number
+        shift parameter of the triangular-function, default value 0
+    @return: []Number
+        result of applying the triangle-function to the input array
+    */
+    const N = x.length;
+    var y = Array(N).fill(0);
+    var delta;
+    for(let i=0 ; i<N ; ++i){
+        delta = (x[i]-shift)/width;
+        if(Math.abs(delta) > 1/2){
+            y[i] = 0;
+        }
+        else if(delta >= 0 && delta <= 1/2){
+            y[i] = 1-2*(x[i]-shift)/width;
+        }
+        else if(delta < 0 && delta >= -1/2){
+            y[i] = 1+2*(x[i]-shift)/width;
+        }
+    }
     return y;
 }
 
 //STEP FUNCTION
 function step(x, shift=0) {
-    //returns the step function of the input array x, centered on shift
-    //input: numeric array x, numeric shift (default 0)
-    N=x.length;
-    y=Array(N).fill(0);
-    for(i=0;i<x.length;++i){
-        delta=x[i]-shift;
-        if (delta >= 0) {y[i]=1;}
-        else            {y[i]=0;}
+    /*
+    This function returns the step-function of the input array, centered on shift
+    @input x: []Number
+        input array, argument of the step-function
+    @input shift: Number
+        shift parameter of the step-function, default value 0
+    @return: []Number
+        result of applying the step-function to the input array
+    */
+    const N = x.length;
+    var y = Array(N).fill(0);
+    var delta;
+    for(let i=0 ; i<N ; ++i){
+        delta = x[i]-shift;
+        if(delta >= 0){
+            y[i] = 1;
+        }
+        else{
+            y[i] = 0;
+        }
     }
     return y;
 }
 
 //SINC FUNCTION
 function sinc(x, width=1, shift=0) {
-    //returns the sinc function of the input array x
-    //input: numeric array x, numeric width (default 1), numeric shift (default 0)
-    N=x.length;
-    y=Array(N).fill(0);
-    for(i=0;i<x.length;++i){
-        delta=(x[i]-shift)/width;
-        if (delta == 0) {y[i]=1;}
-        else            {y[i]=Math.sin(delta)/delta;}
+    /*
+    This function returns the sinc-function of the input array, centered on shift, and of width w.
+    @input x: []Number
+        input array, argument of the sinc-function
+    @input width: Number
+        width parameter of the sinc-function, default value 1
+    @input shift: Number
+        shift parameter of the sinc-function, default value 0
+    @return: []Number
+        result of applying the sinc-function to the input array
+    */
+    const N = x.length;
+    var y = Array(N).fill(0);
+    var delta;
+    for(let i=0 ; i<N ; ++i){
+        delta = (x[i]-shift)/width;
+        if(delta == 0){
+            y[i] = 1;
+        }
+        else{
+            y[i] = Math.sin(delta)/delta;
+        }
     }
     return y;
 }
 
 //NORMALIZED GAUSSIAN FUNCTION
 function gaussian(x, vari=1, expect=0) {
-    //returns the gaussian-normalized function of the input array x, with
-    //expectation expect, and variance vari
-    //input: numeric array x, numeric vari (default 1), numeric expect (default 0)
-    N=x.length;
-    y=Array(N).fill(0);
-    for(i=0;i<N;++i){
-        y[i]=Math.exp(-Math.pow((x[i]-expect),2)/(2*vari))/(Math.sqrt(2*Math.PI*vari));
+    /*
+    This function returns the normalised gaussian function of the input array, with variance vari and expectation expect
+    @input x: []Number
+        input array, argument of the gaussian function
+    @input vari: Number
+        variance parameter of the gaussian function, default value 1
+    @input expect: Number
+        expectation parameter of the gaussian function, default value 0
+    @return: []Number
+        result of applying the gaussian function to the input array
+    */
+    const N = x.length;
+    var y = Array(N).fill(0);
+    for(let i=0;i<N;++i){
+        y[i] = Math.exp(-Math.pow((x[i]-expect),2)/(2*vari))/(Math.sqrt(2*Math.PI*vari));
     }
     return y;
 }
 
 //DIRAC FUNCTION
 function dirac(x, shift=0) {
-    //returns the dirac function of the input array x, centered on shift
-    //input: numeric array x, numeric shift (default 0)
-    var hit =0;
-    N=x.length;
-    y=Array(N).fill(0);
-    for(i=0;i<x.length;++i){
-        if(x[i]>=shift && hit==0)    {y[i]=1; ++hit;}
-        else			     {y[i]=0;}
+    /*
+    This function returns the dirac-function of the input array, centered on shift
+    @input x: []Number
+        input array, argument of the dirac-function
+    @input shift: Number
+        shift parameter of the dirac-function, default value 0
+    @return: []Number
+        result of applying the dirac-function to the input array
+    */
+    var hit = 0;
+    const N = x.length;
+    var y = Array(N).fill(0);
+    for(let i=0 ; i<N ; ++i){
+        if(x[i]>=shift && hit==0){
+            y[i] = 1;
+            ++hit;
+        }
+        else{
+            y[i] = 0;
+        }
     }
     return y;
 }
 
 //DIRAC-COMB FUNCTION
 function diracComb(x) {
-    //returns the dirac-comb function of the input array x
-    //input: numeric array x
-    N=x.length;
-    y=Array(N).fill(0);
-    xMin=Math.ceil(Math.min.apply(Math,x));
-    for(i=0;i<N;++i){
-        if(x[i]<xMin)   {y[i]=0;}
-        else	        {y[i]=1;++xMin;} //xMin updates after every peak
+    /*
+    This function returns the dirac-comb function of the input array
+    @input x: []Number
+        input array, argument of the dirac-comb function
+    @return: []Number
+        result of applying the dirac-comb function to the input array
+    */
+    const N = x.length;
+    var y = Array(N).fill(0);
+    var xMin = Math.ceil(Math.min.apply(Math,x));
+    for(let i=0 ; i<N ; ++i){
+        if(x[i]<xMin){
+            y[i] = 0;
+        }
+        else{
+            y[i] = 1;
+            //xMin updates after every peak
+            ++xMin;
+        }
+    }
+    return y;
+}
+
+//ONE-SIDED DECREASING EXPONENTIAL FUNCTION
+function oneSidedExp(x, rate=1){
+    /*
+    This function returns the one-sided exponential function of the input array
+    @input x: []Number
+        input array, argument of the one-sided exponential function
+    @input rate: Number
+        decaying rate parameter of the one-sided exponential function, default value 1
+    @return: []Number
+        result of applying the one-sided exponential function to the input array
+    */
+    const N = x.length;
+    var y = Array(N).fill(0);
+    for(let i=0 ; i<N ; ++i){
+        if(x[i]<0){
+            y[i] = 0;
+        }
+        else{
+            y[i] = Math.exp(-Math.abs(rate)*x[i]);
+        }
     }
     return y;
 }

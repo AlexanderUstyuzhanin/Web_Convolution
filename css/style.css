@@ -11,7 +11,7 @@ html {
     background: -webkit-linear-gradient( to bottom, #a0bedc, #FFFFFF); /* For Safari 5.1 to 6.0 */
     background: -moz-linear-gradient( to bottom, #a0bedc, #FFFFFF); /* For Firefox 3.6 to 15 */
     background: -o-linear-gradient( to bottom, #a0bedc, #FFFFFF); /* For Opera 11.1 to 12.0 */
-    background: linear-gradient( to bottom, #a0bedc, #FFFFFF); /* Standard syntax */    
+    background: linear-gradient( to bottom, #a0bedc, #FFFFFF); /* Standard syntax */
 }
 
 h1{
@@ -24,13 +24,6 @@ h1{
     -webkit-margin-after: 0em; */
 }
 
-h2{
-    font-size: 1.5em;
-}
-
-input{
-    margin-bottom:1em;
-}
 #files, #iFiles{
     padding: 1px;
     background: #fff;
@@ -73,8 +66,10 @@ input{
     float : left;
     position : relative;
     padding: 20px 50px;
-    width : 300px;
+    width : 320px;
     height : 400px;
+    font-family:Tahoma;
+    font-size: 11pt;
 }
 
 #sliderParagraph {
@@ -84,13 +79,25 @@ input{
 	padding: 0px;
 	margin-right: 100px;
 }
+
+#function1Label {
+  color: green;
+}
+
+#function2Label {
+  color: blue;
+}
+
+#F1_shift, #F2_shift {
+  margin-left: 9px;
+}
 .greyed {
   border-style: solid;
-  background-color: #efede8 !important;  
+  background-color: #efede8 !important;
 }
 .notgreyed {
   border-style: none;
-  background-color: white !important;  
+  background-color: white !important;
 }
 
 /*----- Tabs -----*/
@@ -100,9 +107,9 @@ input{
     display: block;
     margin: auto;
     border: 1px solid transparent;
-    
+
 }
- 
+
     /*----- Tab Links -----*/
     /* Clearfix */
     .tab-links:after {
@@ -110,7 +117,7 @@ input{
         clear:both;
         content:'';
     }
- 
+
     .tab-links li {
         margin:0px 10px;
         float:left;
@@ -120,7 +127,7 @@ input{
         /* -webkit-margin-after: 0em; */
         margin-bottom: 0px;
     }
- 
+
         .tab-links a {
             padding:9px 30px;
             display:inline-block;
@@ -131,17 +138,17 @@ input{
             color:#4c4c4c;
             transition:all linear 0.15s;
         }
- 
+
         .tab-links a:hover {
             background:#a7cce5;
             text-decoration:none;
         }
- 
+
     li.active a, li.active a:hover {
         background:#fff;
         color:#4c4c4c;
     }
- 
+
     /*----- Content of Tabs -----*/
     .tab-content {
         padding:15px;
@@ -149,15 +156,13 @@ input{
         box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
         background:#fff;
     }
- 
+
         .tab {
             display:none;
         }
- 
+
         .tab.active {
-            /* display:block; */
-            /* border: 1px black solid; */
-            /* margin: 0 auto; */
+            display:block;
         }
 
 

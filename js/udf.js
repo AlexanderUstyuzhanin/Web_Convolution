@@ -1,33 +1,53 @@
 // File	  :	udf.js
-// Author :	Alexander Ustyuzhanin
-// HAW Hamburg, CJ1, SS2017
-// User-defined functions for Web Convolution project
- 
-var userDefinedExpression;
-var udfTimes = [];
-var udfOriginalValues = []; // stores complete function for modfication
-var udfValues = [];
-var udfConvoResult = []; // array similar to signalArray3
-var udfCorrResult = []; // array similar to signalArray3
-var leftLimiter;
-var rightLimiter;
-var isUdfDisabled = true;
+// This file contains code related to the user-defined functions implementation.
+// The UDFs functionality relies on the functions present in the plots.js for plotting
+// as well as on the functions located in math_functions.js for convolution & correlation.
+
+var userDefinedExpression; // stores original user input defining the UDF
+var udfValues = []; // stores the UDF function values for the Y axis
+var udfDisabled = true;
 var udfNeedsParsing = true;
 
-function onPageLoadUdf() {
-	// toggleUDF();
-	// opdlUDF.disabled = true;
+// shows or hides the desired div block on the webpage
+function toggleBlockVisibility(divID) {
+    var x = document.getElementById(divID);
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
 }
 
+// disables (greys out) UDF part of the interface
+function disableUdfControls() {
+	document.getElementById("txtUserExpression").disabled = true;
+	document.getElementById("btnUpdateUdf").disabled = true;
+	document.getElementById("lblUdfExpr").disabled = true;
+}
+
+// enables (removes greyout) UDF part of the interface
+function enableUdfControls() {
+	document.getElementById("txtUserExpression").disabled = false;
+	document.getElementById("btnUpdateUdf").disabled = false;
+	document.getElementById("lblUdfExpr").disabled = false;
+}
+
+// performs actions necessary after the initial page load
+function onPageLoadUdf() {
+	// toggleBlockVisibility("divUDF");
+	disableUdfControls();
+}
+
+// updates the flag and enables the update button for UDF
 function updateUdfParsingReq() {
 	udfNeedsParsing = true;
 	document.getElementById("btnUpdateUdf").disabled = false;
 }
 
+// checks if the user selected UDF from the list of available functions
 function checkUdfSelected() {
 	var fl = document.getElementById("functionList1");
-	if (fl.value == 7) {
-		// toggleUDF();
+	if (fl.value == 9) { // 9 corresponds to the UDF id in the list
 		activateUdf();
 	}
 	else {
@@ -35,49 +55,33 @@ function checkUdfSelected() {
 	}
 }
 
-// function toggleUDF() {
-	// isUdfDisabled = !isUdfDisabled; // toggle
-	// opdlUDF.disabled = isUdfDisabled;
-	// if (!isUdfDisabled) { 
-		// if (udfNeedsParsing) parseMathExpr();
-		
-		// document.getElementById("functionList1").value = "7";
-		
-		// plot1(brd);
-	// }
-	// else {
-		
-	// }
-	
-	// return false;
-// }
-
+// enables the udf functionality: updates necessary flags, enables UDF UI, 
+// calls for parsing the expression and redraws the function 1 replacing it by the UDF
 function activateUdf() {
-	if (isUdfDisabled) {
+	if (udfDisabled) {
 		if (udfNeedsParsing) {
 			parseMathExpr();
 		}
-		document.getElementById("F1_width").disabled = true; // TODO - this doesn't work!
-		document.getElementById("F1_shift").disabled = true;
 		plot1(brd);
+		// toggleBlockVisibility("divUDF");
 	}
-	isUdfDisabled = false;
+	enableUdfControls();
+	udfDisabled = false;
 }
 
+// disables the UDF interface and updates necessary flags
 function deactivateUdf() {
-	if (!isUdfDisabled) {
-		document.getElementById("F1_width").disabled = false;
-		document.getElementById("F1_shift").disabled = false;
+	if (!udfDisabled) {
+		// toggleBlockVisibility("divUDF");
 	}
-	isUdfDisabled = true;
+	disableUdfControls();
+	udfDisabled = true;
 }
 
+// reads and parses the expression input in the UDF input field
 function parseMathExpr() {
 	userDefinedExpression = document.getElementById("txtUserExpression").value; // get UDF from the text field
 	// var eval_x = document.getElementById("txtEvalPoint").value; // get evaluation point (for testing)
-	// leftLimiter = parseFloat( document.getElementById("txtLeftLimiter").value );
-	// rightLimiter = parseFloat( document.getElementById("txtRightLimiter").value ); 
-	// updateUdfLimits();
 	var udfDivId = "divUDF"; // HTML element for displaying the pretty function
 	var texDisplayFieldId = "divTexExpr"; // HTML element for displaying the pretty function
 	
@@ -89,12 +93,8 @@ function parseMathExpr() {
 	// updateUDTexExpression(texExpr);
 	// document.getElementById("txtEvalRes").value = result;
 	// displayTex(udfDivId, texDisplayFieldId, texExpr);
-	
-	var input = [ 0, 1 ];
-	var output = evaluateCurrentUserDefinedFunction(input);
-	udfOriginalValues = evaluateCurrentUserDefinedFunction(samplePoints);
-	udfValues = udfOriginalValues.slice();
-	// plotUDF(brd); // call for (re)drawing
+
+	udfValues = evaluateCurrentUserDefinedFunction(samplePoints); // calculate function values
 	udfNeedsParsing = false; // just parsed
 	document.getElementById("btnUpdateUdf").disabled = true;
 	plot1(brd);
@@ -110,7 +110,7 @@ function parseMathExpr() {
 	// disp_div.innerHTML = "$$" + tex + "$$"; // formula display
 // }
 
-
+// updates the TeX hint for what the system parsed from the user input
 function updateUDTexExpression(TeX) {
     var QUEUE = MathJax.Hub.queue;  // shorthand for the queue
     var math = null;                // the element jax for the math output.
@@ -121,6 +121,7 @@ function updateUDTexExpression(TeX) {
 	QUEUE.Push(["Text",math,"\\displaystyle{"+TeX+"}"]);
 }
 
+// returns corresponding UDF Y axis values based on the input vector of X axis values
 function evaluateCurrentUserDefinedFunction(values) { // this assumes user input format like x^2 + 5*x
 	len = values.length;
 	var ret = new Array(2); // eval returns a vector of all inputs concatenated with output
@@ -131,124 +132,13 @@ function evaluateCurrentUserDefinedFunction(values) { // this assumes user input
 		output[i] = ret[1]; // select f(x)
 	}
 	
-	// udfValues = output;
 	return output;
 }
 
+// returns UDF values at a point
 function evaluateCurrentUserDefinedFunctionAtValue(value) { // this assumes user input format like x^2 + 5*x
 	var ret = new Array(2); // eval returns a vector of all inputs concatenated with output
 	ret = math.eval(['x = ' + value, userDefinedExpression]); // [x, f(x)]
 
 	return ret[1]; // select f(x)
-}
-
-// This function plots the currently evaluated user-defined function on the passed board 
-function plotUDF(board) {
-	var graphUDF = board.create('curve', [[0],[0]], {strokeColor:'#FF0000', strokeWidth:1.5}); // red
-	graphUDF.updateDataArray = function(){
-		 this.dataX = samplePoints;
-		 this.dataY = udfValues; 
-	};
-	
-	board.update();
-}
-
-function convolveWithUDF(brd2){
-	convoCorr = 0;
-    graph3.updateDataArray = function(){ 
-        udfConvoResult = conv(signalArray1, udfValues); // for now convolving with the first selected function
-        scaleResult(udfConvoResult);
-        
-        generateResultPoints(udfTimes, udfConvoResult); 	// X-axis points for graph 3
-        this.dataX = udfTimes;  // X axis values for graph 2 on the upper board
-        this.dataY = udfConvoResult;  // Y axis values for graph 2 on the upper board
-        
-    };
-	
-    brd2.update();
-    pnt.moveTo([100,0]); // take red point out of sight
-	
-	return false;
-}
-
-// Gets and plots the correlation values for the selected functions
-function correlateWithUDF(brd2){
-	convoCorr = 1;
-    graph3.updateDataArray = function(){ 
-        udfCorrResult = xcorr(signalArray1, udfValues);
-        scaleResult(udfCorrResult);
-        
-        generateResultPoints(udfTimes, udfCorrResult); // X-axis points for graph 3
-        this.dataX = udfTimes;
-        this.dataY = udfCorrResult;
-    };
-    brd2.update();
-    pnt.moveTo([100,0]);
-    
-	return false;
-}
-
-function updateUdfLimits() {
-	leftLimiter = $( "#slider-range" ).slider( "values", 0 );
-	rightLimiter = $( "#slider-range" ).slider( "values", 1 );
-	
-	if (document.getElementById("cbxUdfRect").checked) {
-		applyRectToUDF(leftLimiter, rightLimiter, samplePoints);
-	}
-	else {
-		udfValues = udfOriginalValues.slice();
-		plot1(brd);
-	}
-	
-	
-	// console.log("Updated udf limits");
-	return false;
-}
-
-function applyRectToUDF(left, right, samplePoints) {
-	var crossedLeft = false;
-	var leftIndex, rightIndex;
-	udfValues = udfOriginalValues.slice();
-	for (i = 0; i < samplePoints.length; i++) {
-		if (!crossedLeft) { if (samplePoints[i]>=left) {crossedLeft = true; leftIndex = i; } }
-		else { if (samplePoints[i]>=right) {rightIndex = i; break; } }
-	}
-	
-	for (i = 0; i < udfValues.length; i++) {
-		if (i < leftIndex) udfValues[i] = 0;
-		if (i > rightIndex) udfValues[i] = 0;
-	}
-	
-	// plotUDF(brd);
-	plot1(brd);
-	
-	console.log("Modified UDF plot");
-	return false;
-}
-
-function applyStepToUDF(start, samplePoints) {
-	var startIndex;
-	for (i = 0; i < samplePoints.length; i++) {
-		if (samplePoints[i]>=start) {startIndex = i; break;}
-	}
-	for (i = 0; i < udfValues.length; i++) {
-		if (i < startIndex) udfValues[i] = 0;
-	}	
-	
-	// plotUDF(brd);
-	plot1(brd);
-	
-	return false;
-}
-
-function updateUdfSliderLimits(board) { // I know it's ugly, but it will have to do for now
-	leftLimiter = board.getBoundingBox()[0];
-	rightLimiter = -1*currentLeftBound;
-	
-	$('#slider-range').slider( "option", "min", leftLimiter );
-	$('#slider-range').slider( "option", "max", rightLimiter );
-	 
-	// console.log("Updated slider limits");
-	
-	return false;
 }
