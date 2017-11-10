@@ -168,4 +168,31 @@ h1{
 
     #tab2{
         padding: 10px 20px;
+        display: flex;
+        /* flex-direction: row; */
+    }
+
+    /*----- audio convolution tab -----*/
+    .inputcontainer{
+        width: 55%;
+        flex-direction: column;
+    }
+
+    .inputbox{
+        padding: 1em;
+        margin: 5px;
+        border: 1px black;
+        border-radius:3px;
+        box-shadow:-1px 1px 1px 1px rgba(0,0,0,0.15);
+    }
+    
+    .outputbox {
+        align-self: center;
+        width: 45%;
+        height: 100%;
+        padding: 1em;
+        margin: 5px;
+        border: 1px black;
+        border-radius:3px;
+        box-shadow:-1px 1px 1px 1px rgba(0,0,0,0.15);
     }
