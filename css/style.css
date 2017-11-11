@@ -28,10 +28,6 @@ h2, legend {
     font-size: 1.5em;
 }
 
-input {
-    margin-bottom: 1em;
-}
-
 #files,
 #iFiles {
     padding: 1px;
@@ -62,15 +58,6 @@ input {
     width: 300px;
     height: 400px;
 }
-
-
-/* fieldset{
-    padding: 1em;
-    margin: 5px;
-    border: 1px black;
-    border-radius:5px;
-    box-shadow:2px 2px 2px 3px rgba(0,0,0,0.15);
-} */
 
 #sliderParagraph {
     font-family: Tahoma;
@@ -201,6 +188,10 @@ li.active a:hover {
     padding: 5px;
 }
 
+input{
+    margin: 0.7em;
+}
+
 input[type="button"] {
     background: #3498db;
     background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
@@ -215,6 +206,7 @@ input[type="button"] {
     font-size: 16px;
     padding: 6px;
     text-decoration: none;
+    margin: 0px;
   }
   
   input[type="button"]:hover {
@@ -231,19 +223,8 @@ input[type="button"] {
       font-size: 18px;
   }
 
-  .fileUpload {
-    position: relative;
-    overflow: hidden;
-    margin: 10px;
-}
-.fileUpload input.upload {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
+
+
+audio{
+    vertical-align: bottom;
 }
