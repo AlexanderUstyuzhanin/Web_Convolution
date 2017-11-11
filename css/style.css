@@ -12,12 +12,10 @@ html {
     background: -moz-linear-gradient( to bottom, #a0bedc, #FFFFFF); /* For Firefox 3.6 to 15 */
     background: -o-linear-gradient( to bottom, #a0bedc, #FFFFFF); /* For Opera 11.1 to 12.0 */
     background: linear-gradient( to bottom, #a0bedc, #FFFFFF); /* Standard syntax */
-}
-
-*{
     font-size: 14px;
     font-family: "Open Sans";
 }
+
 
 h1 {
     padding: 20px 350px;
@@ -26,7 +24,7 @@ h1 {
     font-family: "Open Sans";
 }
 
-h2 {
+h2, legend {
     font-size: 1.5em;
 }
 

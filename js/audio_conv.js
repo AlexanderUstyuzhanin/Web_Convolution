@@ -7,6 +7,11 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
     alert('The File APIs are not fully supported in this browser.');
 }
 
+if(window.AudioContext && window.OfflineAudioContext){
+
+}else{
+    alert('Web Audio API is not fully supported in this browser')
+}
 
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 var offlineCtx;
