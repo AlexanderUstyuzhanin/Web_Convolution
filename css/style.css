@@ -16,15 +16,15 @@ html {
     font-family: "Open Sans";
 }
 
-
 h1 {
-    padding: 20px 350px;
+    padding: 1em calc(300px + 2em);
     color: rgb(0, 60, 160);
     font-size: 2.5em;
     font-family: "Open Sans";
 }
 
-h2, legend {
+h2,
+legend {
     font-size: 1.5em;
 }
 
@@ -35,7 +35,7 @@ h2, legend {
 }
 
 #haw_logo {
-    padding: 0px 15px;
+    padding: 0px 1em;
     float: left;
 }
 
@@ -181,14 +181,16 @@ li.active a:hover {
     box-shadow: -1px 1px 1px 1px rgba(0, 0, 0, 0.15);
 }
 
+
 /************ Button styles ************/
+
 #convolveButtonContainer {
     align-self: center;
     flex-grow: 1;
     padding: 5px;
 }
 
-input{
+input {
     margin: 0.7em;
 }
 
@@ -207,9 +209,9 @@ input[type="button"] {
     padding: 6px;
     text-decoration: none;
     margin: 0px;
-  }
-  
-  input[type="button"]:hover {
+}
+
+input[type="button"]:hover {
     background: #3cb0fd;
     background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
     background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
@@ -217,14 +219,12 @@ input[type="button"] {
     background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
     background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
     text-decoration: none;
-  }
+}
 
-  #convolveButton {
-      font-size: 18px;
-  }
+#convolveButton {
+    font-size: 18px;
+}
 
-
-
-audio{
+audio {
     vertical-align: bottom;
 }
