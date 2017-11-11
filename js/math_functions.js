@@ -1,5 +1,5 @@
 //Author: Nicola Giaconi
-//Last revision: 25/10/2017
+//Last revision: 11/11/2017
 //Math functions for Web-based Convolution Demonstrator
 
 //ZERO_PADDING
@@ -13,6 +13,7 @@ function zeroPad(x1, x2){
     @return: [2][]Number
         two-dimensional array containing the zero-padded versions of the input arrays
     */
+    "use strict";
     x1 = x1.concat(Array(x2.length-1).fill(0));
     x2 = x2.concat(Array(x1.length-1).fill(0));
     return [x1,x2];
@@ -27,8 +28,9 @@ function flip(x){
     @return: []Number
         index-reversed array of the input array
     */
+    "use strict";
     const N = x.length;
-    var x_flipped = Array(N).fill(0);
+    const x_flipped = Array(N);
     for(let i=0 ; i<N ; ++i){
         x_flipped[N-i-1] = x[i];
     }
@@ -46,12 +48,12 @@ function conv(x1, x2){
     @return: []Number
         result of the convolution between the input arrays
     */
-    var x = zeroPad(x1,x2);
+    "use strict";
+    const x = zeroPad(x1,x2);
     x1 = x[0];
     x2 = x[1];
     const N = x[0].length;
-    var y = Array(N).fill(0);
-    //for-loop implementation following definition
+    const y = Array(N).fill(0);
     for(let n=0 ; n<N ; ++n){
         for(let k=0 ; k<N ; ++k){
             if(k>n){
@@ -74,12 +76,12 @@ function xcorr(x1, x2){
     @return: []Number
         result of the cross-correlation between the input arrays
     */
-    var x = zeroPad(x1,flip(x2));
+    "use strict";
+    const x = zeroPad(x1,flip(x2));
     x1 = x[0];
     x2 = x[1];
     const N = x[0].length;
-    var y = Array(N).fill(0);
-    //for-loop implementation following definition
+    const y = Array(N).fill(0);
     for(let n=0 ; n<N ; ++n){
         for(let k=0 ; k<N ; ++k){
             if(k>n){
@@ -87,6 +89,27 @@ function xcorr(x1, x2){
             }
             y[n] += x1[k]*x2[n-k];
         }
+    }
+    return y;
+}
+
+//ELEM-WISE MULTIPLICATION
+function elemWiseMultiplication(x1, x2){
+    /*
+    This function performs the element-wise multiplication of the input arrays
+    @input x1: []Number
+        input array
+    @input x2: []Number
+        input array
+    @return: []Number
+        result of the operation between the input arrays
+    */
+    "use strict";
+    //flip(x2); //extra: toggle to flip 2nd input array
+    const N = x1.length;
+    const y = Array(N);
+    for(let i=0 ; i<N ; ++i){
+        y[i] = x1[i]*x2[i];
     }
     return y;
 }
@@ -105,8 +128,8 @@ function rect(x, width=1, shift=0){
         result of applying the rectangular-function to the input array
     */
     const N = x.length;
-    var y = Array(N).fill(0);
-    var delta;
+    const y = Array(N);
+    let delta;
     for(let i=0 ; i<N ; ++i){
         delta = Math.abs((x[i]-shift)/width);
         if(delta > 1/2){
@@ -136,18 +159,18 @@ function tri(x, width=1, shift=0){
         result of applying the triangle-function to the input array
     */
     const N = x.length;
-    var y = Array(N).fill(0);
-    var delta;
+    const y = Array(N);
+    let delta;
     for(let i=0 ; i<N ; ++i){
         delta = (x[i]-shift)/width;
         if(Math.abs(delta) > 1/2){
             y[i] = 0;
         }
         else if(delta >= 0 && delta <= 1/2){
-            y[i] = 1-2*(x[i]-shift)/width;
+            y[i] = 1-2*delta;
         }
         else if(delta < 0 && delta >= -1/2){
-            y[i] = 1+2*(x[i]-shift)/width;
+            y[i] = 1+2*delta;
         }
     }
     return y;
@@ -165,8 +188,8 @@ function step(x, shift=0) {
         result of applying the step-function to the input array
     */
     const N = x.length;
-    var y = Array(N).fill(0);
-    var delta;
+    const y = Array(N);
+    let delta;
     for(let i=0 ; i<N ; ++i){
         delta = x[i]-shift;
         if(delta >= 0){
@@ -193,8 +216,8 @@ function sinc(x, width=1, shift=0) {
         result of applying the sinc-function to the input array
     */
     const N = x.length;
-    var y = Array(N).fill(0);
-    var delta;
+    const y = Array(N);
+    let delta;
     for(let i=0 ; i<N ; ++i){
         delta = (x[i]-shift)/width;
         if(delta == 0){
@@ -221,7 +244,7 @@ function gaussian(x, vari=1, expect=0) {
         result of applying the gaussian function to the input array
     */
     const N = x.length;
-    var y = Array(N).fill(0);
+    const y = Array(N);
     for(let i=0;i<N;++i){
         y[i] = Math.exp(-Math.pow((x[i]-expect),2)/(2*vari))/(Math.sqrt(2*Math.PI*vari));
     }
@@ -239,13 +262,13 @@ function dirac(x, shift=0) {
     @return: []Number
         result of applying the dirac-function to the input array
     */
-    var hit = 0;
     const N = x.length;
-    var y = Array(N).fill(0);
+    const y = Array(N);
+    let hit = false;
     for(let i=0 ; i<N ; ++i){
-        if(x[i]>=shift && hit==0){
+        if(x[i]>=shift && hit==false){
             y[i] = 1;
-            ++hit;
+            hit = true;
         }
         else{
             y[i] = 0;
@@ -263,16 +286,16 @@ function diracComb(x) {
     @return: []Number
         result of applying the dirac-comb function to the input array
     */
+    "use strict";
     const N = x.length;
-    var y = Array(N).fill(0);
-    var xMin = Math.ceil(Math.min.apply(Math,x));
+    const y = Array(N);
+    let xMin = Math.ceil(Math.min.apply(Math,x));
     for(let i=0 ; i<N ; ++i){
         if(x[i]<xMin){
             y[i] = 0;
         }
         else{
             y[i] = 1;
-            //xMin updates after every peak
             ++xMin;
         }
     }
@@ -291,7 +314,7 @@ function oneSidedExp(x, rate=1){
         result of applying the one-sided exponential function to the input array
     */
     const N = x.length;
-    var y = Array(N).fill(0);
+    const y = Array(N);
     for(let i=0 ; i<N ; ++i){
         if(x[i]<0){
             y[i] = 0;

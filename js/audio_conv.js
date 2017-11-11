@@ -107,9 +107,6 @@ function onIrPresetSelect(evt) {
         case 'carpark':
             irPresetURL = 'music/carpark_balloon_ir_stereo_24bit_44100.wav';
             break;
-        case 'slinky':
-            irPresetURL = 'music/slinky_ir.wav';
-            break;
         case 'centre_stalls':
             irPresetURL = 'music/ir_centre_stalls.wav';
             break;
