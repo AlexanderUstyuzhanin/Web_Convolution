@@ -37,16 +37,16 @@
     <h1>Web-based Convolution Demonstrator</h1>
     <div class="tabs">
         <ul class="tab-links">
-            <li class="active">
-                <a href="#tab1" class="active">Convolution graph</a>
+            <li >
+                <a href="#tab1" >Convolution graph</a>
             </li>
-            <li>
-                <a href="#tab2">Audio Convolution</a>
+            <li class="active">
+                <a href="#tab2" class="active">Audio Convolution</a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div id="tab1" class="tab active">
+            <div id="tab1" class="tab ">
 
                 <!-- User input area -->
                 <div id="formField" class="formField" align="top">
@@ -184,7 +184,7 @@
             </div>
 
             <!-- Audio convolution stuff -->
-            <div id="tab2" class="tab">
+            <div id="tab2" class="tab active">
                 <div id="container">
                     <div class="inputcontainer">
                         <div class="inputbox">
@@ -207,39 +207,40 @@
                         </div>
 
                         <div class="inputbox">
-                            
-                                <h2>Impulse response:</h2>
-                                <form>
-                                    <input type="radio" name="impulseResponse" id="irPresetRadio" checked>Choose from presets
-                                    <select id="irPresetList">
-                                        <option value="" disabled selected style="display:none;">Select an impulse response...</option>
-                                        <option value="carpark" title="Underground car park">Car park</option>
-                                        <option value="centre_stalls" title="Central Hall, University of York">Central Hall</option>
-                                        <option value="aula_carolina" title="Aula Carolina, RWTH Aachen">Aula Carolina</option>
-                                        <option value="corridor">Corridor</option>
-                                        <option value="meeting_room">Meeting room</option>
-                                        <option value="office">Office</option>
-                                        <option value="stairway">Stairway</option>
+                            <h2>Impulse response:</h2>
+                            <form>
+                                <input type="radio" name="impulseResponse" id="irPresetRadio" checked>Choose from presets
+                                <select id="irPresetList">
+                                    <option value="" disabled selected style="display:none;">Select an impulse response...</option>
+                                    <option value="carpark" title="Underground car park">Car park</option>
+                                    <option value="centre_stalls" title="Central Hall, University of York">Central Hall</option>
+                                    <option value="aula_carolina" title="Aula Carolina, RWTH Aachen">Aula Carolina</option>
+                                    <option value="corridor">Corridor</option>
+                                    <option value="meeting_room">Meeting room</option>
+                                    <option value="office">Office</option>
+                                    <option value="stairway">Stairway</option>
 
-                                    </select>
-                                    <br>
-                                    <input type="radio" name="impulseResponse" id="ownIrFile">Choose an impulse response
-                                    <input type="file" id="iFiles" name="files[]" />
-                                    <br>
-                                    <audio id="impulseResponse" controls controlsList="nodownload"></audio>
-                                    <p>(Impuse responses courtesy of
-                                        <a href="https://www.iks.rwth-aachen.de/en/research/tools-downloads/databases/aachen-impulse-response-database/">RWTH Aachen</a> and
-                                        <a href="http://www.openairlib.net/">Open AIR Library</a>)</p>
-                                    <br>
-                                </form>
-                            
+                                </select>
+                                <br>
+                                <input type="radio" name="impulseResponse" id="ownIrFile">Choose an impulse response
+                                <input type="file" id="iFiles" name="files[]" />
+                                <br>
+                                <audio id="impulseResponse" controls controlsList="nodownload"></audio>
+                                <p>(Impuse responses courtesy of
+                                    <a href="https://www.iks.rwth-aachen.de/en/research/tools-downloads/databases/aachen-impulse-response-database/">RWTH Aachen</a> and
+                                    <a href="http://www.openairlib.net/">Open AIR Library</a>)</p>
+                                <br>
+                            </form>
+
                         </div>
+                    </div>
+                    <div id="convolveButtonContainer">
+                        <input type="button" id="convolveButton" value="Convolve" />
                     </div>
                     <div class="outputbox">
                         <h2>Result:</h2>
                         <audio id="outputSound" controls controlsList="nodownload"></audio>
-                        <input type="button" id="convolve" value="Convolve" />
-                        <input type="button" id="downloadButton" value="Download file" />
+                        <input type="button" id="downloadButton" value="Download" />
                         <p id="renderStatus"></p>
                     </div>
                 </div>
