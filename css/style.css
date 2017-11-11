@@ -135,19 +135,20 @@ input{
         }
  
         .tab.active {
-            /* display:block; */
+            display:block;
             /* border: 1px black solid; */
             /* margin: 0 auto; */
         }
+        #container{
+            padding: 10px 20px;
+            display: flex;
+            /* flex-direction: row; */
+        }
 
 
-    #tab2{
-        padding: 10px 20px;
-        display: flex;
-        /* flex-direction: row; */
-    }
 
-    /*----- audio convolution tab -----*/
+
+    /* ----- audio convolution tab ----- */
     .inputcontainer{
         width: 55%;
         flex-direction: column;

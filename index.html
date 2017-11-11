@@ -37,16 +37,16 @@
     <h1>Web-based Convolution Demonstrator</h1>
     <div class="tabs">
         <ul class="tab-links">
-            <li>
-                <a href="#tab1">Convolution graph</a>
-            </li>
             <li class="active">
+                <a href="#tab1" class="active">Convolution graph</a>
+            </li>
+            <li>
                 <a href="#tab2">Audio Convolution</a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div id="tab1" class="tab">
+            <div id="tab1" class="tab active">
 
                 <!-- User input area -->
                 <div id="formField" class="formField" align="top">
@@ -184,63 +184,65 @@
             </div>
 
             <!-- Audio convolution stuff -->
-            <div id="tab2" class="tab active">
-                <div class="inputcontainer">
-                    <div class="inputbox">
-                        <h2>Input sound:</h2>
-                        <form>
-                            <input type="radio" name="audioInput" id="audioPresetRadio" checked> Select an audio example to try
-                            <select id="audioPreset">
-                                <option value="" disabled selected style="display:none;">Select an audio example...</option>
-                                <option value="theForce">The Force</option>
-                                <option value="chime">Chime</option>
-                            </select>
-                            <br>
-                            <input type="radio" name="audioInput" id="ownAudioFile"> Choose a file from your computer to try:
-                            <input type="file" id="files" name="files[]" />
-                            <br>
-                        </form>
-                        <audio id="inputSound" controls controlsList="nodownload"></audio>
-                        <p>(Audio <a href="http://www.moviesoundclips.net/sound.php?id=219">source</a>)</p>
-                    </div>
-
-                    <div class="inputbox">
-                        <div>
-                            <h2>Impulse response:</h2>
+            <div id="tab2" class="tab">
+                <div id="container">
+                    <div class="inputcontainer">
+                        <div class="inputbox">
+                            <h2>Input sound:</h2>
                             <form>
-                                <input type="radio" name="impulseResponse" id="irPresetRadio" checked>Choose from presets
-                                <select id="irPresetList">
-                                    <option value="" disabled selected style="display:none;">Select an impulse response...</option>
-                                    <option value="carpark" title="Underground car park">Car park</option>
-                                    <option value="slinky" title="Slinky toy">Slinky</option>
-                                    <option value="centre_stalls" title="Central Hall, University of York">Central Hall</option>
-                                    <option value="aula_carolina" title="Aula Carolina, RWTH Aachen">Aula Carolina</option>
-                                    <option value="corridor">Corridor</option>
-                                    <option value="meeting_room">Meeting room</option>
-                                    <option value="office">Office</option>
-                                    <option value="stairway">Stairway</option>
-
+                                <input type="radio" name="audioInput" id="audioPresetRadio" checked> Select an audio example to try
+                                <select id="audioPreset">
+                                    <option value="" disabled selected style="display:none;">Select an audio example...</option>
+                                    <option value="theForce">The Force</option>
+                                    <option value="chime">Chime</option>
                                 </select>
                                 <br>
-                                <input type="radio" name="impulseResponse" id="ownIrFile">Choose an impulse response
-                                <input type="file" id="iFiles" name="files[]" /><br>
-                                <audio id="impulseResponse" controls controlsList="nodownload"></audio>
-                                <p>(Impuse responses courtesy of
-                                    <a href="https://www.iks.rwth-aachen.de/en/research/tools-downloads/databases/aachen-impulse-response-database/">RWTH Aachen</a> and
-                                    <a href="http://www.openairlib.net/">Open AIR Library</a>)</p>
+                                <input type="radio" name="audioInput" id="ownAudioFile"> Choose a file from your computer to try:
+                                <input type="file" id="files" name="files[]" />
                                 <br>
                             </form>
+                            <audio id="inputSound" controls controlsList="nodownload"></audio>
+                            <p>(Audio
+                                <a href="http://www.moviesoundclips.net/sound.php?id=219">source</a>)</p>
+                        </div>
+
+                        <div class="inputbox">
+                            
+                                <h2>Impulse response:</h2>
+                                <form>
+                                    <input type="radio" name="impulseResponse" id="irPresetRadio" checked>Choose from presets
+                                    <select id="irPresetList">
+                                        <option value="" disabled selected style="display:none;">Select an impulse response...</option>
+                                        <option value="carpark" title="Underground car park">Car park</option>
+                                        <option value="centre_stalls" title="Central Hall, University of York">Central Hall</option>
+                                        <option value="aula_carolina" title="Aula Carolina, RWTH Aachen">Aula Carolina</option>
+                                        <option value="corridor">Corridor</option>
+                                        <option value="meeting_room">Meeting room</option>
+                                        <option value="office">Office</option>
+                                        <option value="stairway">Stairway</option>
+
+                                    </select>
+                                    <br>
+                                    <input type="radio" name="impulseResponse" id="ownIrFile">Choose an impulse response
+                                    <input type="file" id="iFiles" name="files[]" />
+                                    <br>
+                                    <audio id="impulseResponse" controls controlsList="nodownload"></audio>
+                                    <p>(Impuse responses courtesy of
+                                        <a href="https://www.iks.rwth-aachen.de/en/research/tools-downloads/databases/aachen-impulse-response-database/">RWTH Aachen</a> and
+                                        <a href="http://www.openairlib.net/">Open AIR Library</a>)</p>
+                                    <br>
+                                </form>
+                            
                         </div>
                     </div>
+                    <div class="outputbox">
+                        <h2>Result:</h2>
+                        <audio id="outputSound" controls controlsList="nodownload"></audio>
+                        <input type="button" id="convolve" value="Convolve" />
+                        <input type="button" id="downloadButton" value="Download file" />
+                        <p id="renderStatus"></p>
+                    </div>
                 </div>
-                <div class="outputbox">
-                    <h2>Result:</h2>
-                    <audio id="outputSound" controls controlsList="nodownload"></audio>
-                    <input type="button" id="convolve" value="Convolve"/>
-                    <input type="button" id="downloadButton" value="Download file"/>
-                    <p id="renderStatus"></p>
-                </div>
-
             </div>
             <script type="text/javascript" src="js/audio_conv.js"></script>
             <!-- Audio convolution stuff ends -->
@@ -250,4 +252,5 @@
     <!-- tabs -->
 
 </body>
+
 </html>
