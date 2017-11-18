@@ -7,6 +7,12 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
     alert('The File APIs are not fully supported in this browser.');
 }
 
+//Check for Web Audio API support
+if(window.AudioContext && window.OfflineAudioContext){
+
+}else{
+    alert('Web Audio API is not fully supported in this browser');
+}
 
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 var offlineCtx;
@@ -38,8 +44,6 @@ function onAudioSelect(evt) {
         case 'chime':
             inputAudioPresetURL = 'music/chime.mp3';
             break;
-        default:
-            alert('preset selected');
     }
 
     //Sets the player's src to control playback
@@ -125,8 +129,6 @@ function onIrPresetSelect(evt) {
         case 'stairway':
             irPresetURL = 'music/stairway.wav';
             break;
-        default:
-            alert('preset not selected');
     }
     loadIRPreset(irPresetURL);
     document.getElementById('irPresetRadio').checked = true;
@@ -279,4 +281,4 @@ document.getElementById('irPresetRadio').addEventListener('click', onIRPresetCli
 document.getElementById('ownIrFile').addEventListener('click', onOwnIRClick, false);
 
 document.getElementById('downloadButton').addEventListener("click", downloadFile, false);
-document.getElementById('convolve').addEventListener('click', convolve, false);
+document.getElementById('convolveButton').addEventListener('click', convolve, false);

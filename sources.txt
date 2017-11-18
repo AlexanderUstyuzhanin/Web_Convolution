@@ -1,7 +1,0 @@
-https://www.html5rocks.com/en/tutorials/file/dndfiles/
-https://stackoverflow.com/questions/28619550/javascript-play-uploaded-audio/28619927
-https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_Web_Audio_API
-https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createConvolver
-http://www.openairlib.net/
-http://www.openairlib.net/auralizationdb/content/central-hall-university-york
-http://www.moviesoundclips.net/sound.php?id=219
