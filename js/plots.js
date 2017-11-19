@@ -455,14 +455,16 @@ function reDrawSignal2() {
   
 	slide.setMax(-1 * currentLeftBound); // set slider upper limit
 	slide.setMin(currentLeftBound);	 // set slider lower limit
-
+	
+	/* The number of points of funtion1 and function2 are always 2048
+		We only display half of those points at all times
+		*/
 	graph2.updateDataArray = function () {
 		const signal = document.getElementById('functionList2').value;
-
+		const numOfPoints = 2048; // please do not change!!!!
 		if (currentOperation === 0) { // convolution
 			if (signal === '6') { // dirac pulse selected
-				const xVal = (shiftSignal2 * -1) + slide.Value();
-				// console.log(xVal)
+				const xVal = (shiftSignal2 * -1) + slide.Value();				
 				pntArrow2.moveTo([(xVal), 0.95]); // set arrow on dirac plot
 			}
 			for (let x = 0; x < samplePoints.length; x++) {
@@ -483,14 +485,17 @@ function reDrawSignal2() {
 		}
 
 		if (slide.Value() === slide._smin) { // slider at lowest value
-			arrayIndex = 1536; // size of convolution array divided 2 minus 512
+			// size of convolution array (4095) divided 2 minus 512. Do not change!!!
+			arrayIndex = 1536; 
 		} else if (slide.Value() === slide._smax) { // slider at highest value
-			arrayIndex = 2560; // size of convolution array divided 2 plus 512
+			// size of convolution array ((4095) divided 2 plus 512: Do not change!!!
+			arrayIndex = 2560; 
 		} else {
 			maxNumberOfIntervals = (slide._smax - slide._smin) / sliderSnapWidth;
 			currNumberOfIntervals = (slide.Value() - slide._smin) / sliderSnapWidth;
-			intervalSize = (1024 / maxNumberOfIntervals);
-			arrayIndex = Math.floor(intervalSize * currNumberOfIntervals) + 1536;
+			intervalSize = (numOfPoints / 2 / maxNumberOfIntervals); // 
+			// 1536 is left start point from the left
+			arrayIndex = Math.floor(intervalSize * currNumberOfIntervals) + 1536; 
 		}
 
 		this.dataX = sliderSamplePoints;
