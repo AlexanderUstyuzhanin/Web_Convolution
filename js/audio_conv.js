@@ -59,8 +59,8 @@ function onAudioSelect(evt) {
 
     ajaxRequest.onload = function (e) {
         var audioData = ajaxRequest.response;
-        audioCtx.decodeAudioData(audioData, setInputBuffer, function (e) { "Error with decoding audio data" + e.err });
-    }
+        audioCtx.decodeAudioData(audioData, setInputBuffer, function (e) { "Error with decoding audio data" + e.err; });
+    };
     ajaxRequest.send();
 }
 
@@ -78,7 +78,7 @@ function handleAudioFileSelect(evt) {
     fileReader.onload = function () {
         var fileArrayBuffer = this.result;
         audioCtx.decodeAudioData(fileArrayBuffer, setInputBuffer);
-    }
+    };
     document.getElementById('ownAudioFile').checked = true;
 }
 
@@ -89,7 +89,7 @@ setInputBuffer = function (buffer) {
         inputAudioBuffer.copyToChannel(buffer.getChannelData(channel), channel);
     }
 
-}
+};
 
 function loadIRPreset(audioURL) {
     document.getElementById('impulseResponse').src = audioURL;
@@ -100,8 +100,8 @@ function loadIRPreset(audioURL) {
 
     ajaxRequest.onload = function (e) {
         var audioData = ajaxRequest.response;
-        audioCtx.decodeAudioData(audioData, setConvolverBuffer, function (e) { "Error with decoding audio data" + e.err });
-    }
+        audioCtx.decodeAudioData(audioData, setConvolverBuffer, function (e) { "Error with decoding audio data" + e.err; });
+    };
     ajaxRequest.send();
 }
 
@@ -148,7 +148,7 @@ function handleIRFileSelect(evt) {
     fileReader.onload = function () {
         var IRFileArrayBuffer = this.result;
         audioCtx.decodeAudioData(IRFileArrayBuffer, setConvolverBuffer);
-    }
+    };
 
 
     document.getElementById('ownIrFile').checked = true;
@@ -160,7 +160,7 @@ setConvolverBuffer = function (buffer) {
     for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
         convolverBuffer.copyToChannel(buffer.getChannelData(channel), channel);
     }
-}
+};
 
 function convolve() {
     
