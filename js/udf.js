@@ -28,7 +28,8 @@ function disableUdfControls() {
 // enables (removes greyout) UDF part of the interface
 function enableUdfControls() {
 	document.getElementById("txtUserExpression").disabled = false;
-	document.getElementById("btnUpdateUdf").disabled = false;
+	if (udfNeedsParsing)
+		document.getElementById("btnUpdateUdf").disabled = false;
 	document.getElementById("lblUdfExpr").disabled = false;
 }
 
@@ -99,11 +100,11 @@ function parseMathExpr() {
 
 // returns corresponding UDF Y axis values based on the input vector of X axis values
 function evaluateCurrentUserDefinedFunction(values) { // this assumes user input format like x^2 + 5*x
-	len = values.length;
+	var len = values.length;
 	var ret = new Array(2); // eval returns a vector of all inputs concatenated with output
 	var output = new Array(len);
 	
-	for(i = 0; i < len; ++i) {
+	for(let i = 0; i < len; ++i) {
 		ret = math.eval(['x = ' + values[i], userDefinedExpression]); // [x, f(x)]
 		output[i] = ret[1]; // select f(x)
 	}

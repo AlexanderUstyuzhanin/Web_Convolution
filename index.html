@@ -65,7 +65,7 @@
                                     <option value="6">Dirac</option>
                                     <option value="7">Dirac Train</option>
                                     <option value="8">Decreasing exponential</option>
-                                    <option id="opdlUDF" value="9">User defined</option>
+                                    <option id="opdlUDF" value="9">User-defined</option>
                                 </select>
                                 <br>
 
@@ -105,6 +105,9 @@
                                 <input type="radio" id: "corr" name="actionRadios" onclick="doCorrelation(brd2);" />
                                 <label for="corr">Correlation</label>
                                 <br>
+								<input type="radio" id: "mult" name="actionRadios" onclick="doMultiplication(brd2);" />
+                                <label for="mult">Multiplication</label>
+                                <br>
                             </p>
 
                             <!-- <p id ="sliderParagraph">
@@ -118,7 +121,13 @@
                                     <label id="lblUdfExpr" for="txtUserExpression">Your function: </label>
                                     <br>
                                     <br>
-                                    <input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" onchange="return updateUdfParsingReq()" />
+                                    <input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" />
+									<script>
+										$("#txtUserExpression").on("change keyup paste",
+											function() { 
+												return updateUdfParsingReq(); 
+											})
+									</script>
                                     <button id="btnUpdateUdf" onclick="return parseMathExpr(); plot1(brd);">Update</button>
                                 </p>
                             </div>
