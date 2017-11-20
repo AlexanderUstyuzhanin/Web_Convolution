@@ -8,13 +8,13 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
 }
 
 //Check for Web Audio API support
-if(window.AudioContext && window.OfflineAudioContext){
+if (window.AudioContext && window.OfflineAudioContext) {
 
-}else{
+} else {
     alert('Web Audio API is not fully supported in this browser');
 }
 
-var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+var audioCtx = new window.AudioContext();
 var offlineCtx;
 var offlineConvolver;
 var convolverBuffer;
@@ -59,8 +59,8 @@ function onAudioSelect(evt) {
 
     ajaxRequest.onload = function (e) {
         var audioData = ajaxRequest.response;
-        audioCtx.decodeAudioData(audioData, setInputBuffer, function (e) { "Error with decoding audio data" + e.err });
-    }
+        audioCtx.decodeAudioData(audioData, setInputBuffer);
+    };
     ajaxRequest.send();
 }
 
@@ -78,7 +78,7 @@ function handleAudioFileSelect(evt) {
     fileReader.onload = function () {
         var fileArrayBuffer = this.result;
         audioCtx.decodeAudioData(fileArrayBuffer, setInputBuffer);
-    }
+    };
     document.getElementById('ownAudioFile').checked = true;
 }
 
@@ -89,7 +89,7 @@ setInputBuffer = function (buffer) {
         inputAudioBuffer.copyToChannel(buffer.getChannelData(channel), channel);
     }
 
-}
+};
 
 function loadIRPreset(audioURL) {
     document.getElementById('impulseResponse').src = audioURL;
@@ -100,8 +100,8 @@ function loadIRPreset(audioURL) {
 
     ajaxRequest.onload = function (e) {
         var audioData = ajaxRequest.response;
-        audioCtx.decodeAudioData(audioData, setConvolverBuffer, function (e) { "Error with decoding audio data" + e.err });
-    }
+        audioCtx.decodeAudioData(audioData, setConvolverBuffer);
+    };
     ajaxRequest.send();
 }
 
@@ -148,7 +148,7 @@ function handleIRFileSelect(evt) {
     fileReader.onload = function () {
         var IRFileArrayBuffer = this.result;
         audioCtx.decodeAudioData(IRFileArrayBuffer, setConvolverBuffer);
-    }
+    };
 
 
     document.getElementById('ownIrFile').checked = true;
@@ -160,19 +160,19 @@ setConvolverBuffer = function (buffer) {
     for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
         convolverBuffer.copyToChannel(buffer.getChannelData(channel), channel);
     }
-}
+};
 
 function convolve() {
-    
+
     var renderingText = document.createTextNode("Rendering...");
     var renderedText = document.createTextNode("Rendered");
-    
+
     var node = document.getElementById('renderStatus');
-    if(node.childNodes.length>0){
+    if (node.childNodes.length > 0) {
         node.removeChild(node.lastChild);
     }
     node.appendChild(renderingText);
-    
+
     //Offline context can only be used once. New one has to be recreated everytime
     //Convolution result length is the sum of both input lengths
     offlineCtx = new OfflineAudioContext(2, inputAudioBuffer.length + convolverBuffer.length, inputAudioBuffer.sampleRate);
