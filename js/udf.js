@@ -28,7 +28,8 @@ function disableUdfControls() {
 // enables (removes greyout) UDF part of the interface
 function enableUdfControls() {
 	document.getElementById("txtUserExpression").disabled = false;
-	document.getElementById("btnUpdateUdf").disabled = false;
+	if (udfNeedsParsing)
+		document.getElementById("btnUpdateUdf").disabled = false;
 	document.getElementById("lblUdfExpr").disabled = false;
 }
 
