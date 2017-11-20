@@ -121,7 +121,13 @@
                                     <label id="lblUdfExpr" for="txtUserExpression">Your function: </label>
                                     <br>
                                     <br>
-                                    <input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" onchange="return updateUdfParsingReq()" />
+                                    <input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" />
+									<script>
+										$("#txtUserExpression").on("change keyup paste",
+											function() { 
+												return updateUdfParsingReq(); 
+											})
+									</script>
                                     <button id="btnUpdateUdf" onclick="return parseMathExpr(); plot1(brd);">Update</button>
                                 </p>
                             </div>
