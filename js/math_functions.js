@@ -107,9 +107,9 @@ function elemWiseMultiplication(x1, x2){
     "use strict";
     //flip(x2); //extra: toggle to flip 2nd input array
     const N = x1.length;
-    const y = Array(2*N-1).fill(0);
+    const y = Array(N);
     for(let i=0 ; i<N ; ++i){
-        y[Math.floor(N/2)-1+i] = x1[i]*x2[i];
+        y[i] = x1[i]*x2[i];
     }
     return y;
 }
