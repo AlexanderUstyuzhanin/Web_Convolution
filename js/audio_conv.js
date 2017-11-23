@@ -241,6 +241,8 @@ function downloadFile() {
         filename = filename.concat(ownIRFileName);
     }
 
+    filename = filename.concat(".wav");
+    
     var element = document.createElement('a');
 
     element.setAttribute('href', outputBlobURL);
