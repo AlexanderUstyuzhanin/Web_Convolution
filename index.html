@@ -73,7 +73,8 @@
                                 <!-- Function 1 Width -->
                                 <label id="f1Text1Label" for="F1_width">Function 1 Width:</label>
                                 <input type="text" id="F1_width" size="4" value="1" onchange="plot1(brd)" />
-                                <br> Function 1 Shift:
+                                <br> 
+								<label id="f1Text1Label" for="F1_width">Function 1 Shift        :</label>
                                 <input type="text" id="F1_shift" size="4" value="0" onchange="plot1(brd)" />
                                 <br>
                             </p>
@@ -93,11 +94,15 @@
 
                                 <label id="f2Text1Label" for="F2_width">Function 2 Width:</label>
                                 <input type="text" id="F2_width" size="4" value="1" onchange="plot2(brd)" />
-                                <br> Function 2 Shift:
+                                <br>
+								<label id="f2Text2Label" for="F2_width">Function 2 Shift         :</label>
                                 <input type="text" id="F2_shift" size="4" value="0" onchange="plot2(brd)" />
                                 <br>
                             </p>
-
+							<p>
+								<input type ="checkbox" id="multiCheckBox" onchange="reDrawSignal2()"; checked = "checked"; return false;/>
+								<label for="multiCheckBox">Show Multiplication</label>
+							</p>
                             <p>
                                 <input type="radio" id: "conv" name="actionRadios" onclick="doConvo(brd2);" checked="checked" />
                                 <label for="conv">Convolution</label>
@@ -105,15 +110,15 @@
                                 <input type="radio" id: "corr" name="actionRadios" onclick="doCorrelation(brd2);" />
                                 <label for="corr">Correlation</label>
                                 <br>
-								<input type="radio" id: "mult" name="actionRadios" onclick="doMultiplication(brd2);" />
-                                <label for="mult">Multiplication</label>
+								<!-- <input type="radio" id: "mult" name="actionRadios" onclick="doMultiplication(brd2);" />
+                                <label for="mult">Multiplication</label> -->
                                 <br>
                             </p>
 
                             <!-- <p id ="sliderParagraph">
-                                                                  <input type ="checkbox" id="slideCheckBox" onchange="reDrawSignal2(); return false;" />
-                                                                  <label for="slideCheckBox">Show Graphically</label>
-                                                              </p> -->
+							  <input type ="checkbox" id="slideCheckBox" onchange="reDrawSignal2(); return false;" />
+							  <label for="slideCheckBox">Show Graphically</label>
+							</p> -->
 
                             <!-- User defined functions -->
                             <div id="divUDF">
@@ -137,7 +142,7 @@
 
                     <script type="text/javascript">
                         // The upper board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
-                        var brd = JXG.JSXGraph.initBoard('jxgbox', {
+                        let brd = JXG.JSXGraph.initBoard('jxgbox', {
                             boundingbox: [-4, 2, 4, -0.3], axis: true,
                             showCopyright: false
                         });
@@ -147,10 +152,10 @@
                     <div id="jxgbox2" class="jxgbox" style="width:600px; height:300px"></div>
 
                     <script type="text/javascript">
-                        var previousCoordinateArray;
-                        var currentCoordinateArray;
+                        let previousCoordinateArray;
+                        let currentCoordinateArray;
                         // The lower board goes from -4 to 4 on the X-axis and -1 to 2 on the Y-axis
-                        var brd2 = JXG.JSXGraph.initBoard('jxgbox2', {
+                        let brd2 = JXG.JSXGraph.initBoard('jxgbox2', {
                             boundingbox: [-4, 2, 4, -1], axis: true,
                             showCopyright: false
                         });
@@ -179,6 +184,8 @@
                         });
                         // generate sample points for the 2 functions in the upper graph
                         generateSamplePoints(previousCoordinateArray[0], previousCoordinateArray[2]);
+						
+						
                         // Plot 2 functions (rect() and tri()) as start up case on the upper board
                         start(brd, brd2); // plot pre-selected functions on start-up
                         onPageLoadUdf(); // TODO: move this to page load f-n
