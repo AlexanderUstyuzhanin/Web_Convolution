@@ -8,9 +8,11 @@ let graph3; // graph of function 3
 let signalArray1 = []; // graph 1 Y-axis values for signal 1 (function 1)
 let signalArray2 = []; // graph 2 Y-axis values for signal 2 (function 2)
 let signalArray3 = []; // graph 3 Y-axis values from convolution or correlation result
+let signalArray4 = []; // multiplication graph (on upper board) Y-axis 
 const samplePoints = []; // X-axis values for signals 1 & 2
 let sliderSamplePoints = []; // slider dependent sample points
 const samplePeriod = 1 / 128; // 128 samples per unit on the X-axis
+let range;
 const resultPoints = []; // X-axis values for signals 3
 let widthSignal1; // width of function 1 gotten from text box
 let widthSignal2; // width of function 2 gotten from text box
@@ -27,6 +29,8 @@ let sliderLeftCoord; // X, Y coordinate of left border of slider
 let sliderRightCoord;	// X, Y coordinate of right border of slider
 let numOfConvoCalls = 0; // number of times convolution function (doConvo())
                          // has been called. Used to set slider default value
+						 
+
 
 /* 	Results from convolution and correlation need to be scaled down
  	by a factor of the sampling frequency = 1 / samplePeriod
@@ -55,6 +59,7 @@ function generateSamplePoints(leftBound, rightBound) {
 	let t = 2 * leftBound;
 	multiplier = rightBound / 4;
 	const outerRange = (2 * rightBound) - (2 * leftBound);
+	range = outerRange;
 	samplePoints.length = Math.round(outerRange / multiplier / samplePeriod);
 	for (x = 0; x < samplePoints.length; x++) {
 		samplePoints[x] = t;
@@ -86,12 +91,7 @@ function generateResultPoints(pointAr, resAr) {
 // It plots the two rect() functions with default settings
 function start(brd,brd2) {
 
-	//create slider object with range -4 to 4 and 0 default value
-	slide = brd.create('slider', [[1, 1.5], [3, 1.5], [-4, 0, 4]], {
-					name: 't',
-					snapWidth: 0.05,
-					withLabel: true
-				});
+	
 
 	brd.defaultAxes.x.setLabel('T'); // create X-axis label for upper board and set the text
 	const xAxisLabel = brd.defaultAxes.x.label; // get the label object
@@ -110,6 +110,13 @@ function start(brd,brd2) {
 				position: 'rt', // possible values are 'lft', 'rt', 'top', 'bot'
 				offset: [-10, 15] // (in pixels)
 			});
+			
+	//create slider object with range -4 to 4 and 0 default value
+	slide = brd.create('slider', [[1, 1.5], [3, 1.5], [-4, 0, 4]], {
+												name: 't',
+												snapWidth: 0.05,
+												withLabel: true
+											});
 
 	// create function 1 graph on upper board
 	graph1 = brd.create('curve', [[0], [0]], {
@@ -126,8 +133,21 @@ function start(brd,brd2) {
 			});
 
 	// create convolution / correlation graph on lower board
-	graph3 = brd2.create('curve', [[0], [0]], { strokeWidth: 1.7, strokeColor: 'blue' });
+	graph3 = brd2.create('curve', [[0], [0]], { 
+				strokeWidth: 1.8, 
+				strokeColor: 'saddlebrown' 
+			});
+	
+	// create multiplication graph
+	graph4 = brd.create('curve', [[0], [0]], { 
+				strokeWidth: 0.3, 
+				strokeColor: 'grey', 
+				highlightFillColor: 'pink', 
+				fillColor: 'grey' 
+			});
+	
 
+	
     // create red dot(point) for animation
     pnt = brd2.create('point', [100, 0], { name: '' });
   // create arrows for the dirac pulse
@@ -354,6 +374,26 @@ function plot2(brd) {
 	reDrawSignal2();
 }
 
+function plotMultiplication(shiftedSig2Array){
+	
+	graph4.updateDataArray = function () {
+		if(document.getElementById('multiCheckBox').checked === false)
+		{
+			signalArray4.length = 0;			
+		} else {		
+			for (let x = 0; x < signalArray1.length ; x++) {		
+				signalArray4[x] = shiftedSig2Array[x]*signalArray1[x];		
+			}
+		}
+		//console.log(signalArray4);
+		this.dataX = samplePoints;
+		this.dataY = signalArray4;
+	};
+	
+	brd.update(); // update upper board
+	
+}
+
 
 // Gets and plots the convolution values for the selected functions
 // it takes the lower board as argument and updates the signalArray3 global variable
@@ -363,12 +403,12 @@ function doConvo(brd2) {
 	++numOfConvoCalls;
 	
 	graph3.updateDataArray = function () {
-	  signalArray3 = conv(signalArray1, signalArray2);
-	  scaleResult(signalArray3);// scale convolution result
+		signalArray3 = conv(signalArray1, signalArray2);
+		scaleResult(signalArray3);// scale convolution result
 
-	  generateResultPoints(resultPoints, signalArray3); // X-axis points for graph 3
-	  this.dataX = resultPoints; // X axis values for graph 3 on the lower board
-	  this.dataY = signalArray3; // Y axis values for graph 3 on the lower board
+		generateResultPoints(resultPoints, signalArray3); // X-axis points for graph 3
+		this.dataX = resultPoints; // X axis values for graph 3 on the lower board
+		this.dataY = signalArray3; // Y axis values for graph 3 on the lower board
 	};
 
 	brd2.update();
@@ -451,7 +491,7 @@ function reDrawSignal2() {
 	let intervalSize;
 	let coords = brd.getBoundingBox();
 	let currentLeftBound = coords[0];
-  
+	let shiftedSig2Array =[];
 	slide.setMax(-1 * currentLeftBound); // set slider upper limit
 	slide.setMin(currentLeftBound);	 // set slider lower limit
 	
@@ -461,14 +501,30 @@ function reDrawSignal2() {
 	graph2.updateDataArray = function () {
 		const signal = document.getElementById('functionList2').value;
 		const numOfPoints = 2048; // please do not change!!!!
+		
+		let indexShift = Math.round(slide.Value() /  range * 2048);
+		
+		shiftedSig2Array.length = 2048;
+		shiftedSig2Array.fill(0);
+		
+		
+		
+		
 		if (currentOperation === 0) { // convolution
 			if (signal === '6') { // dirac pulse selected
 				const xVal = (shiftSignal2 * -1) + slide.Value();				
 				pntArrow2.moveTo([(xVal), 0.95]); // set arrow on dirac plot
 			}
+			
 			for (let x = 0; x < samplePoints.length; x++) {
+				
 				//shift the sample points by slider value
-				sliderSamplePoints[x] = samplePoints[x] + slide.Value(); 
+				sliderSamplePoints[x] = samplePoints[x] + slide.Value();
+				
+			}
+			
+			for (let x = 511; x < 1535; x++) {		
+				shiftedSig2Array[x+indexShift] = signalArray2[2047-x];		
 			}
 			//flip new sample points
 			sliderSamplePoints = sliderSamplePoints.reverse(); 
@@ -481,8 +537,12 @@ function reDrawSignal2() {
 				//shift the sample points by slider value
 				sliderSamplePoints[x] = samplePoints[x] + slide.Value();
 			}
+			for (let x = 511; x < 1535; x++) {		
+				shiftedSig2Array[x+indexShift] = signalArray2[x];		
+			}
 		}
-
+		
+		
 		if (slide.Value() === slide._smin) { // slider at lowest value
 			// size of convolution array (4095) divided 2 minus 512. Do not change!!!
 			arrayIndex = 1536; 
@@ -501,9 +561,12 @@ function reDrawSignal2() {
 		this.dataY = signalArray2;
 
 		pnt.moveTo([slide.Value(), signalArray3[arrayIndex]]);
+		
 	};
-
+	
 	brd.update();	// refresh the upper board with latest data
+	plotMultiplication(shiftedSig2Array);
+	
 }
 
 // resize the board to ensure that function graphs 1 and 2 do not overlap
