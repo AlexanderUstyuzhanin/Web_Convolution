@@ -173,56 +173,63 @@ function convolve() {
     }
     node.appendChild(renderingText);
 
-    //Offline context can only be used once. New one has to be recreated everytime
-    //Convolution result length is the sum of both input lengths
-    offlineCtx = new OfflineAudioContext(2, inputAudioBuffer.length + convolverBuffer.length, inputAudioBuffer.sampleRate);
-    offlineContextSource = offlineCtx.createBufferSource();
-    offlineContextSource.buffer = inputAudioBuffer;
+    if (inputAudioBuffer === undefined) {
+        alert("Choose an input audio");
+    } else if(convolverBuffer === undefined){
+        alert("Choose an impulse response");
+    } else {
 
-    offlineConvolver = offlineCtx.createConvolver();
-    offlineConvolver.buffer = convolverBuffer;
+        //Offline context can only be used once. New one has to be recreated everytime
+        //Convolution result length is the sum of both input lengths
+        offlineCtx = new OfflineAudioContext(2, inputAudioBuffer.length + convolverBuffer.length, inputAudioBuffer.sampleRate);
+        offlineContextSource = offlineCtx.createBufferSource();
+        offlineContextSource.buffer = inputAudioBuffer;
 
-    offlineContextSource.connect(offlineConvolver);
-    offlineConvolver.connect(offlineCtx.destination);
-    offlineContextSource.start();
+        offlineConvolver = offlineCtx.createConvolver();
+        offlineConvolver.buffer = convolverBuffer;
 
-    offlineCtx.startRendering().then(function (renderedBuffer) {
+        offlineContextSource.connect(offlineConvolver);
+        offlineConvolver.connect(offlineCtx.destination);
+        offlineContextSource.start();
 
-        node.removeChild(renderingText);
-        node.appendChild(renderedText);
+        offlineCtx.startRendering().then(function (renderedBuffer) {
+
+            node.removeChild(renderingText);
+            node.appendChild(renderedText);
 
 
-        // start a new worker 
-        var worker = new Worker('js/libs/recorderWorker.js');
+            // start a new worker 
+            var worker = new Worker('js/libs/recorderWorker.js');
 
-        // initialize the new worker
-        worker.postMessage({
-            command: 'init',
-            config: { sampleRate: offlineCtx.sampleRate }
+            // initialize the new worker
+            worker.postMessage({
+                command: 'init',
+                config: { sampleRate: offlineCtx.sampleRate }
+            });
+
+            // callback for `exportWAV`
+            worker.onmessage = function (e) {
+                blob = e.data;
+                outputBlobURL = URL.createObjectURL(blob);
+                outputSound.src = outputBlobURL;
+            };
+
+            // send the channel data from our buffer to the worker
+            worker.postMessage({
+                command: 'record',
+                buffer: [
+                    renderedBuffer.getChannelData(0),
+                    renderedBuffer.getChannelData(1)
+                ]
+            });
+
+            // ask the worker for a WAV
+            worker.postMessage({
+                command: 'exportWAV',
+                type: 'audio/wav'
+            });
         });
-
-        // callback for `exportWAV`
-        worker.onmessage = function (e) {
-            blob = e.data;
-            outputBlobURL = URL.createObjectURL(blob);
-            outputSound.src = outputBlobURL;
-        };
-
-        // send the channel data from our buffer to the worker
-        worker.postMessage({
-            command: 'record',
-            buffer: [
-                renderedBuffer.getChannelData(0),
-                renderedBuffer.getChannelData(1)
-            ]
-        });
-
-        // ask the worker for a WAV
-        worker.postMessage({
-            command: 'exportWAV',
-            type: 'audio/wav'
-        });
-    });
+    }
 }
 
 function downloadFile() {
@@ -242,7 +249,7 @@ function downloadFile() {
     }
 
     filename = filename.concat(".wav");
-    
+
     var element = document.createElement('a');
 
     element.setAttribute('href', outputBlobURL);
