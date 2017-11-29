@@ -5,6 +5,7 @@
 
 var userDefinedExpression; // stores original user input defining the UDF
 var udfValues = []; // stores the UDF function values for the Y axis
+var udfOriginalValues = []; // backup copy of the values (to restore the function)
 var udfDisabled = true;
 var udfNeedsParsing = true;
 
@@ -23,6 +24,7 @@ function disableUdfControls() {
 	document.getElementById("txtUserExpression").disabled = true;
 	document.getElementById("btnUpdateUdf").disabled = true;
 	document.getElementById("lblUdfExpr").disabled = true;
+	document.getElementById("cbxUdfStep").disabled = true;
 }
 
 // enables (removes greyout) UDF part of the interface
@@ -31,6 +33,7 @@ function enableUdfControls() {
 	if (udfNeedsParsing)
 		document.getElementById("btnUpdateUdf").disabled = false;
 	document.getElementById("lblUdfExpr").disabled = false;
+	document.getElementById("cbxUdfStep").disabled = false;
 }
 
 // performs actions necessary after the initial page load
@@ -90,6 +93,8 @@ function parseMathExpr() {
 	var texExpr = node.toTex(); // compile to LaTeX for printing
 
 	udfValues = evaluateCurrentUserDefinedFunction(samplePoints); // calculate function values
+	udfOriginalValues = udfValues.slice(); // store a backup copy
+	updateUdfCausality(); // take the checkbox state into account
 	udfNeedsParsing = false; // just parsed
 	document.getElementById("btnUpdateUdf").disabled = true;
 	plot1(brd);
@@ -118,4 +123,44 @@ function evaluateCurrentUserDefinedFunctionAtValue(value) { // this assumes user
 	ret = math.eval(['x = ' + value, userDefinedExpression]); // [x, f(x)]
 
 	return ret[1]; // select f(x)
+}
+
+// multiplies the parsed UDF with a step() function, which sets all Y values for X < 0 to zero
+function makeUdfCausal() {
+	applyStepToUDF(0, samplePoints);
+	plot1(brd);
+	
+	return false;
+}
+
+// undoes any modification applied to the origninally parsed UDF
+function restoreOriginalUdf() {
+	udfValues = udfOriginalValues.slice();
+	plot1(brd);
+	
+	return false;
+}
+
+// multiplies the UDF with a step starting at the desired point
+function applyStepToUDF(start, points) {
+	var startIndex;
+	for (i = 0; i < points.length; i++) {
+		if (points[i]>=start) {startIndex = i; break;}
+	}
+	for (i = 0; i < udfValues.length; i++) {
+		if (i < startIndex) udfValues[i] = 0;
+	}	
+		
+	return false;
+}
+
+// called on corresponding checkbox state change
+function updateUdfCausality() {
+	var state = document.getElementById("cbxUdfStep").checked;
+	if (state) {
+		makeUdfCausal();
+	}
+	else {
+		restoreOriginalUdf();
+	}
 }

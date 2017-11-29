@@ -125,6 +125,8 @@
                                 <p>
                                     <label id="lblUdfExpr" for="txtUserExpression">Your function: </label>
                                     <br>
+									<input type="checkbox" id="cbxUdfStep" onchange="return updateUdfCausality()" />
+									<label for="cbxUdfStep">Causal?</label>
                                     <br>
                                     <input type="text" id="txtUserExpression" value="-0.3*(x^2) + 1/2" />
 									<script>
